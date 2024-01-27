@@ -1,0 +1,73 @@
+body {
+  background-color: #f5f5f5; /* Fondo claro */
+  font-family: Arial, sans-serif; /* Fuente sencilla y legible */
+  color: #333; /* Color de texto oscuro para contraste */
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  max-width: 480px; /* Ancho más estrecho para un look más limpio */
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.logo {
+  height: 4em; /* Tamaño de logo reducido */
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+/* Eliminación de la animación para un look más simple */
+/*.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}*/
+
+.card {
+  background-color: #fff; /* Fondo de tarjeta blanco */
+  padding: 2em;
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Sombra suave */
+  margin-bottom: 1em;
+}
+
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd; /* Borde sutil */
+}
+
+button {
+  background-color: #4285f4; /* Color de botón estilo Google */
+  color: white;
+  border: none;
+}
+
+button:hover {
+  background-color: #357ae8; /* Color de botón al pasar el ratón */
+  cursor: pointer;
+}
+
+.read-the-docs {
+  color: #888;
+  text-decoration: none;
+}
+
+.read-the-docs:hover {
+  text-decoration: underline;
+}
+
+/* Responsive design para pantallas más pequeñas */
+@media (max-width: 600px) {
+  #root {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .logo {
+    height: 3em;
+  }
+}
