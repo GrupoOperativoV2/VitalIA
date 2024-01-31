@@ -6,9 +6,11 @@ const Token = require("../schema/token");
 
 const UserSchema = new Mongoose.Schema({
   id: { type: Object },
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
   name: { type: String, required: true },
+  contact: { type: String, required: true },
+  password: { type: String, required: true },
+  dateOfBirth: { type: Date, required: true },
+  gender: { type: String, required: true },
 });
 
 UserSchema.pre("save", function (next) {
@@ -28,10 +30,12 @@ UserSchema.pre("save", function (next) {
   }
 });
 
-UserSchema.methods.usernameExists = async function (username) {
-  const result = await Mongoose.model("User").find({ username: username });
+UserSchema.statics.contactExists = async function (contact) {
+  const result = await this.find({ contact: contact });
   return result.length > 0;
 };
+
+
 
 UserSchema.methods.isCorrectPassword = async function (password, hash) {
   console.log(password, hash);

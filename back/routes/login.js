@@ -5,14 +5,15 @@ const getUserInfo = require("../lib/getUserInfo");
 const router = express.Router();
 
 router.post("/", async function (req, res, next) {
-  const { username, password } = req.body;
+  const { contact, password } = req.body;
+  console.log(contact, password)
 
   try {
     let user = new User();
-    const userExists = await user.usernameExists(username);
+    const contactExists = await User.contactExists(contact);
 
-    if (userExists) {
-      user = await User.findOne({ username: username });
+    if (contactExists) {
+      user = await User.findOne({ contact: contact });
 
       const passwordCorrect = await user.isCorrectPassword(
         password,

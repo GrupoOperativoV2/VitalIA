@@ -11,10 +11,10 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
         <nav>
           <ul>
             <li>
-              <Link to="/">Login</Link>
+              <Link to="/">Inicio de sesión</Link>
             </li>
             <li>
-              <Link to="/signup">Signup</Link>
+              <Link to="/signup">Crear cuenta</Link>
             </li>
           </ul>
         </nav>

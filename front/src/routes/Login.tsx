@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 import { AuthResponse, AuthResponseError } from "../types/types";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [contact, setContact] = useState("");
   const [password, setPassword] = useState("");
   const [errorResponse, setErrorResponse] = useState("");
 
@@ -13,8 +13,8 @@ export default function Login() {
 
   function handleChange(e: React.ChangeEvent) {
     const { name, value } = e.target as HTMLInputElement;
-    if (name === "username") {
-      setUsername(value);
+    if (name === "contact") {
+      setContact(value);
     }
     if (name === "password") {
       setPassword(value);
@@ -28,7 +28,7 @@ export default function Login() {
       const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ contact, password }),
       });
       if (response.ok) {
         const json = (await response.json()) as AuthResponse;
@@ -52,19 +52,19 @@ export default function Login() {
   return (
     <DefaultLayout>
       <form onSubmit={handleSubmit} className="form">
-        <h1>Login</h1>
+        <h1>Inicio de sesión</h1>
         {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
-        <label>Nombre de usuario</label>
         <input
-          name="username"
+          name="contact"
           type="text"
+          placeholder="Contacto"
           onChange={handleChange}
-          value={username}
+          value={contact}
         />
-        <label>Contraseña</label>
         <input
           type="password"
           name="password"
+          placeholder="Contraseña"
           onChange={handleChange}
           value={password}
         />

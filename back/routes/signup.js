@@ -4,31 +4,33 @@ const { jsonResponse } = require("../lib/jsonResponse");
 const router = express.Router();
 
 router.post("/", async function (req, res, next) {
-  const { username, password, name } = req.body;
+  const { password, name, birthDay, birthMonth, birthYear, gender, contact } = req.body;
 
-  if (!username || !password || !name) {
-    //return next(new Error("username and password are required"));
-    return res.status(409).json(
-      jsonResponse(409, {
-        error: "username and password are required",
-      })
+
+  if (!password || !name || !birthDay || !birthMonth || !birthYear || !gender || !contact) {
+    return res.status(400).json(
+      jsonResponse(400, { error: "All fields are required" })
     );
   }
+  const dateOfBirth = new Date(birthYear, birthMonth - 1, birthDay);
 
   try {
-    const user = new User();
-    const userExists = await user.usernameExists(username);
+    const contactExists = await User.contactExists(contact);
 
-    if (userExists) {
+    if (contactExists) {
       return res.status(409).json(
         jsonResponse(409, {
-          error: "username already exists",
+          error: "contact already exists",
         })
       );
-      //return next(new Error("user already exists"));
     } else {
-      const user = new User({ username, password, name });
-
+      const user = new User({
+        password, 
+        name,
+        dateOfBirth, 
+        gender,
+        contact
+      });
       user.save();
 
       res.json(
@@ -38,6 +40,7 @@ router.post("/", async function (req, res, next) {
       );
     }
   } catch (err) {
+    console.error(err);
     return res.status(500).json(
       jsonResponse(500, {
         error: "Error creating user",
