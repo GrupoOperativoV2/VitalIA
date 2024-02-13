@@ -10,10 +10,15 @@ import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import Profile from "./routes/Profile.tsx";
 
 import "./index.css";
+import App from "./App.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <App />,
+  },
+  {
+    path: "/login",
     element: <Login />,
   },
   {
