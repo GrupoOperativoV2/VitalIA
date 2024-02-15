@@ -1,73 +1,93 @@
-body {
-  background-color: #f5f5f5; /* Fondo claro */
-  font-family: Arial, sans-serif; /* Fuente sencilla y legible */
-  color: #333; /* Color de texto oscuro para contraste */
-  text-align: center;
-  margin: 0;
+* {
+  box-sizing: border-box;
   padding: 0;
+  margin: 0;
+  scroll-behavior: smooth;
 }
 
-#root {
-  max-width: 480px; /* Ancho más estrecho para un look más limpio */
-  margin: 2rem auto;
-  padding: 2rem;
+body {
+  background: var(--color-bg);
 }
 
-.logo {
-  height: 4em; /* Tamaño de logo reducido */
-  padding: 1em;
-  margin-bottom: 1em;
-}
-
-/* Eliminación de la animación para un look más simple */
-/*.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}*/
-
-.card {
-  background-color: #fff; /* Fondo de tarjeta blanco */
-  padding: 2em;
-  border-radius: 8px; /* Bordes redondeados */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Sombra suave */
-  margin-bottom: 1em;
-}
-
-input, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd; /* Borde sutil */
-}
-
-button {
-  background-color: #4285f4; /* Color de botón estilo Google */
-  color: white;
-  border: none;
-}
-
-button:hover {
-  background-color: #357ae8; /* Color de botón al pasar el ratón */
-  cursor: pointer;
-}
-
-.read-the-docs {
-  color: #888;
+a {
+  color: unset;
   text-decoration: none;
 }
 
-.read-the-docs:hover {
-  text-decoration: underline;
+.gradient__bg {
+  background:-moz-radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
+
+  /* safari 5.1+,chrome 10+ */
+  background:-webkit-radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
+
+  /* opera 11.10+ */
+  background:-o-radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
+
+  /* ie 10+ */
+  background:-ms-radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
+
+  /* global 92%+ browsers support */
+  background:radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
 }
 
-/* Responsive design para pantallas más pequeñas */
-@media (max-width: 600px) {
-  #root {
-    margin: 1rem;
-    padding: 1rem;
+.gradient__text {
+  background: var(--gradient-text);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section__padding {
+  padding: 4rem 6rem;
+}
+
+.section__margin {
+  margin: 4rem 6rem;
+}
+
+.scale-up-center {
+	-webkit-animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+@-webkit-keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .section__padding {
+    padding: 4rem;
   }
 
-  .logo {
-    height: 3em;
+  .section__margin {
+    margin: 4rem;
   }
+}
+
+@media screen and (max-width: 550px) {
+  .section__padding {
+    padding: 4rem 2rem;
+  }
+
+  .section__margin {
+    margin: 4rem 2rem;
+  }  
 }
