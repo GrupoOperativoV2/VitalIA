@@ -18,6 +18,7 @@ function Register() {
   const navigate = useNavigate();
 
   const onSubmit = async (value) => {
+    console.log(value)
     await signup(value);
   };
 
@@ -31,13 +32,13 @@ function Register() {
         {registerErrors.map((error, i) => (
           <Message message={error} key={i} />
         ))}
-        <h1 className="text-3xl font-bold">Regístrate</h1>
+        <h1 className="text-3xl font-bold">Register</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Label htmlFor="username">Nombre:</Label>
+          <Label htmlFor="username">Username:</Label>
           <Input
             type="text"
             name="username"
-            placeholder="Ingresa tu nombre"
+            placeholder="Write your name"
             {...register("username")}
             autoFocus
           />
@@ -45,9 +46,7 @@ function Register() {
             <p className="text-red-500">{errors.username?.message}</p>
           )}
 
-          
-
-          <Label htmlFor="Correo electrónico">Email:</Label>
+          <Label htmlFor="email">Email:</Label>
           <Input
             name="email"
             placeholder="youremail@domain.tld"
@@ -56,7 +55,8 @@ function Register() {
           {errors.email?.message && (
             <p className="text-red-500">{errors.email?.message}</p>
           )}
-          <Label htmlFor="password">Contraseña:</Label>
+
+          <Label htmlFor="password">Password:</Label>
           <Input
             type="password"
             name="password"
@@ -67,7 +67,7 @@ function Register() {
             <p className="text-red-500">{errors.password?.message}</p>
           )}
 
-          <Label htmlFor="confirmPassword">Confirma tu contraseña:</Label>
+          <Label htmlFor="confirmPassword">Confirm Password:</Label>
           <Input
             type="password"
             name="confirmPassword"
@@ -77,12 +77,12 @@ function Register() {
           {errors.confirmPassword?.message && (
             <p className="text-red-500">{errors.confirmPassword?.message}</p>
           )}
-          <Button>Enviar</Button>
+          <Button>Submit</Button>
         </form>
         <p>
-          ¿Ya tienes cuenta?
+          Already Have an Account?
           <Link className="text-sky-500" to="/login">
-            Inicio de sesión
+            Login
           </Link>
         </p>
       </Card>
