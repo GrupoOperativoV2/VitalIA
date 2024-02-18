@@ -8,7 +8,7 @@ npm i
 npm run dev
 ```
 
-### Deployment back
+### Deployment front
 
 ```sh
 
