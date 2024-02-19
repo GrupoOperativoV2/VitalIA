@@ -21,7 +21,13 @@ export function Navbar() {
               <ButtonLink to="/add-task">Personal</ButtonLink>
             </li>
             <li>
-              <ButtonLink to="/gestor">Gestión</ButtonLink>
+              <ButtonLink to="/tasks">Sedes</ButtonLink>
+            </li>
+            <li>
+              <ButtonLink to="/tasks">Material</ButtonLink>
+            </li>
+            <li>
+              <ButtonLink to="/tasks">Buscar camas</ButtonLink>
             </li>
             <li>
               {/* <ButtonLink to="/add-task"></ButtonLink> */}

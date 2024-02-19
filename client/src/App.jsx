@@ -8,6 +8,7 @@ import { TaskFormPage } from "./pages/TaskFormPage";
 import { LoginPage } from "./pages/LoginPage";
 import { TasksPage } from "./pages/TasksPage";
 import { TaskProvider } from "./context/tasksContext";
+import { GestorPage} from "./pages/GestorPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/tasks" element={<TasksPage />} />
                 <Route path="/add-task" element={<TaskFormPage />} />
                 <Route path="/tasks/:id" element={<TaskFormPage />} />
+                <Route path="/gestor" element={<GestorPage />} />
                 <Route path="/profile" element={<h1>Profile</h1>} />
               </Route>
             </Routes>
