@@ -10,7 +10,7 @@ import { Navbar } from "../components/NavbarGestion";
 
 dayjs.extend(utc);
 
-export function TaskFormPage() {
+export function GestorPage() {
   const { createTask, getTask, updateTask } = useTasks();
   const navigate = useNavigate();
   const params = useParams();
@@ -93,3 +93,4 @@ export function TaskFormPage() {
     </>
   );
 }
+
