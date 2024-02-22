@@ -18,16 +18,13 @@ export function Navbar() {
               Bienvenido {user.username}
             </li>
             <li>
-              <ButtonLink to="/add-task">Personal</ButtonLink>
-            </li>
-            <li>
               <ButtonLink to="/tasks">Sedes</ButtonLink>
             </li>
             <li>
-              <ButtonLink to="/tasks">Material</ButtonLink>
+              <ButtonLink to="/add-room">Camas disponibles</ButtonLink>
             </li>
             <li>
-              <ButtonLink to="/tasks">Buscar camas</ButtonLink>
+              <ButtonLink to="/tasks">Análisis</ButtonLink>
             </li>
             <li>
               {/* <ButtonLink to="/add-task"></ButtonLink> */}
