@@ -53,7 +53,7 @@ export function RoomFormPage(){
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
          <Card>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <h3>Cuartos insanos</h3>
+                        <h3>Cuartos</h3>
                         {/* Ajuste de campos según el modelo */}
                         <Label htmlFor="number">Number</Label>
                         <Input

@@ -19,7 +19,7 @@ export function RoomPage() {
           <div>
             <ImFileEmpty className="text-6xl text-gray-400 m-auto my-2" />
             <h1 className="font-bold text-xl">
-              Urgente que te pongas a chambear Donovan  
+              No se han agregado cuartos  
             </h1>
           </div>
         </div>

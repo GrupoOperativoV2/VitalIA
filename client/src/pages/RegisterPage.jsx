@@ -22,7 +22,7 @@ function Register() {
   };
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/add-task");
+    if (isAuthenticated) navigate("/gestor");
   }, [isAuthenticated]);
 
   return (
