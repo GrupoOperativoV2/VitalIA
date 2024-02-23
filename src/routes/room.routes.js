@@ -19,12 +19,12 @@ router.post('/rooms', auth, validateSchema(createRoomSchema), createRoom);
 router.get('/rooms', auth, getRooms);
 
 // Obtener un cuarto por su ID, requiere autenticación
-router.get('/room/:id', auth, getRoomById);
+router.get('/rooms/:id', auth, getRoomById);
 
 // Actualizar un cuarto por su ID, con validación de esquema y autenticación
-router.put('/room/:id', auth, updateRoom);
+router.put('/rooms/:id', auth, updateRoom);
 
 // Eliminar un cuarto por su ID, requiere autenticación
-router.delete('/room/:id', auth, deleteRoom);
+router.delete('/rooms/:id', auth, deleteRoom);
 
 export default router;

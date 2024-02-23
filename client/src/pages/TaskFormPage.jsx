@@ -64,7 +64,7 @@ export function TaskFormPage() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
       <Card>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h3>Cuartos</h3>
+          <h3>Camas</h3>
           <Label htmlFor="title">Title</Label>
           <Input
             type="text"
