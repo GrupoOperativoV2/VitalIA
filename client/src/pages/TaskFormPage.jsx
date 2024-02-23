@@ -64,12 +64,12 @@ export function TaskFormPage() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
       <Card>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h3>Camas</h3>
-          <Label htmlFor="title">Title</Label>
+          <h3>Medicamentos</h3>
+          <Label htmlFor="title">Nombre</Label>
           <Input
             type="text"
             name="title"
-            placeholder="Title"
+            placeholder="Nombre"
             {...register("title")}
             autoFocus
           />
@@ -77,16 +77,16 @@ export function TaskFormPage() {
             <p className="text-red-500 text-xs italic">Please enter a title.</p>
           )}
 
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description">Descripcion</Label>
           <Textarea
             name="description"
             id="description"
             rows="3"
-            placeholder="Description"
+            placeholder="Descripcion"
             {...register("description")}
           ></Textarea>
 
-          <Label htmlFor="date">Date</Label>
+          <Label htmlFor="date">Fecha de caducidad</Label>
           <Input type="date" name="date" {...register("date")} />
           <Button>Save</Button>
         </form>

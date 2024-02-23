@@ -21,10 +21,10 @@ export function Navbar() {
               <ButtonLink to="/add-room">Cuartos</ButtonLink>
             </li>
             <li>
-              <ButtonLink to="/add-task">Camas</ButtonLink>
+              <ButtonLink to="/tasks">Camas</ButtonLink>
             </li>
             <li>
-              <ButtonLink to="/tasks">Material</ButtonLink>
+              <ButtonLink to="/add-task">Material</ButtonLink>
             </li>
             <li>
               <ButtonLink to="/gestionH">Regresar</ButtonLink>
