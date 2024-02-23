@@ -23,6 +23,7 @@ export const register = async (req, res) => {
       username,
       email,
       password: passwordHash,
+
     });
 
     // saving the user in the database
@@ -31,6 +32,8 @@ export const register = async (req, res) => {
     // create access token
     const token = await createAccessToken({
       id: userSaved._id,
+      username: userSaved.username,
+      tipo: userSaved.tipo,
     });
 
     res.cookie("token", token, {
@@ -69,7 +72,8 @@ export const login = async (req, res) => {
     const token = await createAccessToken({
       id: userFound._id,
       username: userFound.username,
-    });
+      tipo: userFound.tipo,
+      });
 
     res.cookie("token", token, {
       httpOnly: process.env.NODE_ENV !== "development",
