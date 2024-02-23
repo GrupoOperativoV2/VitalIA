@@ -11,6 +11,8 @@ import { TaskProvider } from "./context/tasksContext";
 import {RoomFormPage} from "./pages/RoomFormPage";
 import { RoomPage } from "./pages/RoomsPage"; // Importando la página de Rooms
 import { RoomProvider } from "./context/roomsContext"; // Importando el proveedor de contexto para Rooms
+import { GestorPage } from "./pages/GestorPage";
+import { GestorH } from "./pages/GestorH";
 
 function App() {
   return (
@@ -22,7 +24,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/register" element={<RegisterPage />} /> 
                 <Route element={<ProtectedRoute />}>
                   {/* Rutas existentes */}
                   <Route path="/tasks" element={<TasksPage />} />
@@ -32,6 +34,8 @@ function App() {
                   {/* Nuevas rutas para Rooms */}
                   <Route path="/rooms" element={<RoomPage />} />
                   <Route path="/add-room" element={<RoomFormPage />} />
+                  <Route path="/gestor" element={<GestorPage />} />
+                  <Route path="/gestionH" element={<GestorH />} />
                   {/* Si tienes más páginas relacionadas con Rooms, pueden ir aquí */}
                 </Route>
               </Routes>

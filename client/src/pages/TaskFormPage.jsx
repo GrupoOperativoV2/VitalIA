@@ -6,7 +6,7 @@ import { Button, ButtonLink, Card, Input, Label } from "../components/ui";
 import { useTasks } from "../context/tasksContext";
 import { Textarea } from "../components/ui/Textarea";
 import { useForm } from "react-hook-form";
-import { Navbar } from "../components/NavbarGestion";
+import { Navbar } from "../components/NavbarCRUD";
 
 dayjs.extend(utc);
 

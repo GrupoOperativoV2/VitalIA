@@ -60,36 +60,7 @@ export function GestorPage() {
 
   return (
     <>
-      <Navbar />
-      <Card>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Label htmlFor="title">Title</Label>
-          <Input
-            type="text"
-            name="title"
-            placeholder="Title"
-            {...register("title")}
-            autoFocus
-          />
-          {errors.title && (
-            <p className="text-red-500 text-xs italic">Please enter a title.</p>
-          )}
-
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            name="description"
-            id="description"
-            rows="3"
-            placeholder="Description"
-            {...register("description")}
-          ></Textarea>
-
-          <Label htmlFor="date">Date</Label>
-          <Input type="date" name="date" {...register("date")} />
-          <Button>Save</Button>
-        </form>
-        <ButtonLink to="/tasks">Registros</ButtonLink>
-      </Card>
+      <Navbar/>
     </>
   );
 }

@@ -27,6 +27,9 @@ export function Navbar() {
               <ButtonLink to="/tasks">Material</ButtonLink>
             </li>
             <li>
+              <ButtonLink to="/gestor">Regresar</ButtonLink>
+            </li>
+            <li>
               {/* <ButtonLink to="/add-task"></ButtonLink> */}
             </li>
             <li>
