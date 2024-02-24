@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // clear errors after 5 seconds
+ 
   useEffect(() => {
     if (errors.length > 0) {
       const timer = setTimeout(() => {
@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
     } catch (error) {
       console.log(error);
-      // setErrors(error.response.data.message);
     }
   };
 

@@ -29,8 +29,14 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} /> 
                 <Route element={<ProtectedRoute />}>
-
-                  {/* Rutas existentes */}
+                  {/*
+                  Después de agregar los módulos faltantes, deberán ser 
+                  agregados dentro del elemento de cada tipo de usuario.
+                  Para definir a qué ruta deberá ser referenciado el usuario 
+                  como su principal, se deberá consultar ./routes y realizar los
+                  cambios indicados
+                  */}
+                  
                   <Route element={<ManagerPages />}>
                     <Route path="/tasks" element={<TasksPage />} />
                     <Route path="/add-task" element={<TaskFormPage />} />

@@ -15,10 +15,10 @@ export const register = async (req, res) => {
         message: ["The email is already in use"],
       });
 
-    // hashing the password
+    // Se hashea el password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // creating the user
+    // Crea un nuevo usuario
     const newUser = new User({
       username,
       email,
@@ -26,10 +26,10 @@ export const register = async (req, res) => {
 
     });
 
-    // saving the user in the database
+    // Guarda el usuario en la BD
     const userSaved = await newUser.save();
 
-    // create access token
+    // Genera un token de acceso definiendo qué datos podrán ser visualizados en Cookies
     const token = await createAccessToken({
       id: userSaved._id,
       username: userSaved.username,
