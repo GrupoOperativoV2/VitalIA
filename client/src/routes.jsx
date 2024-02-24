@@ -1,5 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "./context/authContext";
+import Cookies from "js-cookie";
+import React, { useEffect } from 'react';
 
 export const ProtectedRoute = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -8,3 +10,34 @@ export const ProtectedRoute = () => {
   if (!isAuthenticated && !loading) return <Navigate to="/login" replace />;
   return <Outlet />;
 };
+
+export const ManagerPages = () => {
+  const tokenString = Cookies.get("token");
+  const [headerEncoded, payloadEncoded, signature] = tokenString.split('.');
+  const payload = JSON.parse(atob(payloadEncoded));
+  const valorTipo = payload.tipo;
+  console.log(valorTipo);
+  if (valorTipo == "3") return <Navigate to="/pacient" replace />;
+  if (valorTipo == "2") return <Navigate to="/doctor" replace />;
+  return <Outlet />;
+}
+export const PatientPages = () => {
+  const tokenString = Cookies.get("token");
+  const [headerEncoded, payloadEncoded, signature] = tokenString.split('.');
+  const payload = JSON.parse(atob(payloadEncoded));
+  const valorTipo = payload.tipo;
+  console.log(valorTipo);
+  if (valorTipo == "1") return <Navigate to="/tasks" replace />;
+  if (valorTipo == "2") return <Navigate to="/doctor" replace />;
+  return <Outlet />;
+}
+export const DoctorPages = () => {
+  const tokenString = Cookies.get("token");
+  const [headerEncoded, payloadEncoded, signature] = tokenString.split('.');
+  const payload = JSON.parse(atob(payloadEncoded));
+  const valorTipo = payload.tipo;
+  console.log(valorTipo);
+  if (valorTipo == "3") return <Navigate to="/pacient" replace />;
+  if (valorTipo == "1") return <Navigate to="/tasks" replace />;
+  return <Outlet />;
+}
