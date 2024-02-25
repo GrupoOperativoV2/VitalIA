@@ -4,7 +4,7 @@ import { CTA, Brand, Navbar } from '../components';
 
 function HomePage() {
   return (
-    <div className="App" style={{ background: '#040C18', color: 'white' }}>
+    <div className="App">
       <div className="gradient__bg">
        <Navbar />
        <Header />
