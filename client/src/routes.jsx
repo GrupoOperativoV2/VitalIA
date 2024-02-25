@@ -22,7 +22,7 @@ export const ManagerPages = () => {
   const valorTipo = payload.tipo;
   /*En caso de cambiar la página a la que deba ser redirigido cada usuario 
   se remplazará el valor de cada Navigate to en cada caso*/
-  if (valorTipo == "3") return <Navigate to="/paciente" replace />;
+  if (valorTipo == "3") return <Navigate to="/pacient" replace />;
   if (valorTipo == "2") return <Navigate to="/doctor" replace />;
   return <Outlet />;
 }
@@ -40,7 +40,7 @@ export const DoctorPages = () => {
   const [headerEncoded, payloadEncoded, signature] = tokenString.split('.');
   const payload = JSON.parse(atob(payloadEncoded));
   const valorTipo = payload.tipo;
-  if (valorTipo == "3") return <Navigate to="/paciente" replace />;
+  if (valorTipo == "3") return <Navigate to="/pacient" replace />;
   if (valorTipo == "1") return <Navigate to="/tasks" replace />;
   return <Outlet />;
 }
