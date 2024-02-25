@@ -32,7 +32,11 @@ function HomePage() {
   return (
     
     <div className="neon"id="neon">
+<<<<<<< HEAD
       <div className="App" style={{ background: '#040C18', color: 'white' }} >
+=======
+      <div className="App">
+>>>>>>> 78177744a90081c87ac66b1e7bcca16290c0c377
         <div className="gradient__bg">
           <Navbar />
           <Header />
