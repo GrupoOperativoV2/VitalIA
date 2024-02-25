@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, Message, Button, Input, Label } from "../components/ui";
 import { loginSchema } from "../schemas/auth";
+import styles from '../styles/login.module.css';
 
 export function LoginPage() {
   const {
@@ -26,40 +27,43 @@ export function LoginPage() {
   }, [isAuthenticated]);
 
   return (
-    <div className="h-[calc(100vh-100px)] flex items-center justify-center">
-      <Card>
-        {loginErrors.map((error, i) => (
-          <Message message={error} key={i} />
-        ))}
-        <h1 className="text-2xl font-bold">Inicio de sesión</h1>
-
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Label htmlFor="email">Correo electrónico:</Label>
+    <div className={styles.container}>
+    <div className={styles.card}>
+      {/* ... */}
+      <h1 className={styles.title}>Inicio de sesión</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className={styles.inputField}>
+          <Label htmlFor="email" className={styles.label}>Correo electrónico:</Label>
           <Input
+            className={styles.input}
             label="Ingresa tu correo"
             type="email"
             name="email"
-            placeholder="youremail@example.com  "
+            placeholder="youremail@example.com"
             {...register("email", { required: true })}
           />
-          <p>{errors.email?.message}</p>
+          {errors.email && <p className={styles.errorMessage}>{errors.email.message}</p>}
+        </div>
 
-          <Label htmlFor="password">Contraseña:</Label>
+        <div className={styles.inputField}>
+          <Label htmlFor="password" className={styles.label}>Contraseña:</Label>
+          <br></br>
           <Input
+            className={styles.input}
             type="password"
             name="password"
-            placeholder="Ingresa su contraseña  "
+            placeholder="Ingresa su contraseña"
             {...register("password", { required: true, minLength: 6 })}
           />
-          <p>{errors.password?.message}</p>
+          {errors.password && <p className={styles.errorMessage}>{errors.password.message}</p>}
+        </div>
 
-          <Button>Entrar</Button>
-        </form>
-
-        <p className="flex gap-x-2 justify-between">
-          ¿No tienes cuenta? <Link to="/register" className="text-sky-500">Crea una</Link>
-        </p>
-      </Card>
+        <Button className={styles.button}>Entrar</Button>
+      </form>
+      <p className={`flex gap-x-2 justify-between ${styles.link}`}>
+        ¿No tienes cuenta? <Link to="/register" className={styles.link}>Crea una</Link>
+      </p>
     </div>
+  </div>
   );
 }

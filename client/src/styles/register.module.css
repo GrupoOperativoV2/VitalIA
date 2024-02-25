@@ -1,0 +1,101 @@
+/* register.module.css */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 100px); /* Ajuste si hay un header o footer */
+  background-color: #ffffff; /* Fondo blanco para toda la página */
+}
+
+.card {
+  padding: 3rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 500px; /* Un poco más ancho que el de login para más contenido */
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #040C18; /* Título oscuro */
+  margin-bottom: 2rem;
+  text-align: center; /* Centrar título */
+}
+
+.inputField {
+  margin-bottom: 1.5rem;
+}
+
+.input {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold; /* Texto en negrita para mayor claridad */
+}
+
+.button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #22c55e; /* Botón verde */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold; /* Texto en negrita */
+  margin-top: 1rem;
+  text-align: center; /* Centrar texto del botón */
+}
+
+.link, .errorMessage {
+  text-align: center; /* Centrar mensaje de error y enlaces */
+  margin-top: 2rem;
+}
+
+.errorMessage {
+  color: #ef4444; /* Color rojo para mensajes de error */
+  font-size: 0.875rem;
+}
+
+.label {
+  color: #040C18 !important; /* Color negro para los labels con prioridad */
+  font-weight: bold; /* Texto en negrita */
+  display: block; /* Asegura que el label sea un bloque para alinearlo correctamente */
+  margin-bottom: 0.5rem; /* Espacio debajo del label */
+  font-size: 1rem; /* Tamaño del texto para el label */
+}
+
+/* Estilos para el enlace de "inicio de sesión" */
+.link {
+  color: #040C18; /* Color azul para enlaces */
+  font-weight: bold; /* Texto en negrita */
+  display: inline; /* Para que el enlace quede al lado del texto */
+  margin-left: 0.5rem; /* Espacio antes del enlace */
+}
+
+.prompt {
+  text-align: center;
+  margin-top: 2rem; /* Ajusta según sea necesario */
+}
+
+.loginLink {
+  display: block; /* Esto hará que el enlace aparezca en una nueva línea */
+  margin-top: 0.5rem; /* Ajusta el espacio entre el texto y el enlace según sea necesario */
+  color: #040C18; /* Esto es para el color azul del enlace, ajusta según sea necesario */
+  font-weight: bold; /* Si quieres que el enlace sea en negrita */
+  text-decoration: none; /* Si quieres quitar el subrayado del enlace */
+}
+
+
+@media (max-width: 768px) {
+  .card {
+    padding: 2rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+}
