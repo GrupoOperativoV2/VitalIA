@@ -27,8 +27,8 @@ function HomePage() {
         })
         .catch(error => console.error("Error al cargar threejs-toys:", error));
     }
-  }, []);
-  */
+  }, []);*/
+  
   return (
     
     <div className="neon"id="neon">

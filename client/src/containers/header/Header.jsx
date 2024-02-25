@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import ai from '../../assets/ai.png'; // Asegúrate de que la ruta sea correcta
 import './header.css'; // Asegúrate de que la ruta sea correcta
 
-// Definición de TextScramble (puedes ubicarla en otro archivo si prefieres)
+// Definición de TextScramble
 class TextScramble {
   constructor(el) {
     this.el = el;
@@ -60,18 +60,13 @@ class TextScramble {
 // Componente funcional Header
 const Header = () => {
   const textRef = useRef(null);
+  const neonRef = useRef(null); // Correctamente declarado para su uso en todo el componente
 
   useEffect(() => {
+    // Inicialización de TextScramble
     if (textRef.current) {
       const fx = new TextScramble(textRef.current);
-
-      
-  const phrases = [
-    "VitalIA está",
-    "para cuidar de ti",
-    "de forma inteligente",
-  ];
-
+      const phrases = ["VitalIA está", "para cuidar de ti", "de forma inteligente"];
       let counter = 0;
       const next = () => {
         fx.setText(phrases[counter]).then(() => {
@@ -79,13 +74,33 @@ const Header = () => {
         });
         counter = (counter + 1) % phrases.length;
       };
-
       next();
     }
-  }, []);
+
+    // Carga dinámica de neonCursor
+    if (neonRef.current) {
+      import("https://unpkg.com/threejs-toys@0.0.8/build/threejs-toys.module.cdn.min.js")
+        .then(({ neonCursor }) => {
+          neonCursor({
+            el: neonRef.current,
+            shaderPoints: 16,
+            curvePoints: 80,
+            curveLerp: 0.5,
+            radius1: 5,
+            radius2: 30,
+            velocityTreshold: 10,
+            sleepRadiusX: 100,
+            sleepRadiusY: 100,
+            sleepTimeCoefX: 0.0025,
+            sleepTimeCoefY: 0.0025
+          });
+        })
+        .catch(error => console.error("Error al cargar threejs-toys:", error));
+    }
+  }, []); // Un solo useEffect para ambos efectos
 
   return (
-    <div className="gpt3__header section__padding" id="home">
+    <div className="gpt3__header section__padding" ref={neonRef} id="neon">
       <div className="gpt3__header-content">
         <h1 className="gradient__text">Con VitalIA, lleva el cuidado de la salud al siguiente nivel</h1>
         <p>En la búsqueda de bienestar, ninguna innovación es demasiado grande. No hay descanso en el avance de la tecnología. El progreso trae consigo una transformación jubilosa, rompiendo las barreras de la medicina tradicional. Unidos en nuestra misión, nos adelantamos a los años, respondiendo al llamado de cuidado y precisión.</p>
