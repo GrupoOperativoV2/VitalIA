@@ -23,6 +23,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
   };
 
 
+  const { logout } = useAuth();
 
   return (
     <Container isOpen={sidebarOpen} themeUse={theme}>
@@ -47,17 +48,33 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
       ))}
       <Divider />
-      {secondarylinksArray.map(({ icon, label, to }) => (
-        <div className="LinkContainer" key={label}>
-          <NavLink
-            to={to}
-            className={({ isActive }) => `Links${isActive ? ` active` : ``}`}
-          >
-            <div className="Linkicon">{icon}</div>
-            {sidebarOpen && <span>{label}</span>}
-          </NavLink>
-        </div>
-      ))}
+      {secondarylinksArray.map(({ icon, label, to }) => {
+        if (label === "Salir") {
+          return (
+            <div className="LinkContainer" key={label}>
+              <button onClick={logout} className="Links">
+                <div className="Linkicon">{icon}</div>
+                {sidebarOpen && <span>{label}</span>}
+              </button>
+            </div>
+          );
+        } else {
+          return (
+            <div className="LinkContainer" key={label}>
+              <NavLink
+                to={to}
+                className={({ isActive }) =>
+                  `Links${isActive ? ` active` : ``}`
+                }
+              >
+                <div className="Linkicon">{icon}</div>
+                {sidebarOpen && <span>{label}</span>}
+              </NavLink>
+            </div>
+          );
+        }
+      })}
+
       <Divider />
       <div className="Themecontent">
         <div className="Togglecontent">

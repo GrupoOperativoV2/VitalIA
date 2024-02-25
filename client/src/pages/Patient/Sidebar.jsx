@@ -22,7 +22,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
     setTheme((theme) => (theme === "light" ? "dark" : "light"));
   };
 
-
+  const { logout } = useAuth();
 
   return (
     <Container isOpen={sidebarOpen} themeUse={theme}>
@@ -47,17 +47,33 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
       ))}
       <Divider />
-      {secondarylinksArray.map(({ icon, label, to }) => (
-        <div className="LinkContainer" key={label}>
-          <NavLink
-            to={to}
-            className={({ isActive }) => `Links${isActive ? ` active` : ``}`}
-          >
-            <div className="Linkicon">{icon}</div>
-            {sidebarOpen && <span>{label}</span>}
-          </NavLink>
-        </div>
-      ))}
+      {secondarylinksArray.map(({ icon, label, to }) => {
+        if (label === "Salir") {
+          return (
+            <div className="LinkContainer" key={label}>
+              <button onClick={logout} className="Links">
+                <div className="Linkicon">{icon}</div>
+                {sidebarOpen && <span>{label}</span>}
+              </button>
+            </div>
+          );
+        } else {
+          return (
+            <div className="LinkContainer" key={label}>
+              <NavLink
+                to={to}
+                className={({ isActive }) =>
+                  `Links${isActive ? ` active` : ``}`
+                }
+              >
+                <div className="Linkicon">{icon}</div>
+                {sidebarOpen && <span>{label}</span>}
+              </NavLink>
+            </div>
+          );
+        }
+      })}
+
       <Divider />
       <div className="Themecontent">
         <div className="Togglecontent">
@@ -90,7 +106,7 @@ const linksArray = [
   },
   {
     label: "Perfil",
-    icon: <MdOutlineAnalytics />, 
+    icon: <MdOutlineAnalytics />,
     to: "/profilepatient",
   },
   {
@@ -103,7 +119,6 @@ const linksArray = [
     icon: <MdOutlineAnalytics />,
     to: "/messages",
   },
- 
 ];
 const secondarylinksArray = [
   {
@@ -114,7 +129,7 @@ const secondarylinksArray = [
   {
     label: "Salir",
     icon: <MdLogout />,
-    to: "/null" ,
+    to: "/null",
   },
 ];
 //#endregion
@@ -171,7 +186,7 @@ const Container = styled.div`
   }
   .LinkContainer {
     margin: 8px 0;
-   
+
     padding: 0 15%;
     :hover {
       background: ${(props) => props.theme.bg3};
@@ -182,7 +197,7 @@ const Container = styled.div`
       text-decoration: none;
       padding: calc(${v.smSpacing}-2px) 0;
       color: ${(props) => props.theme.text};
-      height:50px;
+      height: 50px;
       .Linkicon {
         padding: ${v.smSpacing} ${v.mdSpacing};
         display: flex;

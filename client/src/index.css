@@ -1,9 +1,9 @@
 @tailwind base;
-
+/* @tailwind utilities; */
 
 body {
-  background: #040C18;
-  color: white;
+  background: #ffff;
+  color: #000;
 }
 
 .content-container {
@@ -19,5 +19,9 @@ body {
   --color-footer : #031B34;
   --color-blog: #333435;
   --color-text: #81AFDD;
-  --color-subtext: #FF8A71;
+  --color-subtext: #FF8A71;
 }
+
+
+
+
