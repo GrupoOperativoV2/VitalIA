@@ -5,6 +5,7 @@ import { Card, Message, Button, Input, Label } from "../components/ui";
 import { useForm } from "react-hook-form";
 import { registerSchema } from "../schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import styles from '../styles/register.module.css';
 
 function Register() {
   const { signup, errors: registerErrors, isAuthenticated } = useAuth();
@@ -26,65 +27,87 @@ function Register() {
   }, [isAuthenticated]);
 
   return (
-    <div className="h-[calc(100vh-100px)] flex items-center justify-center">
-      <Card>
+    <div className={styles.container}>
+      <Card className={styles.card}>
         {registerErrors.map((error, i) => (
-          <Message message={error} key={i} />
+          <Message key={i} message={error} />
         ))}
-        <h1 className="text-3xl font-bold">Regístrate</h1>
+        <h1 className={styles.title}>Regístrate</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Label htmlFor="username">Nombre:</Label>
-          <Input
-            type="text"
-            name="username"
-            placeholder="Ingresa tu nombre"
-            {...register("username")}
-            autoFocus
-          />
-          {errors.username?.message && (
-            <p className="text-red-500">{errors.username?.message}</p>
-          )}
+          <div className={styles.inputField}>
+            <Label htmlFor="username" className={styles.label}>
+              Nombre:
+            </Label>
+            <br></br>
+            <Input
+              type="text"
+              name="username"
+              placeholder="Ingresa tu nombre"
+              {...register("username")}
+              autoFocus
+            />
+            {errors.username?.message && (
+              <p className={styles.errorMessage}>{errors.username?.message}</p>
+            )}
+          </div>
 
-          
+          <div className={styles.inputField}>
+            <Label htmlFor="email" className={styles.label}>
+              Correo electrónico:
+            </Label>
+            <br></br>
+            <Input
+              name="email"
+              placeholder="youremail@domain.tld"
+              {...register("email")}
+            />
+            {errors.email?.message && (
+              <p className={styles.errorMessage}>{errors.email?.message}</p>
+            )}
+          </div>
 
-          <Label htmlFor="Correo electrónico">Email:</Label>
-          <Input
-            name="email"
-            placeholder="youremail@domain.tld"
-            {...register("email")}
-          />
-          {errors.email?.message && (
-            <p className="text-red-500">{errors.email?.message}</p>
-          )}
-          <Label htmlFor="password">Contraseña:</Label>
-          <Input
-            type="password"
-            name="password"
-            placeholder="********"
-            {...register("password")}
-          />
-          {errors.password?.message && (
-            <p className="text-red-500">{errors.password?.message}</p>
-          )}
+          <div className={styles.inputField}>
+            <Label htmlFor="password" className={styles.label}>
+              Contraseña:
+            </Label>
+            <br></br>
+            <Input
+              type="password"
+              name="password"
+              placeholder="********"
+              {...register("password")}
+            />
+            {errors.password?.message && (
+              <p className={styles.errorMessage}>{errors.password?.message}</p>
+            )}
+          </div>
 
-          <Label htmlFor="confirmPassword">Confirma tu contraseña:</Label>
-          <Input
-            type="password"
-            name="confirmPassword"
-            placeholder="********"
-            {...register("confirmPassword")}
-          />
-          {errors.confirmPassword?.message && (
-            <p className="text-red-500">{errors.confirmPassword?.message}</p>
-          )}
-          <Button>Enviar</Button>
+          <div className={styles.inputField}>
+            <Label htmlFor="confirmPassword" className={styles.label}>
+              Confirma tu contraseña:
+            </Label>
+            <br></br>
+            <Input
+              type="password"
+              name="confirmPassword"
+              placeholder="********"
+              {...register("confirmPassword")}
+            />
+            {errors.confirmPassword?.message && (
+              <p className={styles.errorMessage}>
+                {errors.confirmPassword?.message}
+              </p>
+            )}
+          </div>
+          <Button className={styles.button}>Enviar</Button>
         </form>
-        <p>
+        <br></br>
+        <div className={styles.prompt}>
           ¿Ya tienes cuenta?
-          <Link className="text-sky-500" to="/login">
+          <Link to="/login" className={styles.loginLink}>
             Inicio de sesión
           </Link>
-        </p>
+        </div>
       </Card>
     </div>
   );

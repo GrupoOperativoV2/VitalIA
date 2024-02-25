@@ -1,0 +1,36 @@
+import React, { useState } from "react";
+import { Sidebar } from "./Sidebar.jsx";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
+
+const PatientPageContainer = styled.div`
+  display: grid;
+  grid-template-columns: 90px auto;
+  background: ${({ theme }) => theme.bgtotal};
+  transition: all 0.3s;
+  justify-items: normal;
+  &.active {
+    grid-template-columns: 300px auto;
+  }
+  color: ${({ theme }) => theme.text};
+  height: 100vh;
+`;
+
+export function PatientPage() {
+  const { isAuthenticated, logout, user } = useAuth();
+  console.log(isAuthenticated, user);
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <PatientPageContainer className={sidebarOpen ? "sidebarState active" : ""}>
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <h1>Ponganse a chambear 1</h1>
+      <Link to="/" onClick={() => logout()}>
+        Salir
+      </Link>
+      <h1>Ahorita lo pongo en Sidebar</h1>
+    </PatientPageContainer>
+  );
+}
