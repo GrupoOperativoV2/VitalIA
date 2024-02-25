@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import ai from '../../assets/ai.png'; // Asegúrate de que la ruta sea correcta
-import './header.css'; // Asegúrate de que la ruta sea correcta
+import ai from '../../assets/ai.png'; 
+import './header.css'; 
 
 // Definición de TextScramble
 class TextScramble {
@@ -8,6 +8,7 @@ class TextScramble {
     this.el = el;
     this.chars = "!<>-_\\/[]{}—=+*^?#________";
     this.update = this.update.bind(this);
+    this.frameRequest = null; // Agregado para manejar la cancelación del frame
   }
   setText(newText) {
     const oldText = this.el.innerText;
@@ -21,7 +22,9 @@ class TextScramble {
       const end = start + Math.floor(Math.random() * 40);
       this.queue.push({ from, to, start, end });
     }
-    cancelAnimationFrame(this.frameRequest);
+    if (this.frameRequest) {
+      cancelAnimationFrame(this.frameRequest);
+    }
     this.frame = 0;
     this.update();
     return promise;
@@ -60,13 +63,15 @@ class TextScramble {
 // Componente funcional Header
 const Header = () => {
   const textRef = useRef(null);
-  const neonRef = useRef(null); // Correctamente declarado para su uso en todo el componente
+  const neonRef = useRef(null);
 
   useEffect(() => {
+    let fx; // Declaración de fx dentro del useEffect
+
     // Inicialización de TextScramble
     if (textRef.current) {
-      const fx = new TextScramble(textRef.current);
-      const phrases = ["VitalIA está", "para cuidar de ti", "de forma inteligente"];
+      fx = new TextScramble(textRef.current);
+      const phrases = ["VitalIA existe", "para cuidar de ti", "de forma inteligente", "Un proyecto de GoDev"];
       let counter = 0;
       const next = () => {
         fx.setText(phrases[counter]).then(() => {
@@ -97,7 +102,14 @@ const Header = () => {
         })
         .catch(error => console.error("Error al cargar threejs-toys:", error));
     }
-  }, []); // Un solo useEffect para ambos efectos
+
+    // Limpieza: Cancelar el requestAnimationFrame cuando el componente se desmonte
+    return () => {
+      if (fx && fx.frameRequest) {
+        cancelAnimationFrame(fx.frameRequest);
+      }
+    };
+  }, []);
 
   return (
     <div className="gpt3__header section__padding" ref={neonRef} id="neon">
