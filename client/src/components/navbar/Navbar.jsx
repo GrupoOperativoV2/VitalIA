@@ -63,13 +63,13 @@ const Navbar = () => {
                 <a href="#features">Enfoque</a>
               </p>
               <p>
-                <a href="#blog">Más</a>
+                <a href="#blog">Contacto</a>
               </p>
             </div>
             <div className="gpt3__navbar-sign">
-            <Link to="/login" className="white-link">Inicia sesión</Link>
+            <Link to="/login" className="white-link">Login</Link>
               <button type="button">
-                <Link to="/register">Regístrate</Link>
+                <Link to="/register">Register</Link>
               </button>
             </div>
           </div>

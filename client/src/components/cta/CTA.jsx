@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const CTA = () => (
   <div className="gpt3__cta">
     <div className="gpt3__cta-content">
-      <p>Solicita tu Acceso Anticipado para Comenzar</p>
+      <p>Solicita tu acceso para Comenzar</p>
       <h3>
         Regístrate Ahora y Comienza a Descubrir un Mundo de Posibilidades
         Infinitas.
