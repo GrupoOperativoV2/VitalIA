@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Slider from "./Login/Slider"; 
-import LoginForm from "./Login/LoginForm";
-import RegisterForm from "./Login/RegisterForm";
+import Slider from "../components/Login/Slider"; 
+import LoginForm from "../components/Login/LoginForm";
+import RegisterForm from "../components/Login/RegisterForm";
 import { useAuth } from "../context/authContext";
-import "./Login.css";
+import "./../styles/Login.css";
 
-export function LoginPage() {
+export function SesionPage() {
   const [isLoginView, setIsLoginView] = useState(true); // Controla si se muestra el formulario de inicio de sesión o de registro
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();

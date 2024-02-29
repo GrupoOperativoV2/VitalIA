@@ -11,11 +11,10 @@ import React, { useState } from "react";
 export const ThemeContext = React.createContext(null);
 
 import HomePage from "./pages/HomePage";
-import RegisterPage from "./pages/RegisterPage";
 import { TaskFormPage } from "./pages/TaskFormPage";
 
 
-import { LoginPage } from "./pages/LoginPage";
+import { SesionPage } from "./pages/SesionPage";
 
 import { TasksPage } from "./pages/TasksPage";
 import { TaskProvider } from "./context/tasksContext";
@@ -64,8 +63,8 @@ function App() {
                 <main className="container content-container mx-auto px-10 md:px-0">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/login" element={<SesionPage />} />
+                    <Route path="/register" element={<SesionPage />} />
                     <Route element={<ProtectedRoute />}>
                       {/*
                   Después de agregar los módulos faltantes, deberán ser 
