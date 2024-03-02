@@ -17,13 +17,13 @@ const Navbar = () => {
             <a href="#home">Inicio</a>
           </p>
           <p>
-            <a href="#wgpt3">¿Qué es VitalIA?</a>
+            <a href="#vitalIA">¿Qué es VitalIA?</a>
           </p>
           <p>
-            <a href="#features">Enfoque</a>
+            <a href="#info">Enfoque</a>
           </p>
           <p>
-            <a href="#blog">Contacto</a>
+            <a href="#contacto">Contacto</a>
           </p>
         </div>
       </div>
@@ -54,10 +54,10 @@ const Navbar = () => {
                 <a href="#home">Inicio</a>
               </p>
               <p>
-                <a href="#wgpt3">¿Qué es VitalIA?</a>
+                <a href="#vitalIA">¿Qué es VitalIA?</a>
               </p>
               <p>
-                <a href="#possibility">Metodología</a>
+                <a href="#info">Metodología</a>
               </p>
               <p>
                 <a href="#features">Enfoque</a>

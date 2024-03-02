@@ -9,7 +9,7 @@ const RegisterForm = () => {
         cbx_terminos: false
     });
 
-    const [showPassword, setShowPassword] = useState(false); // Estado para controlar la visibilidad de la contraseña
+    const [showPassword, setShowPassword] = useState(false); 
     const { signup } = useAuth();
 
     const handleChange = (e) => {

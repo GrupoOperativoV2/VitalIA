@@ -3,7 +3,7 @@ import gpt3Logo from '../../trace.svg';
 import './footer.css';
 
 const Footer = () => (
-  <div className="gpt3__footer section__padding">
+  <div className="gpt3__footer section__padding" id="contacto">
 
     <div className="gpt3__footer-links">
       <div className="gpt3__footer-links_logo">

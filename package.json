@@ -18,9 +18,11 @@
     "cron": "^3.1.6",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "mdb-react-ui-kit": "^7.2.0",
     "mongoose": "^7.2.2",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.10",
+    "react-bootstrap": "^2.10.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {

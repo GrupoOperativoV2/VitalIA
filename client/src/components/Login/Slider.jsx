@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import doctor from '../../assets/doc.png';
-import hospital from '../../assets/hospital.png'; // Importa la nueva imagen
+import doctor from '../../assets/medico.png';
+import hospital from '../../assets/medica.png'; // Importa la nueva imagen
 
 const Slider = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -37,9 +37,9 @@ const Slider = () => {
             <div className="slider">
                 {slides.map((slide, index) => (
                     <div className={`slide-fade ${currentIndex === index ? 'active' : ''}`} key={slide.id}>
-                       <img className="slider__image" src={slide.image} alt="" />
+                        <img className="slider__image" src={slide.image} alt="" />
                         <div className="contenido-slider">
-                            <p className="slider-texto">{slide.text}</p>
+                            <p className={`slider-texto style-${index}`}>{slide.text}</p>
                         </div>
                     </div>
                 ))}

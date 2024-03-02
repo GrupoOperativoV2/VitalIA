@@ -6,13 +6,13 @@ import RegisterForm from "../components/Login/RegisterForm";
 import { useAuth } from "../context/authContext";
 import "./../styles/Login.css";
 
+
 export function SesionPage() {
-  const [isLoginView, setIsLoginView] = useState(true); // Controla si se muestra el formulario de inicio de sesión o de registro
+  const [isLoginView, setIsLoginView] = useState(true); 
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Navegar al dashboard si el usuario ya está autenticado
     if (isAuthenticated) {
       navigate("/gestor");
     }

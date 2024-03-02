@@ -3,7 +3,7 @@ import Feature from '../../components/feature/Feature';
 import './whatGPT3.css';
 
 const WhatGPT3 = () => (
-  <div className="gpt3__whatgpt3 section__margin" id="wgpt3">
+  <div className="gpt3__whatgpt3 section__margin" id="vitalIA">
     <div className="gpt3__whatgpt3-feature">
       <Feature title="¿Qué es VitalIA?" text="Juntos, en este viaje de innovación, nos encontramos en la encrucijada de la tecnología y la compasión. Cada avance que hacemos es un paso hacia adelante, escuchando las necesidades aún no expresadas de la salud. Su visión no se ve empañada por limitaciones pasadas, pues cada solución que ofrecemos rompe las barreras de lo convencional. En la unión de mentes curiosas y corazones comprometidos, encontramos nuestro camino, abriendo puertas a un futuro donde la salud y la tecnología se encuentran en perfecta armonía." />
     </div>

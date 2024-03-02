@@ -1,5 +1,5 @@
-import { Footer, Blog, Possibility, Features, WhatGPT3, Header } from '../containers';
-import { CTA, Brand, Navbar } from '../components';
+import { Footer, Possibility, Features, WhatGPT3, Header } from '../containers';
+import { CTA, Navbar } from '../components';
 
 
 function HomePage() {

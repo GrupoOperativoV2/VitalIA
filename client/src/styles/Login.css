@@ -14,28 +14,8 @@
 /*========================================
 Estilos generales
 ==========================================*/
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body{
-    background: #f7f9fd;
-    font-family: 'Lato', sans-serif;
-    font-size: 15px;
-}
-
-a{
-    text-decoration: none;
-}
-
-ul,ol{
-    list-style: none;
-}
-
 .contenedor-login{
-    width: 100%;
+    width: 97%;
     height: 100vh;
     display: flex;
     -webkit-box-align: start;
@@ -44,10 +24,6 @@ ul,ol{
 }
 
 
-
-
-
-/* Ajustes para el contenedor del slider y elementos dentro */
 .contenedor-slider {
     width: calc(100% - 520px);
     height: 100%;
@@ -78,16 +54,14 @@ ul,ol{
     opacity: 1;
 }
 
-/* Ajustes específicos para imágenes */
 .slider__image {
-    width: 50%; /* Reducido del 50% al 20% para hacer la imagen más pequeña */
-    height: auto; /* Cambiado a auto para mantener la proporción de la imagen */
+    height: auto;
     object-fit: cover;
     display: block;
-    position: absolute; /* Posición absoluta dentro de su contenedor relativo */
+    position: absolute;
     bottom: 50px; 
     left: 50%; 
-    transform: translateX(-50%); /* Ajuste fino para centrar exactamente la imagen */
+    transform: translateX(-50%); 
 }
 
 
@@ -147,6 +121,38 @@ ul,ol{
 }
 
 
+.slider-texto {
+    text-align: center;
+    margin: 20px 0;
+    padding: 0 30px;
+}
+
+.slider-texto.style-0 {
+    color: var(--color-celeste);
+    font-size: 2.5rem; 
+    font-weight: bold;
+}
+
+/* Estilos para el segundo texto del slider */
+.slider-texto.style-1 {
+    color: var(--color-celeste);
+    font-size: 2.5rem; 
+    font-weight: bold;  
+}
+
+@media screen and (max-width: 768px) {
+    .slider-texto.style-0,
+    .slider-texto.style-1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .slider-texto.style-0,
+    .slider-texto.style-1 {
+        font-size: 2rem; 
+    }
+}
 
 
 
@@ -191,7 +197,6 @@ ul,ol{
 }
 
 .next{
-    right: 0;
     border-radius: 3px 0px 0px 3px;
 }
 

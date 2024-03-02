@@ -1,16 +1,17 @@
-/* #neon canvas {
+#neon canvas {
     display: block;
     position: fixed;
     z-index: -1;
     top: 0;
-} */
+}
 
 .container{
-    width: vh;
+    width: 100%;
     margin-left: 20px;
     display: grid;
     ;
 }
+
 .text {
     font-size: 1.5rem;
     color: #20C20E;
@@ -28,7 +29,7 @@
     justify-content: center;
     align-items: flex-start;
     flex-direction: column;
-
+    padding: 6rem;
     margin-right: 5rem;
 }
 

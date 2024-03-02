@@ -23,7 +23,7 @@ const featuresData = [
 
 
 const Features = () => (
-  <div className="gpt3__features section__padding" id="features">
+  <div className="gpt3__features section__padding" id="info">
     <div className="gpt3__features-heading">
       <h1 className="gradient__text">
         El Futuro de la Salud Comienza Hoy. Únete a la Revolución de VitalIA.
