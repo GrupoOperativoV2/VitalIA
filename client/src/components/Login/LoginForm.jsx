@@ -9,7 +9,7 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signin } = useAuth();
+  const { signin, errors: authErrors } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
@@ -37,21 +37,35 @@ const LoginForm = () => {
             <p>{errors.email.message}</p>
           </div>
         )}
-        <input type="text" placeholder="Correo electrónico" className="input-text" {...register("email", { required: "Este campo es requerido" })} autoComplete="off" />
+        <input
+          type="text"
+          placeholder="Correo electrónico"
+          className="input-text"
+          {...register("email", { required: "Este campo es requerido" })}
+          autoComplete="off"
+        />
         <div className="grupo-input">
-                <input 
-                    type={showPassword ? "text" : "password"} 
-                    placeholder="Contraseña" 
-                    className="input-text clave" 
-                    {...register("password", { required: "Este campo es requerido" })} 
-                />
-                <button 
-                    type="button" 
-                    className="icono fas fa-eye mostrarClave" 
-                    onClick={togglePasswordVisibility}
-                >
-                </button>
-            </div>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Contraseña"
+            className="input-text clave"
+            {...register("password", { required: "Este campo es requerido" })}
+          />
+          <button
+            type="button"
+            className="icono fas fa-eye mostrarClave"
+            onClick={togglePasswordVisibility}
+          ></button>
+        </div>
+
+        {authErrors.length > 0 && (
+          <div className="error-text">
+            {authErrors.map((error, index) => (
+              <p key={index}>{error}</p>
+            ))}
+          </div>
+        )}
+
         <a href="#" className="link" onClick={toggleForgotPasswordModal}>
           ¿Olvidaste tu contraseña?
         </a>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Slider from "../components/Login/Slider"; 
 import LoginForm from "../components/Login/LoginForm";
 import RegisterForm from "../components/Login/RegisterForm";
 import { useAuth } from "../context/authContext";
 import "./../styles/Login.css";
+import ai from '../assets/ai.png'; 
 
 
 export function SesionPage() {
@@ -20,12 +20,14 @@ export function SesionPage() {
 
   return (
     <div className="contenedor-login">
-      <Slider />
+      <div className="contenedor-imagen">
+        <img src={ai} alt="Contenido Visual" />
+      </div>
       <div className="contenedor-texto">
         <div className="contenedor-form">
           <h1 className="titulo">¡Bienvenido a VitalIA!</h1>
           <p className="descripcion">
-            Ingresa a tu cuenta y descubre los beneficios exclusivos y promociones especiales que VitalIA tiene para ti.
+            Ingresa a tu cuenta y descubre los beneficios especiales que VitalIA tiene para ti.
           </p>
 
           <ul className="tabs-links">
@@ -46,5 +48,7 @@ export function SesionPage() {
         </div>
       </div>
     </div>
+
+    
   );
 }

@@ -15,7 +15,7 @@
 Estilos generales
 ==========================================*/
 .contenedor-login{
-    width: 97%;
+    width: 100%;
     height: 100vh;
     display: flex;
     -webkit-box-align: start;
@@ -23,123 +23,40 @@ Estilos generales
     overflow: hidden;
 }
 
-
-.contenedor-slider {
-    width: calc(100% - 520px);
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-    max-width: auto;
-    margin: auto;
-}
-
-.slider, .slide-fade {
-    position: relative;
-    display: flex;
+.contenedor-imagen {
+    width: 100%; 
     width: 100%;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
-}
-
-.slide, .slide-fade {
-    min-width: 100%;
-    min-height: 100%;
-    display: none;
-    position: relative;
+    height: calc(100vh - 4rem); 
+    display: flex;
     justify-content: center;
-}
-
-.slide.active, .slide-fade.active {
-    display: flex;
-    opacity: 1;
-}
-
-.slider__image {
-    height: auto;
-    object-fit: cover;
-    display: block;
-    position: absolute;
-    bottom: 50px; 
-    left: 50%; 
-    transform: translateX(-50%); 
-}
-
-
-.contenido-slider {
-    display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    text-align: center; /* Asegura que el texto esté centrado */
-    position: absolute;
-    top: 60px;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto; /* Útil si necesitas ajustar el margen */
-}
-
-.contenido-slider .logo {
-    margin-bottom: 20px;
-}
-
-.contenido-slider .slider-texto {
-    color: #6a86a2;
-    font-size: 16px;
-    text-align: center;
-}
+    align-items: center; 
+  }
+  
+  .contenedor-imagen img {
+    margin: auto;
+    max-width: 100%; 
+    max-height: 105vh; 
+    object-fit: contain; 
+  }
+  
+  
+  /* Estilos para ajustar el layout para pantallas más pequeñas o responsividad */
+  @media (max-width: 768px) {
+    .contenedor-login {
+      flex-direction: column;
+    }
+    .contenedor-texto,
+    .contenedor-imagen {
+      width: 100%;
+      height: auto; /* Altura automática para dispositivos móviles */
+    }
+  }
+  
+  /* ... (añade aquí más estilos si es necesario) */
+  
 
 
-.fade, .slide-fade {
-    animation: fade 1.5s ease-in-out;
-    -webkit-animation: fade 1.5s ease-in-out;
-    transition: opacity 0.5s ease-in-out;
-    opacity: 0;
-}
-
-.prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    border: none;
-    padding: 10px;
-    z-index: 100;
-}
-
-.prev { left: 10px; }
-.next { right: 10px; }
-
-.dot {
-    cursor: pointer;
-    height: 15px;
-    width: 15px;
-    margin: 0 2px;
-    background-color: #bbb;
-    border-radius: 50%;
-    display: inline-block;
-    transition: background-color 0.6s ease;
-}
-
-
-.slider-texto {
-    text-align: center;
-    margin: 20px 0;
-    padding: 0 30px;
-}
-
-.slider-texto.style-0 {
-    color: var(--color-celeste);
-    font-size: 2.5rem; 
-    font-weight: bold;
-}
-
-/* Estilos para el segundo texto del slider */
-.slider-texto.style-1 {
-    color: var(--color-celeste);
-    font-size: 2.5rem; 
-    font-weight: bold;  
-}
-
+ 
 @media screen and (max-width: 768px) {
     .slider-texto.style-0,
     .slider-texto.style-1 {
@@ -257,6 +174,78 @@ Estilos contenedor formularios
     font-size: 15px;
     color: var(--color-texto);
 }
+
+
+/* Estilo para las etiquetas de los campos de selección */
+.input-label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--color-texto);
+    font-size: 14px;
+    font-weight: normal;
+    pointer-events: none;
+    transition: 0.3s ease all;
+}
+
+
+.formulario .fecha-nacimiento {
+    margin-bottom: 20px;
+}
+
+/* Ajustes adicionales para los select para alinear con el nuevo estilo de label */
+.input-text.input-select {
+    display: block;
+    width: 100%;
+    margin-bottom: 0; /* Eliminar el margen inferior del select para que la etiqueta esté más cerca */
+}
+
+/* Estilo para el contenedor general de fecha de nacimiento */
+.fecha-nacimiento-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+/* Estilo para cada columna de fecha de nacimiento */
+.fecha-nacimiento-column {
+    flex-basis: calc(33.333% - 10px); /* Resta 10px para el espaciado entre columnas */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilo para los labels dentro de cada columna */
+.input-label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--color-texto);
+    font-size: 14px;
+    font-weight: normal;
+    pointer-events: none;
+    transition: 0.3s ease all;
+}
+
+/* Estilo para los select dentro de cada columna */
+.input-text.input-select {
+    padding: 14px 20px;
+    border: 1px solid transparent;
+    background: var(--color-input);
+    margin-bottom: 20px;
+    border-radius: 3px;
+    width: 100%;
+    outline: 0;
+    font-size: 14px;
+    color: var(--color-texto);
+}
+
+@media (max-width: 768px) {
+    .fecha-nacimiento-column {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+
 
 /*========================================
 Estilos Tabs

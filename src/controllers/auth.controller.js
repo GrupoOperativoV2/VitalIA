@@ -3,10 +3,18 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { TOKEN_SECRET } from "../config.js";
 import { createAccessToken } from "../libs/jwt.js";
+import { registerSchema } from "../schemas/auth.schema.js";
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, birthDate } = req.body;
+
+    const parsedData = registerSchema.safeParse({ username, email, password, birthDate });
+    if (!parsedData.success) {
+      return res.status(400).json({
+        message: parsedData.error.issues.map(issue => issue.message),
+      });
+    }
 
     const userFound = await User.findOne({ email });
 
@@ -23,7 +31,7 @@ export const register = async (req, res) => {
       username,
       email,
       password: passwordHash,
-
+      birthDate,
     });
 
     // Guarda el usuario en la BD

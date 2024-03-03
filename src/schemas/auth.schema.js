@@ -18,6 +18,13 @@ export const registerSchema = z.object({
     .min(6, {
       message: "Password must be at least 6 characters",
     }),
+    birthDate: z
+    .string({
+      required_error: "Birthdate is required",
+    })
+    .regex(/^\d{4}-\d{2}-\d{2}$/, {
+      message: "Birthdate must be in YYYY-MM-DD format",
+    }),
 });
 
 export const loginSchema = z.object({

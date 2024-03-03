@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: '3',
   },
+  birthDate: { // Aquí agregas el nuevo campo para la fecha de nacimiento
+    type: Date,
+    required: false, // Puedes hacerlo opcional o requerido según tu necesidad
+  },
 }, {
   timestamps: true,
 });

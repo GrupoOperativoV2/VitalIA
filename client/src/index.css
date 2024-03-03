@@ -1,17 +1,6 @@
 @tailwind base;
 @tailwind utilities;
 
-body {
-  background: #ffff;
-  color: #000;
-}
-
-
-
-.content-container {
-  height: calc(100vh - theme("spacing.20"));
-}
-
 :root {
   --font-family: 'Manrope', sans-serif;
 
@@ -31,9 +20,6 @@ body {
   scroll-behavior: smooth;
 }
   
-body {
-  background: var(--color-bg);
-}
 
 a {
   color: unset;
@@ -53,7 +39,7 @@ a {
 }
 
 .section__margin {
-  margin: 4rem 6rem;
+  margin: 14rem 6rem;
 }
 
 .scale-up-center {

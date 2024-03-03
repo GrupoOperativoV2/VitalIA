@@ -42,13 +42,25 @@ export const AuthProvider = ({ children }) => {
 
   const signin = async (user) => {
     try {
-      const res = await loginRequest(user);
-      setUser(res.data);
-      setIsAuthenticated(true);
+        const res = await loginRequest(user);
+        if (res.status === 200) {
+            setUser(res.data);
+            setIsAuthenticated(true);
+            setErrors([]); // Limpiar errores previos
+        }
     } catch (error) {
-      console.log(error);
+        // Verifica si es un error 400 y maneja los mensajes de error específicamente
+        if (error.response && error.response.status === 400) {
+            // Asume que el backend envía mensajes de error en error.response.data.message
+            const messages = error.response.data.message || ["There was a problem with your login details"];
+            setErrors(messages);
+        } else {
+            // Manejo de otros errores no específicos
+            setErrors(["An unexpected error occurred"]);
+        }
     }
-  };
+};
+
 
   const logout = () => {
     Cookies.remove("token");

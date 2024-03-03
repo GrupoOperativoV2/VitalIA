@@ -1,9 +1,9 @@
-#neon canvas {
-    display: block;
-    position: fixed;
-    z-index: -1;
-    top: 0;
+#neon {
+    width: 100%; /* Ajusta al ancho del viewport o contenedor padre */
+    height: 100vh; /* Ajusta al alto del viewport, cambia según necesidad */
+    position: relative; /* Importante para contener correctamente el canvas */
 }
+
 
 .container{
     width: 100%;
