@@ -26,7 +26,6 @@ export function GestorPage() {
   return (
     <PatientPageContainer className={sidebarOpen ? "sidebarState active" : ""}>
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <h1>Ponganse a chambear gestor 1</h1>
       
     </PatientPageContainer>
   );

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
-import { loginRequest, registerRequest, verifyTokenRequest } from "../api/auth";
+import { loginRequest, registerRequest, verifyTokenRequest, registerDoctorRequest } from "../api/auth";
 import Cookies from "js-cookie";
 
 const AuthContext = createContext();
@@ -39,6 +39,30 @@ export const AuthProvider = ({ children }) => {
       setErrors(error.response.data.message);
     }
   };
+
+
+  const registerDoctor = async (user) => {
+    console.log("Intentando registrar al doctor con datos:", user);
+    try {
+        const res = await registerDoctorRequest(user);
+        console.log("Respuesta recibida:", res);
+        if (res.status === 200) {
+            console.log("Doctor registrado con éxito:", res.data);
+            setUser(res.data);  
+            setIsAuthenticated(true);
+        }
+    } catch (error) {
+        console.error("Error en la solicitud de registro:", error);
+        if (error.response) {
+            console.log("Datos de error:", error.response.data);
+            setErrors(error.response.data.message);
+        } else {
+            console.log("Error sin respuesta del servidor:", error.message);
+            setErrors(error.message);
+        }
+    }
+};
+
 
   const signin = async (user) => {
     try {
@@ -97,6 +121,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         signup,
+        registerDoctor,
         signin,
         logout,
         isAuthenticated,
