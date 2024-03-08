@@ -8,37 +8,45 @@ import { registerSchema, registerDoctorSchema} from "../schemas/auth.schema.js";
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password, birthDate } = req.body;
+    const { name, username, email, password, birthDate } = req.body;
 
-    const parsedData = registerSchema.safeParse({ username, email, password, birthDate });
+    const parsedData = registerSchema.safeParse({ name, username, email, password, birthDate });
     if (!parsedData.success) {
       return res.status(400).json({
         message: parsedData.error.issues.map(issue => issue.message),
       });
     }
 
-    const userFound = await User.findOne({ email });
+    const [emailFoundInUsers, usernameFound, emailFoundInDoctors] = await Promise.all([
+      User.findOne({ email }),
+      User.findOne({ username }),
+      Doctor.findOne({ email }), 
+    ]);
 
-    if (userFound)
+    let errors = [];
+
+    if (emailFoundInUsers || emailFoundInDoctors) errors.push("The email is already in use");
+    if (usernameFound) errors.push("The username is already in use");
+
+    if (errors.length > 0) {
       return res.status(400).json({
-        message: ["The email is already in use"],
+        message: errors,
       });
+    }
 
-    // Se hashea el password
+    // Continúa con el proceso de registro
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Crea un nuevo usuario
     const newUser = new User({
+      name,
       username,
       email,
       password: passwordHash,
       birthDate,
     });
 
-    // Guarda el usuario en la BD
     const userSaved = await newUser.save();
 
-    // Genera un token de acceso definiendo qué datos podrán ser visualizados en Cookies
     const token = await createAccessToken({
       id: userSaved._id,
       username: userSaved.username,
@@ -51,7 +59,7 @@ export const register = async (req, res) => {
       sameSite: "none",
     });
 
-    res.json({
+    res.status(200).json({
       id: userSaved._id,
       username: userSaved.username,
       email: userSaved.email,
@@ -115,59 +123,54 @@ export const registerDoctor = async (req, res) => {
   }
 };
 
-
-
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    let errors = [];
 
-    // Intenta encontrar el email en la colección User
     let userFound = await User.findOne({ email });
-
-    // Si no se encuentra en User, busca en la colección Doctor
     if (!userFound) {
       userFound = await Doctor.findOne({ email });
-
-      // Si tampoco se encuentra en Doctor, retorna error
-      if (!userFound)
-        return res.status(400).json({
-          message: ["The email does not exist"],
-        });
     }
 
-    // Compara la contraseña proporcionada con la almacenada
-    const isMatch = await bcrypt.compare(password, userFound.password);
-    if (!isMatch) {
+    if (!userFound) {
+      errors.push("The email does not exist");
+    }
+
+    let isMatch = false;
+    if (userFound) {
+      isMatch = await bcrypt.compare(password, userFound.password);
+      if (!isMatch) {
+        errors.push("The password is incorrect");
+      }
+    }
+
+    if (errors.length > 0) {
       return res.status(400).json({
-        message: ["The password is incorrect"],
+        message: errors,
       });
     }
 
-    // Genera el token de acceso con la información del usuario o doctor encontrado
     const token = await createAccessToken({
       id: userFound._id,
-      username: userFound.username || userFound.name, // Asume que Doctor puede no tener 'username' pero sí 'name'
+      username: userFound.username || userFound.name, 
       tipo: userFound.tipo,
     });
 
-    // Configura la cookie con el token
     res.cookie("token", token, {
       httpOnly: process.env.NODE_ENV !== "development",
       secure: true,
       sameSite: "none",
     });
 
-    // Retorna la respuesta con la información del usuario o doctor
-    res.json({
+    return res.json({
       id: userFound._id,
-      username: userFound.username || userFound.name, // Asume que Doctor puede no tener 'username' pero sí 'name'
-      email: userFound.email,
+      username: userFound.username || userFound.name, 
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
-
 
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
@@ -176,21 +179,17 @@ export const verifyToken = async (req, res) => {
   jwt.verify(token, TOKEN_SECRET, async (error, user) => {
     if (error) return res.sendStatus(401);
 
-    // Intenta encontrar el usuario por ID en la colección User
     let userFound = await User.findById(user.id);
 
-    // Si no se encuentra en User, busca en la colección Doctor
     if (!userFound) {
       userFound = await Doctor.findById(user.id);
 
-      // Si tampoco se encuentra en Doctor, retorna error
       if (!userFound) return res.sendStatus(401);
     }
 
-    // Devuelve la información del usuario o doctor encontrado
     return res.json({
       id: userFound._id,
-      username: userFound.username || userFound.name, // Asume que Doctor puede no tener 'username' pero sí 'name'
+      username: userFound.username || userFound.name, 
       email: userFound.email,
     });
   });

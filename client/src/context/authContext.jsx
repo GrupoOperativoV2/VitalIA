@@ -70,16 +70,13 @@ export const AuthProvider = ({ children }) => {
         if (res.status === 200) {
             setUser(res.data);
             setIsAuthenticated(true);
-            setErrors([]); // Limpiar errores previos
+            setErrors([]); 
         }
     } catch (error) {
-        // Verifica si es un error 400 y maneja los mensajes de error específicamente
         if (error.response && error.response.status === 400) {
-            // Asume que el backend envía mensajes de error en error.response.data.message
             const messages = error.response.data.message || ["There was a problem with your login details"];
             setErrors(messages);
         } else {
-            // Manejo de otros errores no específicos
             setErrors(["An unexpected error occurred"]);
         }
     }

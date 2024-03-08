@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 
 export function Assistant() {
   const [inputValue, setInputValue] = useState('');
-  const [imagePreview, setImagePreview] = useState(null); // Simplificado, eliminamos el estado `image` no utilizado
+  const [imagePreview, setImagePreview] = useState(null); 
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0]; // Asumimos que el usuario selecciona un archivo
+    const file = event.target.files[0]; 
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result); // Aquí establecemos la previsualización de la imagen
+        setImagePreview(reader.result);
       };
-      reader.readAsDataURL(file); // Esto lee el archivo como una URL de datos
+      reader.readAsDataURL(file); 
     }
   };
 

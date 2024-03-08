@@ -1,55 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/authContext";
-import "../../styles/popup.css";
 
 const LoginForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    setError, // Función para establecer errores manualmente
+  } = useForm({
+    mode: "onBlur",
+  });
   const { signin, errors: authErrors } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  useEffect(() => {
+    // Aquí manejamos los errores de autenticación y los mapeamos a los campos correspondientes
+    authErrors.forEach(error => {
+      if (error.includes("email does not exist")) {
+        setError("email", {
+          type: "manual",
+          message: "El correo electrónico no existe.",
+        });
+      } else if (error.includes("password is incorrect")) {
+        setError("password", {
+          type: "manual",
+          message: "La contraseña es incorrecta.",
+        });
+      }
+    });
+  }, [authErrors, setError]);
 
-  const toggleForgotPasswordModal = () => {
-    setShowForgotPasswordModal(!showForgotPasswordModal);
-  };
-
-  const closeModal = (e) => {
-    if (e.target.classList.contains("modal")) {
-      setShowForgotPasswordModal(false);
-    }
-  };
-
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const toggleForgotPasswordModal = () => setShowForgotPasswordModal(!showForgotPasswordModal);
+  const closeModal = (e) => e.target.classList.contains("modal") && setShowForgotPasswordModal(false);
   const onSubmit = (data) => signin(data);
 
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="formulario active">
-        {errors.email && (
-          <div className="error-text">
-            <p>{errors.email.message}</p>
-          </div>
-        )}
         <input
           type="text"
           placeholder="Correo electrónico"
-          className="input-text"
-          {...register("email", { required: "Este campo es requerido" })}
+          className={`input-text ${errors.email ? 'is-invalid' : ''}`}
+          {...register("email", {
+            required: "El correo electrónico es obligatorio.",
+            pattern: {
+              value: /^\S+@\S+\.\S+$/,
+              message: "El formato del correo electrónico no es válido.",
+            },
+          })}
           autoComplete="off"
         />
+        {errors.email && <div className="error-text">{errors.email.message}</div>}
+        
         <div className="grupo-input">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Contraseña"
-            className="input-text clave"
-            {...register("password", { required: "Este campo es requerido" })}
+            className={`input-text clave ${errors.password ? 'is-invalid' : ''}`}
+            {...register("password", {
+              required: "La contraseña es obligatoria.",
+            })}
           />
           <button
             type="button"
@@ -57,14 +70,7 @@ const LoginForm = () => {
             onClick={togglePasswordVisibility}
           ></button>
         </div>
-
-        {authErrors.length > 0 && (
-          <div className="error-text">
-            {authErrors.map((error, index) => (
-              <p key={index}>{error}</p>
-            ))}
-          </div>
-        )}
+        {errors.password && <div className="error-text">{errors.password.message}</div>}
 
         <a href="#" className="link" onClick={toggleForgotPasswordModal}>
           ¿Olvidaste tu contraseña?

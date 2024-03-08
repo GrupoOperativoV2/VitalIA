@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/authContext";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
+    name: "",
     username: "",
     email: "",
     password: "",
@@ -11,15 +12,62 @@ const RegisterForm = () => {
     birthMonth: "",
     birthYear: "",
   });
-
   const [showPassword, setShowPassword] = useState(false);
-  const { signup } = useAuth();
+  const [isPoliciesPopupVisible, setIsPoliciesPopupVisible] = useState(false);
+  const [errorMessages, setErrorMessages] = useState({});
+  const { signup, errors, setErrors } = useAuth();
+
+  useEffect(() => {
+    // Limpia los errores después de 5 segundos
+    const timer = setTimeout(() => {
+      setErrors([]);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [errors, setErrors]);
+
+
+  const validateForm = () => {
+    let errors = {};
+    let formIsValid = true;
+    if (!formData.name.trim()) {
+      formIsValid = false;
+      errors["name"] = "Por favor, ingresa tu nombre.";
+    } 
+    if (!formData.username.trim()) {
+      formIsValid = false;
+      errors["username"] = "Por favor, ingresa un nombre de usuario.";
+    }
+    if (!formData.email.trim()) {
+      formIsValid = false;
+      errors["email"] = "Por favor, ingresa un correo electrónico.";
+    }
+    if (!formData.password) {
+      formIsValid = false;
+      errors["password"] = "Por favor, ingresa una contraseña.";
+    }
+    if (!formData.birthDay || !formData.birthMonth || !formData.birthYear) {
+      formIsValid = false;
+      errors["birthDate"] =
+        "Por favor, selecciona tu fecha de nacimiento completa.";
+    }
+    if (!formData.cbx_terminos) {
+      formIsValid = false;
+      errors["cbx_terminos"] =
+        "Debes aceptar los términos y condiciones para continuar.";
+    }
+    setErrorMessages(errors);
+    return formIsValid;
+  };
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: type === "checkbox" ? checked : value,
+    }));
+    setErrorMessages((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
     }));
   };
 
@@ -29,29 +77,51 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const birthDate = `${formData.birthYear}-${String(formData.birthMonth).padStart(2, '0')}-${String(formData.birthDay).padStart(2, '0')}`;
-
+    if (!validateForm()) return;
+    const birthDate = `${formData.birthYear}-${String(
+      formData.birthMonth
+    ).padStart(2, "0")}-${String(formData.birthDay).padStart(2, "0")}`;
     const dataToSubmit = {
-        ...formData,
-        birthDate,
-        birthDay: undefined,
-        birthMonth: undefined,
-        birthYear: undefined    
+      ...formData,
+      birthDate,
+      birthDay: undefined,
+      birthMonth: undefined,
+      birthYear: undefined,
     };
-
-    console.log('Datos a enviar:', dataToSubmit);
-
     try {
-        await signup(dataToSubmit);
+      await signup(dataToSubmit);
     } catch (error) {
-        console.error("Error al registrar:", error);
+      console.error("Error al registrar:", error);
     }
   };
 
+  const PoliciesPopup = ({ onClose }) => (
+    <div className="popup-background">
+      <div className="popup-container">
+        <h2>Policies</h2>
+        <p>
+          Aquí puedes incluir todos los términos, condiciones y políticas de
+          privacidad de tu servicio. Asegúrate de proporcionar información clara
+          y precisa a tus usuarios.
+        </p>
+        <button onClick={onClose}>Cerrar</button>
+      </div>
+    </div>
+  );
+
   return (
     <form onSubmit={handleSubmit} className="formulario active">
-      <div className="error-text"></div>
+      <input
+    type="text"
+    placeholder="Nombre completo" // Placeholder actualizado para reflejar el nuevo campo
+    className="input-text"
+    name="name"
+    value={formData.name}
+    onChange={handleChange}
+    autoComplete="off"
+  />
+  <div className="error-text">{errorMessages["name"]}</div>
+
       <input
         type="text"
         placeholder="Nombre de usuario"
@@ -61,6 +131,8 @@ const RegisterForm = () => {
         onChange={handleChange}
         autoComplete="off"
       />
+      {errors.includes("The username is already in use") && <div className="error-text">El nombre de usuario ya está en uso.</div>}
+      <div className="error-text">{errorMessages["username"]}</div>
       <input
         type="text"
         placeholder="Correo electrónico"
@@ -70,7 +142,8 @@ const RegisterForm = () => {
         onChange={handleChange}
         autoComplete="off"
       />
-
+      {errors.includes("The email is already in use") && <div className="error-text">El correo electrónico ya está en uso.</div>}
+      <div className="error-text">{errorMessages["email"]}</div>
       <div className="fecha-nacimiento-container">
         <div className="fecha-nacimiento-column">
           <label className="input-label" htmlFor="birthDay">
@@ -140,7 +213,7 @@ const RegisterForm = () => {
           </select>
         </div>
       </div>
-
+      <div className="error-text">{errorMessages["birthDate"]}</div>
       <div className="grupo-input">
         <input
           type={showPassword ? "text" : "password"}
@@ -156,12 +229,19 @@ const RegisterForm = () => {
           onClick={togglePasswordVisibility}
         ></button>
       </div>
+      <div className="error-text">{errorMessages["password"]}</div>
       <label className="contenedor-cbx animate">
         He leído y acepto los
-        <a href="#" className="link">
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            setIsPoliciesPopupVisible(true);
+          }}
+          className="link"
+        >
           Términos, Condiciones y Política de privacidad de VitalIA
         </a>
-    
         <input
           type="checkbox"
           name="cbx_terminos"
@@ -170,9 +250,13 @@ const RegisterForm = () => {
         />
         <span className="cbx-marca"></span>
       </label>
+      <div className="error-text">{errorMessages["cbx_terminos"]}</div>
       <button className="btn" type="submit">
         Crear Cuenta
       </button>
+      {isPoliciesPopupVisible && (
+        <PoliciesPopup onClose={() => setIsPoliciesPopupVisible(false)} />
+      )}
     </form>
   );
 };
