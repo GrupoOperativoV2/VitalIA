@@ -1,28 +1,48 @@
 import React, { useState } from "react";
 import { Sidebar } from "./Sidebar.jsx";
 import styled from "styled-components";
+import { useAuth } from "../../context/authContext";
 
 const PatientPageContainer = styled.div`
-  display: grid;
-  grid-template-columns: 90px auto;
+  display: flex; 
   background: ${({ theme }) => theme.bgtotal};
   transition: all 0.3s;
-  justify-items: normal;
-  &.active {
-    grid-template-columns: 300px auto;
-  }
-  color: ${({ theme }) => theme.text};
-  height:100vh;
+  height: 100vh;
 `;
 
+const SidebarContainer = styled.div`
+  width: ${({ isOpen }) => (isOpen ? "300px" : "90px")};
+  transition: width 0.3s;
+  height: 1000px;
+`;
+
+const BodyContainer = styled.div`
+  flex-grow: 1; // Ocupa el espacio restante
+  background: ${({ theme }) =>
+    theme.bg}; // Asume que tienes un tema con color de fondo
+  transition: all 0.3s;
+  overflow: auto; // Para el desplazamiento del contenido si es necesario
+`;
+
+
+
 export function MonitoringPage() {
+  const { isAuthenticated, logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+
+  const togglePopup = () => {
+    setPopupVisible(!popupVisible);
+  };
 
   return (
-    <PatientPageContainer className={sidebarOpen ? "sidebarState active" : ""}>
+    <PatientPageContainer>
+      <SidebarContainer isOpen={sidebarOpen}>
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <h1>Ponganse a chambear 3</h1>
+      </SidebarContainer>
+      <BodyContainer>
+        <h1>Ponganse a chambear 1</h1>
+      </BodyContainer>
     </PatientPageContainer>
   );
 }
-

@@ -14,7 +14,6 @@ import { MdLogout } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../../App";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 export function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const ModSidebaropen = () => {
@@ -138,13 +137,13 @@ const secondarylinksArray = [
     to: "/null" ,
   },
 ];
-//#endregion
 
 const Container = styled.div`
   color: ${(props) => props.theme.text};
   background: ${(props) => props.theme.bg};
   position: sticky;
   padding-top: 20px;
+  height: 100vh;
   .Sidebarbutton {
     position: absolute;
     top: ${v.xxlSpacing};

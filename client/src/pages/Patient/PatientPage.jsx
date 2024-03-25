@@ -13,7 +13,7 @@ const PatientPageContainer = styled.div`
 const SidebarContainer = styled.div`
   width: ${({ isOpen }) => (isOpen ? "300px" : "90px")};
   transition: width 0.3s;
-  height: 100vh;
+  height: 1000px;
 `;
 
 const BodyContainer = styled.div`
