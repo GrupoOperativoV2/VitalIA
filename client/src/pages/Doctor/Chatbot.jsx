@@ -114,7 +114,7 @@ const Chatbot = ({ showChatbot, setShowChatbot }) => {
     <ChatbotContainer className={showChatbot ? 'open' : ''}>
       <div className="chat-header">
         <h3>Chatbot</h3>
-        <button onClick={(),() => setShowChatbot(false), start()}>❌</button>
+        <button onClick={() => { setShowChatbot(false); start(); }}>❌</button>
       </div>
       <div id="chat-messages" className="chat-content">
         {messages.map((message, index) => (

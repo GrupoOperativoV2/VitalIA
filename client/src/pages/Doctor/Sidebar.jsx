@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import logo from "../../assets/react.svg";
+import logo from "../../Godev.svg";
 import { v } from "../../styles/Variables";
 import {
   AiOutlineLeft,

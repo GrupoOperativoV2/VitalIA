@@ -8,9 +8,9 @@ const RegisterForm = () => {
     email: "",
     password: "",
     cbx_terminos: false,
-    birthDay: "",
-    birthMonth: "",
-    birthYear: "",
+    birthDay: "1", 
+    birthMonth: "1",  
+    birthYear: "2000",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isPoliciesPopupVisible, setIsPoliciesPopupVisible] = useState(false);

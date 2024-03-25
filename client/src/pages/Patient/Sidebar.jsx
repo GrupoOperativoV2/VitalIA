@@ -1,17 +1,17 @@
 import styled from "styled-components";
-import logo from "../../assets/react.svg";
+import logo from "../../Godev.svg";
 import { v } from "../../styles/Variables";
-import {
-  AiOutlineLeft,
-  AiOutlineHome,
-  AiOutlineApartment,
-  AiOutlineSetting,
-} from "react-icons/ai";
-import { MdOutlineAnalytics, MdLogout } from "react-icons/md";
+
+import { FaHome } from "react-icons/fa";
+import { CiMonitor } from "react-icons/ci";
+import { AiOutlineSetting } from "react-icons/ai";
+import { LuMessagesSquare } from "react-icons/lu";
+import { IoPerson } from "react-icons/io5";
+import {MdLogout } from "react-icons/md";
+import { AiOutlineLeft } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../../App";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 export function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const ModSidebaropen = () => {
@@ -97,29 +97,30 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
     </Container>
   );
 }
-//#region Data links
+
 const linksArray = [
   {
     label: "Home",
-    icon: <AiOutlineHome />,
+    icon: <FaHome  />,
     to: "/pacient",
   },
   {
     label: "Perfil",
-    icon: <MdOutlineAnalytics />,
+    icon: <IoPerson  />,
     to: "/profilepatient",
   },
   {
-    label: "Monitoreo",
-    icon: <AiOutlineApartment />,
+    label: "Monitoreo ",
+    icon: <CiMonitor />,
     to: "/monitoring",
   },
   {
     label: "Mensajes",
-    icon: <MdOutlineAnalytics />,
+    icon: <LuMessagesSquare  />,
     to: "/messages",
   },
 ];
+
 const secondarylinksArray = [
   {
     label: "Configuración",
@@ -132,7 +133,8 @@ const secondarylinksArray = [
     to: "/null",
   },
 ];
-//#endregion
+
+/*ESTILOS SIDEBARPATIENT */
 
 const Container = styled.div`
   color: ${(props) => props.theme.text};
@@ -186,8 +188,8 @@ const Container = styled.div`
   }
   .LinkContainer {
     margin: 8px 0;
-
     padding: 0 15%;
+
     :hover {
       background: ${(props) => props.theme.bg3};
     }

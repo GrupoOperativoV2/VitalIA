@@ -11,17 +11,9 @@ import React, { useState } from "react";
 export const ThemeContext = React.createContext(null);
 
 import HomePage from "./pages/HomePage";
-import { TaskFormPage } from "./pages/TaskFormPage";
 
 
 import { SesionPage } from "./pages/SesionPage";
-
-import { TasksPage } from "./pages/TasksPage";
-import { TaskProvider } from "./context/tasksContext";
-import { RoomFormPage } from "./pages/RoomFormPage";
-import { RoomPage } from "./pages/RoomsPage"; // Importando la página de Rooms
-import { RoomProvider } from "./context/roomsContext"; // Importando el proveedor de contexto para Rooms
-import { GestorH } from "./pages/GestorH";
 
 //Paciente
 import { PatientPage } from "./pages/Patient/PatientPage";
@@ -53,8 +45,6 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   return (
     <AuthProvider>
-      <TaskProvider>
-        <RoomProvider>
           {" "}
           {/* Agregando el RoomProvider en el árbol de componentes */}
           <BrowserRouter>
@@ -116,8 +106,6 @@ function App() {
               </ThemeProvider>
             </ThemeContext.Provider>
           </BrowserRouter>
-        </RoomProvider>
-      </TaskProvider>
     </AuthProvider>
   );
 }
