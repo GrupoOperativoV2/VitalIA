@@ -3,11 +3,14 @@ import logo from "../../Godev.svg";
 import { v } from "../../styles/Variables";
 import {
   AiOutlineLeft,
-  AiOutlineHome,
-  AiOutlineApartment,
   AiOutlineSetting,
 } from "react-icons/ai";
-import { MdOutlineAnalytics, MdLogout } from "react-icons/md";
+
+import { FaHome } from "react-icons/fa";
+import { FaUserDoctor } from "react-icons/fa6";
+import { SiGoogleassistant } from "react-icons/si";
+import { LuMessagesSquare } from "react-icons/lu";
+import { MdLogout } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../../App";
@@ -98,26 +101,27 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
     </Container>
   );
 }
-//#region Data links
+
+
 const linksArray = [
   {
     label: "Home",
-    icon: <AiOutlineHome />,
+    icon: <FaHome />,
     to: "/doctor",
   },
   {
     label: "Perfil",
-    icon: <MdOutlineAnalytics />, 
+    icon: <FaUserDoctor />, 
     to: "/profiledoctor",
   },
   {
     label: "Asistente por IA",
-    icon: <AiOutlineApartment />,
+    icon: <SiGoogleassistant />,
     to: "/assistant",
   },
   {
     label: "Mensajes",
-    icon: <MdOutlineAnalytics />,
+    icon: <LuMessagesSquare />,
     to: "/messagesdoctor",
   },
  
