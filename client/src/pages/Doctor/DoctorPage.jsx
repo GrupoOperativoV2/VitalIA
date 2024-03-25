@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
 import Chatbot from "./Chatbot.jsx";
+import { useAuth } from "../../context/authContext";  
 
 const DoctorPageContainer = styled.div`
   display: flex; // Cambiado a flex para un mejor control del layout
@@ -38,21 +39,62 @@ const PositionedButton = styled.button`
   cursor: pointer;
 `;
 
+const PopupContainer = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background-color: white;
+  border: 2px solid #000;
+  z-index: 100;
+  padding: 20px;
+  display: ${({ show }) => (show ? "block" : "none")};
+`;
+
+const Popup = ({ show, onClose, children }) => (
+  <PopupContainer show={show}>
+    {children}
+    <button onClick={onClose}>Cerrar</button>
+  </PopupContainer>
+);
+
 export function DoctorPage() {
+  const { isAuthenticated, logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
 
-  return (  
+  const togglePopup = () => {
+    setPopupVisible(!popupVisible);
+  };
+
+  return (
     <DoctorPageContainer>
       <SidebarContainer isOpen={sidebarOpen}>
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
       <BodyContainer>
         <h1>Bienvenido Doctor</h1>
+
+
+        <button onClick={togglePopup}>Mostrar popup</button>
+
+        <Popup show={popupVisible} onClose={togglePopup}>
+          <div>
+            {user ? (
+              <h1>Bienvenido, {user.username}!</h1>
+            ) : (
+              <h1>Bienvenido a nuestra aplicación!</h1>
+            )}
+          </div>
+        </Popup>
+
+
+
         <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
         {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
-        </BodyContainer>
+      </BodyContainer>
     </DoctorPageContainer>
   );
 }
