@@ -20,8 +20,9 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
     setSidebarOpen(!sidebarOpen);
   };
   const { setTheme, theme } = useContext(ThemeContext);
-  const CambiarTheme = () => {
-    setTheme((theme) => (theme === "light" ? "dark" : "light"));
+
+ const CambiarTheme = () => {
+    setTheme(prevTheme => prevTheme === "light" ? "dark" : "light");
   };
 
 
@@ -89,6 +90,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     type="checkbox"
                     className="theme-swither"
                     onClick={CambiarTheme}
+                    checked={theme === 'dark'}
                   ></input>
                   <span istheme={theme} className="slider round"></span>
                 </label>
@@ -194,6 +196,7 @@ const Container = styled.div`
    
     padding: 0 15%;
     :hover {
+     
       background: ${(props) => props.theme.bg3};
     }
     .Links {

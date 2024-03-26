@@ -60,7 +60,7 @@ const Popup = ({ show, onClose, children }) => (
 );
 
 export function DoctorPage() {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);

@@ -86,6 +86,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     type="checkbox"
                     className="theme-swither"
                     onClick={CambiarTheme}
+                    checked={theme === 'dark'}
                   ></input>
                   <span istheme={theme} className="slider round"></span>
                 </label>

@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from "react";
 import { loginRequest, registerRequest, verifyTokenRequest, registerDoctorRequest } from "../api/auth";
 import Cookies from "js-cookie";
 
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
