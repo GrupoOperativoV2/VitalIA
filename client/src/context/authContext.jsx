@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
       if (res.status === 200) {
         setUser(res.data);  
         setIsAuthenticated(true);
+        localStorage.setItem('isFirstLogin', 'true');
       }
     } catch (error) {
       console.log(error.response.data);

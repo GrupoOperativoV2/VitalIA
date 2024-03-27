@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Sidebar } from "./Sidebar.jsx";
 import styled from "styled-components";
+import { ProfilePatient } from "./containers/ProfilePatient.jsx";
 import { useAuth } from "../../context/authContext";
 
 const PatientPageContainer = styled.div`
@@ -41,7 +42,7 @@ export function ProfilePage() {
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
       <BodyContainer>
-        <h1>Ponganse a chambear 1</h1>
+        <ProfilePatient/>
       </BodyContainer>
     </PatientPageContainer>
   );

@@ -123,11 +123,11 @@ const linksArray = [
 ];
 
 const secondarylinksArray = [
-  {
-    label: "Configuración",
-    icon: <AiOutlineSetting />,
-    to: "/setting",
-  },
+  // {
+  //   label: "Configuración",
+  //   icon: <AiOutlineSetting />,
+  //   to: "/setting",
+  // },
   {
     label: "Salir",
     icon: <MdLogout />,
