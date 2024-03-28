@@ -1,4 +1,3 @@
-var llave = "";
 const clave = {
     'a': 'b', 'b': 'c', 'c': 'd', 'd': 'e', 'e': 'f',
     'f': 'g', 'g': 'h', 'h': 'i', 'i': 'j', 'j': 'k',
@@ -41,11 +40,12 @@ function descifrarMensaje(mensajeCifrado) {
 
     return resultado;
 }
-llave = descifrarMensaje("tl_9a00nz33IECyZLX8rSbVU4CmclGKkfpkMKRoPf9vlwLjGEAD");
+var llave = descifrarMensaje("tl_9a00nz33IECyZLX8rSbVU4CmclGKkfpkMKRoPf9vlwLjGEAD");
 
 var API_KEY = llave;
-export async function getCompletion(prompt, nivel) {
+export async function getCompletion(prompt) {
   try {
+    console.log(prompt);
     const response = await fetch(`https://api.openai.com/v1/chat/completions`, {
       method: "POST",
       headers: {
@@ -66,6 +66,7 @@ export async function getCompletion(prompt, nivel) {
     return data.choices[0].message.content.trim();
   } catch (error) {
     console.error('Error in getCompletion:', error);
+    
     return 'An error occurred while processing your request. Please try again later.';
   }
 }

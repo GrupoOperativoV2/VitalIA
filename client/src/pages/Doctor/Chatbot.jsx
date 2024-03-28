@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { getCompletion } from './api';
 import Cookies from "js-cookie";
@@ -19,6 +19,22 @@ const ChatbotContainer = styled.div`
     transform: translateX(0);
   }
 
+  .user-message {
+    color: blue;
+    background-color: #f0f0f0;
+    padding: 5px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .bot-message {
+    color: green;
+    background-color: #e0e0e0;
+    padding: 5px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+  }
+  
   .chat-header {
     display: flex;
     justify-content: space-between;
@@ -71,8 +87,25 @@ const ChatbotContainer = styled.div`
 `;
 
 const Chatbot = ({ showChatbot, setShowChatbot }) => {
-  const [messages, setMessages] = useState([]);
+  var num = 0;
+  useEffect(() => {
+    firstMessage();
+    console.log("holaa");
+  }, []);
 
+  const firstMessage = async () => {
+    num++;
+    const tokenString = Cookies.get("token");
+    if (tokenString && num === 1) {
+      const [headerEncoded, payloadEncoded, signature] = tokenString.split('.');
+      const payload = JSON.parse(atob(payloadEncoded));
+      const nom = payload.username;
+      const initialBotMessage = `Hola ${nom}, soy Stella, tu chatbot personal, estoy aquí para responder todas tus preguntas sobre tu salud, puedes elegir sobre qué quieras que te responda, ¿Empezamos?`;
+      sendMessage(initialBotMessage, 'bot');
+    }
+  };
+
+  const [messages, setMessages] = useState([]);
   const sendMessage = async (message, sender) => {
     const messageElement = document.createElement('div');
     messageElement.innerText = message;
@@ -84,15 +117,12 @@ const Chatbot = ({ showChatbot, setShowChatbot }) => {
 
   const processUserInput = async () => {
     const userInput = document.getElementById('user-input');
-    const userLevelSelect = document.getElementById('user-level');
-    const userLevel = userLevelSelect.value;
     const userMessage = userInput.value.trim();
 
     if (userMessage !== '') {
       sendMessage(userMessage, 'user');
-
-      const fullPrompt = getFullPrompt(userMessage, userLevel);
-
+      var datos = "Altura:1.80, Peso:60kg"; 
+      const fullPrompt =  "(Responde muy brevemente a la siguiente petición en base a los siguientes datos si se trata de cuestiones de salud, si no se trata de cuestiones de salud decir: No puedo responder eso). datos = " + datos + " petición= " + userMessage;
       const response = await getCompletion(fullPrompt);
       sendMessage(response, 'bot');
 
@@ -100,21 +130,11 @@ const Chatbot = ({ showChatbot, setShowChatbot }) => {
     }
   };
 
-  const getFullPrompt = (userMessage, userLevel) => {
-    var datos = "Altura:1.80, Peso:60kg"; 
-    if (userLevel === "personal")
-      return "(Responde muy brevemente a la siguiente petición en base a los siguientes datos si se trata de cuestiones de salud, si no se trata de cuestiones de salud decir: No puedo responder eso). datos = " + datos + " petición= " + userMessage;
-    else if (userLevel === "intermedio")
-      return "(De la siguiente petición, di algo en respuesta muy breve (menos de 35 palabras), de forma que un estudiante de secundaria lo entienda, únicamente si se trata de química, si no se trata de química decir: No puedo responder eso). petición= " + userMessage;
-    else if (userLevel === "avanzado")
-      return "(De la siguiente petición, di algo en respuesta muy breve (menos de 60 palabras), de forma que un experto lo entienda, detallando demasiado y usando el mayor número de tecnisismos posible, únicamente si se trata de química, si no se trata de química decir: No puedo responder eso). petición= " + userMessage;
-  };
-
   return (
     <ChatbotContainer className={showChatbot ? 'open' : ''}>
       <div className="chat-header">
         <h3>Chatbot</h3>
-        <button onClick={(),() => setShowChatbot(false), start()}>❌</button>
+        <button onClick={() => setShowChatbot(false)}>❌</button>
       </div>
       <div id="chat-messages" className="chat-content">
         {messages.map((message, index) => (
@@ -124,70 +144,16 @@ const Chatbot = ({ showChatbot, setShowChatbot }) => {
         ))}
       </div>
       <div className="chat-input">
-        <select id="user-level">
-          <option value="perfil">Perfil</option>
-          <option value="intermedio">Intermedio</option>
-          <option value="avanzado">Avanzado</option>
-        </select>
         <input type="text" id="user-input" placeholder="Realiza tu consulta..." onKeyPress={(event) => {
           if (event.key === "Enter") {
             processUserInput();
             event.target.value = "";
           }
         }} />
-                <button id="send-button" onClick={processUserInput}>▶️</button>
+        <button id="send-button" onClick={processUserInput}>▶️</button>
       </div>
     </ChatbotContainer>
   );
 };
-
-// Add this script part at the end of the chatbot.jsx file
-
-(async () => {
-  const chatMessages = document.getElementById('chat-messages');
-  const sendButton = document.getElementById('send-button');
-  
-  async function sendMessage(message, sender) {
-    const messageElement = document.createElement('div');
-    messageElement.innerText = message;
-    messageElement.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
-    chatMessages.appendChild(messageElement);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-  const tokenString = Cookies.get("token");
-  const [headerEncoded, payloadEncoded, signature] = tokenString.split('.');
-  const payload = JSON.parse(atob(payloadEncoded));
-  const nom = payload.username;
-
-  async function start() {
-  const initialBotMessage = "Hola " +nom +", soy Stella, tu chatbot personal, estoy aquí para responder todas tus preguntas sobre tu salud, puedes elegir sobre qué quieras que te responda, ¿Empezamos?";
-  sendMessage(initialBotMessage, 'bot');
-  }
-
-  async function processUserInput() {
-    const userInput = document.getElementById('user-input');
-    const userLevelSelect = document.getElementById('user-level');
-    const userLevel = userLevelSelect.value;
-    const userMessage = userInput.value.trim();
-
-    if (userMessage !== '') {
-      sendMessage(userMessage, 'user');
-
-      const fullPrompt = getFullPrompt(userMessage, userLevel);
-
-      const response = await getCompletion(fullPrompt);
-      sendMessage(response, 'bot');
-
-      userInput.value = '';
-    }
-  }
-
-  document.getElementById('user-input').addEventListener('keyup', function (event) {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      processUserInput();
-    }
-  });
-})();
 
 export default Chatbot;
