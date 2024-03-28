@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import styled from "styled-components";
 import { AuthProvider } from "./context/authContext";
 import { ProtectedRoute } from "./routes";
 import { PatientPages } from "./routes";
@@ -7,21 +6,13 @@ import { DoctorPages } from "./routes";
 import { ManagerPages } from "./routes";
 import { Light, Dark } from "./styles/Themes";
 import { ThemeProvider } from "styled-components";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 export const ThemeContext = React.createContext(null);
 
 import HomePage from "./pages/HomePage";
-import { TaskFormPage } from "./pages/TaskFormPage";
 
 
 import { SesionPage } from "./pages/SesionPage";
-
-import { TasksPage } from "./pages/TasksPage";
-import { TaskProvider } from "./context/tasksContext";
-import { RoomFormPage } from "./pages/RoomFormPage";
-import { RoomPage } from "./pages/RoomsPage"; // Importando la página de Rooms
-import { RoomProvider } from "./context/roomsContext"; // Importando el proveedor de contexto para Rooms
-import { GestorH } from "./pages/GestorH";
 
 //Paciente
 import { PatientPage } from "./pages/Patient/PatientPage";
@@ -47,14 +38,16 @@ import { SettingPageM } from "./pages/Manager/SettingPageM";
 
 function App() {
 
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light')
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   const themeStyle = theme === "light" ? Light : Dark;
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   return (
     <AuthProvider>
-      <TaskProvider>
-        <RoomProvider>
           {" "}
           {/* Agregando el RoomProvider en el árbol de componentes */}
           <BrowserRouter>
@@ -116,8 +109,6 @@ function App() {
               </ThemeProvider>
             </ThemeContext.Provider>
           </BrowserRouter>
-        </RoomProvider>
-      </TaskProvider>
     </AuthProvider>
   );
 }

@@ -1,40 +1,58 @@
 import React, { useState } from "react";
-import { Sidebar } from "./Sidebar.jsx";
 import styled from "styled-components";
-import { Assistant } from "../../containers/IA/Assitant.jsx";
+import { Sidebar } from "./Sidebar.jsx";
+import Chatbot from "./Chatbot.jsx";
 
-const PatientPageContainer = styled.div`
-  display: flex;
+const DoctorPageContainer = styled.div`
+  display: flex; // Cambiado a flex para un mejor control del layout
+  background: ${({ theme }) => theme.bgtotal};
+  transition: all 0.3s;
   height: 100vh;
-  .sidebar-container {
-    transition: width 0.3s;
-    width: ${({ sidebarOpen }) => (sidebarOpen ? '300px' : '90px')};
-    position: fixed; /* Fixed sidebar (stay in place on scroll) */
-    height: 100%; 
-    z-index: 1000; 
-  }
-  .content-container {
-    margin-left: ${({ sidebarOpen }) => (sidebarOpen ? '300px' : '90px')}; /* Add a margin to the left of the page content to make space for the expanded sidebar */
-    transition: margin-left 0.3s;
-    width: calc(100% - ${({ sidebarOpen }) => (sidebarOpen ? '300px' : '90px')}); /* Responsive width */
-    padding: 20px; 
-  }
+`;
+
+const SidebarContainer = styled.div`
+  width: ${({ isOpen }) => (isOpen ? "300px" : "90px")};
+  transition: width 0.3s;
+  height: 1000px;
+`;
+
+const BodyContainer = styled.div`
+  flex-grow: 1; // Ocupa el espacio restante
+  background: ${({ theme }) =>
+    theme.bg}; // Asume que tienes un tema con color de fondo
+  transition: all 0.3s;
+  overflow: auto; // Para el desplazamiento del contenido si es necesario
+`;
+
+const PositionedButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
 `;
 
 export function AssistantPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showChatbot, setShowChatbot] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
 
-
-  return (
-    <PatientPageContainer sidebarOpen={sidebarOpen}>
-      <div className="sidebar-container">
+  return (  
+    <DoctorPageContainer>
+      <SidebarContainer isOpen={sidebarOpen}>
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      </div>
-      <div className="content-container">
-        <Assistant/>
-    
-      </div>
-    </PatientPageContainer>
+      </SidebarContainer>
+      <BodyContainer>
+        <h1>Hola</h1>
+        <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
+        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
+        </BodyContainer>
+    </DoctorPageContainer>
   );
 }
-

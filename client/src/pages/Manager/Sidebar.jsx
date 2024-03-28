@@ -1,13 +1,15 @@
 import styled from "styled-components";
-import logo from "../../assets/react.svg";
+import logo from "../../Godev.svg";
 import { v } from "../../styles/Variables";
 import {
   AiOutlineLeft,
-  AiOutlineHome,
-  AiOutlineApartment,
   AiOutlineSetting,
 } from "react-icons/ai";
-import { MdOutlineAnalytics, MdLogout } from "react-icons/md";
+import { FaHome } from "react-icons/fa";
+import { MdOutlineMonitor } from "react-icons/md";
+import { BsFillFileEarmarkPersonFill } from "react-icons/bs";
+import { IoSearchSharp } from "react-icons/io5";
+import { MdLogout } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../../App";
@@ -87,6 +89,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     type="checkbox"
                     className="theme-swither"
                     onClick={CambiarTheme}
+                    checked={theme === 'dark'}
                   ></input>
                   <span istheme={theme} className="slider round"></span>
                 </label>
@@ -102,22 +105,26 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
 const linksArray = [
   {
     label: "Home",
-    icon: <AiOutlineHome />,
+    icon: <FaHome />,
     to: "/gestor",
   },
+
+
+
+
   {
     label: "Gestión",
-    icon: <MdOutlineAnalytics />, 
+    icon: <MdOutlineMonitor />, 
     to: "/management",
   },
   {
     label: "Registro de personal",
-    icon: <AiOutlineApartment />,
+    icon: <BsFillFileEarmarkPersonFill />,
     to: "/personal",
   },
   {
     label: "Busqueda de cama",
-    icon: <MdOutlineAnalytics />,
+    icon: <IoSearchSharp />,
     to: "/search",
   },
  
@@ -141,6 +148,7 @@ const Container = styled.div`
   background: ${(props) => props.theme.bg};
   position: sticky;
   padding-top: 20px;
+  height: 100vh;
   .Sidebarbutton {
     position: absolute;
     top: ${v.xxlSpacing};

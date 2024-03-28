@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/authContext";
+import "../../styles/popup.css"
 
 const LoginForm = () => {
   const {
@@ -16,7 +17,6 @@ const LoginForm = () => {
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
   useEffect(() => {
-    // Aquí manejamos los errores de autenticación y los mapeamos a los campos correspondientes
     authErrors.forEach(error => {
       if (error.includes("email does not exist")) {
         setError("email", {

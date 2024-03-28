@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from "react";
 import { loginRequest, registerRequest, verifyTokenRequest, registerDoctorRequest } from "../api/auth";
 import Cookies from "js-cookie";
 
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -33,6 +34,7 @@ export const AuthProvider = ({ children }) => {
       if (res.status === 200) {
         setUser(res.data);  
         setIsAuthenticated(true);
+        localStorage.setItem('isFirstLogin', 'true');
       }
     } catch (error) {
       console.log(error.response.data);

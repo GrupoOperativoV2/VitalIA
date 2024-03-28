@@ -1,25 +1,28 @@
 import styled from "styled-components";
-import logo from "../../assets/react.svg";
+import logo from "../../Godev.svg";
 import { v } from "../../styles/Variables";
 import {
   AiOutlineLeft,
-  AiOutlineHome,
-  AiOutlineApartment,
   AiOutlineSetting,
 } from "react-icons/ai";
-import { MdOutlineAnalytics, MdLogout } from "react-icons/md";
+
+import { FaHome } from "react-icons/fa";
+import { FaUserDoctor } from "react-icons/fa6";
+import { SiGoogleassistant } from "react-icons/si";
+import { LuMessagesSquare } from "react-icons/lu";
+import { MdLogout } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../../App";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 export function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const ModSidebaropen = () => {
     setSidebarOpen(!sidebarOpen);
   };
   const { setTheme, theme } = useContext(ThemeContext);
-  const CambiarTheme = () => {
-    setTheme((theme) => (theme === "light" ? "dark" : "light"));
+
+ const CambiarTheme = () => {
+    setTheme(prevTheme => prevTheme === "light" ? "dark" : "light");
   };
 
 
@@ -87,6 +90,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     type="checkbox"
                     className="theme-swither"
                     onClick={CambiarTheme}
+                    checked={theme === 'dark'}
                   ></input>
                   <span istheme={theme} className="slider round"></span>
                 </label>
@@ -98,26 +102,27 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
     </Container>
   );
 }
-//#region Data links
+
+
 const linksArray = [
   {
     label: "Home",
-    icon: <AiOutlineHome />,
+    icon: <FaHome />,
     to: "/doctor",
   },
   {
     label: "Perfil",
-    icon: <MdOutlineAnalytics />, 
+    icon: <FaUserDoctor />, 
     to: "/profiledoctor",
   },
   {
     label: "Asistente por IA",
-    icon: <AiOutlineApartment />,
+    icon: <SiGoogleassistant />,
     to: "/assistant",
   },
   {
     label: "Mensajes",
-    icon: <MdOutlineAnalytics />,
+    icon: <LuMessagesSquare />,
     to: "/messagesdoctor",
   },
  
@@ -134,13 +139,13 @@ const secondarylinksArray = [
     to: "/null" ,
   },
 ];
-//#endregion
 
 const Container = styled.div`
   color: ${(props) => props.theme.text};
   background: ${(props) => props.theme.bg};
   position: sticky;
   padding-top: 20px;
+  height: 100vh;
   .Sidebarbutton {
     position: absolute;
     top: ${v.xxlSpacing};
@@ -191,6 +196,7 @@ const Container = styled.div`
    
     padding: 0 15%;
     :hover {
+     
       background: ${(props) => props.theme.bg3};
     }
     .Links {
