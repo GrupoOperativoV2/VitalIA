@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
-import Chatbot from "./Chatbot.jsx";
+import Chatbot from "../Patient/Chatbot.jsx";
 import { useAuth } from "../../context/authContext";  
 
 const DoctorPageContainer = styled.div`
@@ -62,7 +62,6 @@ const Popup = ({ show, onClose, children }) => (
 export function DoctorPage() {
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showChatbot, setShowChatbot] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
 
   const togglePopup = () => {

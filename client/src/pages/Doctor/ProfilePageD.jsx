@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
-import Chatbot from "./Chatbot.jsx";
+import Chatbot from "../Patient/Chatbot.jsx";
 
 const DoctorPageContainer = styled.div`
   display: flex; // Cambiado a flex para un mejor control del layout

@@ -1,7 +1,23 @@
   import React, { useState } from "react";
 import { Sidebar } from "./Sidebar.jsx";
 import styled from "styled-components";
+
 import { useAuth } from "../../context/authContext";
+
+
+const PositionedButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+`;
 
 const PatientPageContainer = styled.div`
   display: flex; 
@@ -28,6 +44,7 @@ const BodyContainer = styled.div`
 
 export function SettingPage() {
   const { isAuthenticated, logout, user } = useAuth();
+  const [showChatbot, setShowChatbot] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
 
@@ -43,6 +60,9 @@ export function SettingPage() {
       <BodyContainer>
         <h1>Ponganse a chambear 1</h1>
       </BodyContainer>
+      
+      <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
+        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
     </PatientPageContainer>
   );
 }

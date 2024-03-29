@@ -4,7 +4,25 @@ import { Sidebar } from "./Sidebar.jsx";
 import { Dashboard } from "./containers/Dashboard.jsx";
 import { MedicalDiscoveryTab } from "./containers/MedicalDiscoveryTab.jsx";
 import { MedicalHistoryForm } from "./containers/MedicalHistoryForm.jsx";
-import { useAuth } from "../../context/authContext";
+import Chatbot from "./Chatbot.jsx";
+import { useAuth } from "../../context/authContext";  
+
+
+
+const PositionedButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+`;
+
 
 // Contendores principales
 const PatientPageContainer = styled.div`
@@ -124,6 +142,7 @@ const CloseButton = styled.button`
 export function PatientPage() {
   const { user, isAuthenticated    } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showChatbot, setShowChatbot] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
   const [historyPopupVisible, setHistoryPopupVisible] = useState(false);
 
@@ -151,6 +170,7 @@ export function PatientPage() {
       <SidebarContainer isOpen={sidebarOpen}>
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
+      
       <BodyContainer>
         {/* <button onClick={togglePopup}>Mostrar popup</button> */}
 
@@ -180,6 +200,7 @@ export function PatientPage() {
             >
               Completar Historial Médico
             </ActionButton>
+           
           </Popup>
         )}
 
@@ -203,6 +224,8 @@ export function PatientPage() {
       <ContentSidebarContainer>
         <Dashboard user={user} />
       </ContentSidebarContainer>
+      <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
+        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
     </PatientPageContainer>
   );
 }
