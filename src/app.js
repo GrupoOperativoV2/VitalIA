@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
 import taksRoutes from "./routes/tasks.routes.js";
+import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';  
 import { FRONTEND_URL } from "./config.js";
 
 
@@ -21,8 +22,10 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
+app.use("/api/medicalHistory", medicalHistoryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api", taksRoutes);
+app.use('/uploads', express.static('uploads'));
 
 if (process.env.NODE_ENV === "production") {
   const path = await import("path");
@@ -33,10 +36,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve("client", "dist", "index.html"));
   });
 }
-
-
-
-
 
 
 export default app;

@@ -7,10 +7,13 @@ const ChatbotContainer = styled.div`
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 300px;
-  height: 410px;
-  background-color: #fff;
-  border-left: 1px solid #ddd;
+  width: 320px;
+  height: 430px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
   transform: translateX(100%);
   transition: transform 0.3s ease-out;
   z-index: 100;
@@ -19,72 +22,85 @@ const ChatbotContainer = styled.div`
     transform: translateX(0);
   }
 
-  .user-message {
-    color: blue;
-    background-color: #f0f0f0;
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 5px;
-  }
-  
-  .bot-message {
-    color: green;
-    background-color: #e0e0e0;
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 5px;
-  }
-  
   .chat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #ddd;
+    padding: 15px;
+    background-color: #007bff;
+    color: white;
+  }
 
-    h3 {
-      margin: 0;
-    }
-
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.5rem;
-      color: #6c757d;
-    }
+  .close-button, .send-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 1.5rem;
   }
 
   .chat-content {
     padding: 10px;
     height: 300px;
     overflow-y: auto;
+    background-color: #fff;
   }
 
   .chat-input {
     display: flex;
     align-items: center;
     padding: 10px;
-    border-top: 1px solid #ddd;
+    background-color: #f0f0f0;
 
     input {
       flex: 1;
-      padding: 5px 10px;
-      border: none;
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
       border-radius: 5px;
     }
 
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.5rem;
-      color: #6c757d;
-      margin-left: 10px;
+    button.send-button {
+      color: #007bff;
+      font-size: 2rem;
     }
   }
+
+  .user-message {
+    background-color: #e9e9ff;
+    color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0;
+    text-align: left;
+  }
+
+  .bot-message {
+    background-color: #d9d9d9;
+    color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0;
+    text-align: left;
+  }
+
+  /* Icono personalizado con clases CSS */
+  .icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: cover;
+  }
+
+  .icon-close {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23ffffff" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>');
+  }
+
+  .icon-send {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23007bff" d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg>');
+  }
 `;
+
 
 const Chatbot = ({ showChatbot, setShowChatbot }) => {
   var num = 0;
@@ -97,60 +113,81 @@ const Chatbot = ({ showChatbot, setShowChatbot }) => {
     num++;
     const tokenString = Cookies.get("token");
     if (tokenString && num === 1) {
-      const [headerEncoded, payloadEncoded, signature] = tokenString.split('.');
+      const [headerEncoded, payloadEncoded, signature] = tokenString.split(".");
       const payload = JSON.parse(atob(payloadEncoded));
       const nom = payload.username;
       const initialBotMessage = `Hola ${nom}, soy Stella, tu chatbot personal, estoy aquí para responder todas tus preguntas sobre tu salud, puedes elegir sobre qué quieras que te responda, ¿Empezamos?`;
-      sendMessage(initialBotMessage, 'bot');
+      sendMessage(initialBotMessage, "bot");
     }
   };
 
   const [messages, setMessages] = useState([]);
   const sendMessage = async (message, sender) => {
-    const messageElement = document.createElement('div');
+    const messageElement = document.createElement("div");
     messageElement.innerText = message;
-    messageElement.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
-    const chatMessages = document.getElementById('chat-messages');
+    messageElement.classList.add(
+      sender === "user" ? "user-message" : "bot-message"
+    );
+    const chatMessages = document.getElementById("chat-messages");
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   };
 
   const processUserInput = async () => {
-    const userInput = document.getElementById('user-input');
+    const userInput = document.getElementById("user-input");
     const userMessage = userInput.value.trim();
 
-    if (userMessage !== '') {
-      sendMessage(userMessage, 'user');
-      var datos = "Altura:1.80, Peso:60kg"; 
-      const fullPrompt =  "(Responde muy brevemente a la siguiente petición en base a los siguientes datos si se trata de cuestiones de salud, si no se trata de cuestiones de salud decir: No puedo responder eso). datos = " + datos + " petición= " + userMessage;
+    if (userMessage !== "") {
+      sendMessage(userMessage, "user");
+      var datos = "Altura:1.80, Peso:60kg";
+      const fullPrompt =
+        "(Responde muy brevemente a la siguiente petición en base a los siguientes datos si se trata de cuestiones de salud, si no se trata de cuestiones de salud decir: No puedo responder eso). datos = " +
+        datos +
+        " petición= " +
+        userMessage;
       const response = await getCompletion(fullPrompt);
-      sendMessage(response, 'bot');
+      sendMessage(response, "bot");
 
-      userInput.value = '';
+      userInput.value = "";
     }
   };
 
   return (
-    <ChatbotContainer className={showChatbot ? 'open' : ''}>
+    <ChatbotContainer className={showChatbot ? "open" : ""}>
       <div className="chat-header">
         <h3>Chatbot</h3>
-        <button onClick={() => { setShowChatbot(false); start(); }}>❌</button>
+        <button className="close-button"
+          onClick={() => {
+            setShowChatbot(false);
+            start();
+          }}
+        >
+           <span className="icon icon-close"></span>
+        </button>
       </div>
       <div id="chat-messages" className="chat-content">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.type}`}>
             <p>{message.text}</p>
           </div>
-        ))}
+        ))} 
       </div>
       <div className="chat-input">
-        <input type="text" id="user-input" placeholder="Realiza tu consulta..." onKeyPress={(event) => {
-          if (event.key === "Enter") {
-            processUserInput();
-            event.target.value = "";
-          }
-        }} />
-        <button id="send-button" onClick={processUserInput}>▶️</button>
+        <input
+          type="text"
+          id="user-input"
+          placeholder="Realiza tu consulta..."
+          onKeyPress={(event) => {
+            if (event.key === "Enter") {
+              processUserInput();
+              event.target.value = "";
+            }
+          }}
+        />
+        <button className="send-button" id="send-button" onClick={processUserInput}>
+          {" "}
+          <span className="icon icon-send"></span>
+        </button>
       </div>
     </ChatbotContainer>
   );

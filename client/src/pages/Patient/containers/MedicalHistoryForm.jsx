@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Importa useEffect
 import styled from 'styled-components';
+import { useAuth } from '../../../context/authContext';
 
 // Estilos para el formulario
 const Form = styled.form`
@@ -50,14 +51,15 @@ const Button = styled.button`
   }
 `;
 
-const MedicalHistoryForm = () => {
+const MedicalHistoryForm = ({ userData }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    birthdate: '',
+    userId: userData?.id || '',  // Asegurarse de tener el userId en los datos del usuario
+    name: userData?.name || '',
+    birthdate: userData?.birthDate || '',
     gender: '',
     address: '',
     contactNumber: '',
-    email: '',
+    email: userData?.email || '',
     emergencyContactName: '',
     emergencyContactRelation: '',
     emergencyContactNumber: '',
@@ -67,24 +69,75 @@ const MedicalHistoryForm = () => {
     allergies: '',
     currentMedications: '',
     familyHistory: '',
-    lifestyle: '',
+    lifestyle: {
+      diet: '',
+      exercise: '',
+      alcohol: '',
+      smoking: ''
+    },
     vaccinations: '',
     labResults: '',
     patientPhoto: null
   });
 
+  const { addMedicalHistory, uploadPatientPhoto } = useAuth();
+
+ useEffect(() => {
+    if (userData) {
+      setFormData(prev => ({
+        ...prev,
+        userId: userData.id,
+        name: userData.name,
+        email: userData.email,
+        birthdate: userData.birthDate ? userData.birthDate.substring(0, 10) : ''
+      }));
+    }
+  }, [userData]);
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: files ? files[0] : value
-    }));
+    if (files && name === 'patientPhoto') {
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: files[0]  // Asume que solo se sube 1 archivo
+        }));
+    } else if (name in formData.lifestyle) {
+        setFormData(prevState => ({
+            ...prevState,
+            lifestyle: { ...prevState.lifestyle, [name]: value }
+        }));
+    } else {
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+};
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Extraer patientPhoto de formData y preparar los demás datos para el envío
+  const { patientPhoto, ...dataWithoutPhoto } = formData;
+  const formattedData = {
+      ...dataWithoutPhoto,
+      lifestyle: dataWithoutPhoto.lifestyle // Asumiendo que lifestyle ya es un objeto adecuado
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
+  try {
+      await addMedicalHistory(formData.userId, formattedData);
+      alert('Historial médico enviado con éxito');
+
+      // Si hay una foto para subir, hazlo después de enviar el formulario
+      if (patientPhoto) {
+          await uploadPatientPhoto(formData.userId, patientPhoto);
+      }
+  } catch (error) {
+      console.error('Error al enviar el historial médico:', error);
+      alert('Error al enviar el historial médico');
+  }
+};
+
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -175,6 +228,7 @@ const MedicalHistoryForm = () => {
       <Fieldset>
         <Legend>Foto del Paciente</Legend>
         <Input type="file" name="patientPhoto" onChange={handleChange} />
+
       </Fieldset>
 
       <Button type="submit">Enviar Historial Médico</Button>

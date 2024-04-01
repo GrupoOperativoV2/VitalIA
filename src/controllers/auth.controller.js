@@ -63,7 +63,10 @@ export const register = async (req, res) => {
       id: userSaved._id,
       username: userSaved.username,
       email: userSaved.email,
-    });
+      name: userSaved.name,
+      tipo: userSaved.tipo,
+      birthDate: userSaved.birthDate  
+  });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -166,7 +169,11 @@ export const login = async (req, res) => {
     return res.json({
       id: userFound._id,
       username: userFound.username || userFound.name, 
-    });
+      email: userFound.email,
+      name: userFound.name,
+      tipo: userFound.tipo,
+      birthDate: userFound.birthDate
+  });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -189,9 +196,13 @@ export const verifyToken = async (req, res) => {
 
     return res.json({
       id: userFound._id,
-      username: userFound.username || userFound.name, 
+      username: userFound.username || userFound.name,
       email: userFound.email,
-    });
+      name: userFound.name,
+      tipo: userFound.tipo,
+      birthDate: userFound.birthDate
+  });
+  
   });
 };
 

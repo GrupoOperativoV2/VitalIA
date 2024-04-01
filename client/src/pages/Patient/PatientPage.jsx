@@ -172,7 +172,7 @@ export function PatientPage() {
       </SidebarContainer>
       
       <BodyContainer>
-        {/* <button onClick={togglePopup}>Mostrar popup</button> */}
+        <button onClick={togglePopup}>Mostrar popup</button>
 
         <MedicalDiscoveryTab />
 
@@ -217,7 +217,7 @@ export function PatientPage() {
     padding: 30px;
   `}
         >
-          <MedicalHistoryForm />
+         <MedicalHistoryForm userData={user} />
         </Popup>
       </BodyContainer>
 

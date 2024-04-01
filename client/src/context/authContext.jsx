@@ -1,8 +1,15 @@
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
-import { loginRequest, registerRequest, verifyTokenRequest, registerDoctorRequest } from "../api/auth";
+import {
+  loginRequest,
+  registerRequest,
+  verifyTokenRequest,
+  registerDoctorRequest,
+  addMedicalHistoryRequest,
+  uploadPatientPhotoRequest,
+  getMedicalHistoryPhotoRequest
+} from "../api/auth";
 import Cookies from "js-cookie";
-
 
 const AuthContext = createContext();
 
@@ -18,7 +25,6 @@ export const AuthProvider = ({ children }) => {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);
 
- 
   useEffect(() => {
     if (errors.length > 0) {
       const timer = setTimeout(() => {
@@ -32,9 +38,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await registerRequest(user);
       if (res.status === 200) {
-        setUser(res.data);  
+        setUser(res.data);
         setIsAuthenticated(true);
-        localStorage.setItem('isFirstLogin', 'true');
+        localStorage.setItem("isFirstLogin", "true");
       }
     } catch (error) {
       console.log(error.response.data);
@@ -42,54 +48,82 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
   const registerDoctor = async (user) => {
     console.log("Intentando registrar al doctor con datos:", user);
     try {
-        const res = await registerDoctorRequest(user);
-        console.log("Respuesta recibida:", res);
-        if (res.status === 200) {
-            console.log("Doctor registrado con éxito:", res.data);
-            setUser(res.data);  
-            setIsAuthenticated(true);
-        }
+      const res = await registerDoctorRequest(user);
+      console.log("Respuesta recibida:", res);
+      if (res.status === 200) {
+        console.log("Doctor registrado con éxito:", res.data);
+        setUser(res.data);
+        setIsAuthenticated(true);
+      }
     } catch (error) {
-        console.error("Error en la solicitud de registro:", error);
-        if (error.response) {
-            console.log("Datos de error:", error.response.data);
-            setErrors(error.response.data.message);
-        } else {
-            console.log("Error sin respuesta del servidor:", error.message);
-            setErrors(error.message);
-        }
+      console.error("Error en la solicitud de registro:", error);
+      if (error.response) {
+        console.log("Datos de error:", error.response.data);
+        setErrors(error.response.data.message);
+      } else {
+        console.log("Error sin respuesta del servidor:", error.message);
+        setErrors(error.message);
+      }
     }
-};
-
+  };
 
   const signin = async (user) => {
     try {
-        const res = await loginRequest(user);
-        if (res.status === 200) {
-            setUser(res.data);
-            setIsAuthenticated(true);
-            setErrors([]); 
-        }
+      const res = await loginRequest(user);
+      if (res.status === 200) {
+        setUser(res.data);
+        setIsAuthenticated(true);
+        setErrors([]);
+      }
     } catch (error) {
-        if (error.response && error.response.status === 400) {
-            const messages = error.response.data.message || ["There was a problem with your login details"];
-            setErrors(messages);
-        } else {
-            setErrors(["An unexpected error occurred"]);
-        }
+      if (error.response && error.response.status === 400) {
+        const messages = error.response.data.message || [
+          "There was a problem with your login details",
+        ];
+        setErrors(messages);
+      } else {
+        setErrors(["An unexpected error occurred"]);
+      }
     }
-};
-
+  };
 
   const logout = () => {
     Cookies.remove("token");
     setUser(null);
     setIsAuthenticated(false);
   };
+
+  const addMedicalHistory = async (userId, medicalHistoryData) => {
+    try {
+      const response = await addMedicalHistoryRequest(
+        userId,
+        medicalHistoryData
+      );
+      console.log("Historial médico añadido:", response.data);
+      // Aquí puedes realizar más acciones como actualizar el estado o redirigir al usuario
+    } catch (error) {
+      console.error("Error al añadir el historial médico:", error);
+      throw error; // Lanzar el error para manejarlo en el formulario
+    }
+  };
+
+  const uploadPatientPhoto = async (userId, file) => {
+    try {
+      const response = await uploadPatientPhotoRequest(userId, file);
+      console.log("Foto subida con éxito:", response.data);
+    } catch (error) {
+      console.error("Error al subir la foto:", error);
+    }
+  };
+
+  // En tu archivo authContext.jsx o donde tengas tu AuthContext
+
+  const getMedicalHistoryPhoto = async (userId) => {
+    return await getMedicalHistoryPhotoRequest(userId);
+};
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -125,7 +159,10 @@ export const AuthProvider = ({ children }) => {
         logout,
         isAuthenticated,
         errors,
+        addMedicalHistory,
         loading,
+        uploadPatientPhoto,
+        getMedicalHistoryPhoto
       }}
     >
       {children}
