@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import taksRoutes from "./routes/tasks.routes.js";
 import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';  
+import appointmentRoutes from './routes/appointment.routes.js';
 import { FRONTEND_URL } from "./config.js";
 
 
@@ -25,6 +26,7 @@ app.use(cookieParser());
 app.use("/api/medicalHistory", medicalHistoryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api", taksRoutes);
+app.use("/api/appointments", appointmentRoutes);
 app.use('/uploads', express.static('uploads'));
 
 if (process.env.NODE_ENV === "production") {

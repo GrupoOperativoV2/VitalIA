@@ -33,13 +33,23 @@ export const uploadPatientPhotoRequest = async (userId, file) => {
   return axios.post(`/medicalHistory/user/${userId}/medicalHistory/photo`, formData);
 };
 
-export const getMedicalHistoryPhotoRequest = async (userId) => {
+export const getMedicalHistory = async (userId) => {
   try {
-      const response = await axios.get(`/medicalHistory/user/${userId}/medicalHistory`);
-      // Asumiendo que la foto se encuentra en la propiedad 'patientPhoto' de la respuesta
-      return response.data.patientPhoto;
+    const response = await axios.get(`/medicalHistory/user/${userId}/medicalHistory`);
+    // Asumiendo que la foto se encuentra en la propiedad 'patientPhoto' de la respuesta
+    return response.data.patientPhoto;
   } catch (error) {
-      console.error('Error al obtener la foto del historial médico:', error);
-      return null;
+    console.error('Error al obtener la foto del historial médico:', error);
+    return null;
+  }
+};
+
+
+export const getMedicalHistoryRequest = async (userId) => {
+  try {
+    const response = await axios.get(`/medicalHistory/user/${userId}/medicalHistory`);
+    return response.data; // Devuelve los datos recibidos
+  } catch (error) {
+    throw new Error(error.response.data.message || 'Error al obtener el historial médico');
   }
 };

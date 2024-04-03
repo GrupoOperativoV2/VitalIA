@@ -7,9 +7,11 @@ import {
   registerDoctorRequest,
   addMedicalHistoryRequest,
   uploadPatientPhotoRequest,
-  getMedicalHistoryPhotoRequest
+  getMedicalHistoryRequest
 } from "../api/auth";
-import Cookies from "js-cookie";
+import {AppointmentRequest,  // Importamos la función de solicitud de citas
+DoctorSearchRequest  } from "../api/appointments";
+import Cookies from "js-cookie";  
 
 const AuthContext = createContext();
 
@@ -24,6 +26,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [appointments, setAppointments] = useState([]); 
 
   useEffect(() => {
     if (errors.length > 0) {
@@ -119,11 +122,53 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // En tu archivo authContext.jsx o donde tengas tu AuthContext
 
-  const getMedicalHistoryPhoto = async (userId) => {
-    return await getMedicalHistoryPhotoRequest(userId);
+const getMedicalHistory = async (userId) => {
+  try {
+      const history = await getMedicalHistoryRequest(userId);
+      return history;
+  } catch (error) {
+      console.error('Error fetching medical history:', error);
+      throw error;
+  }
 };
+
+// Definimos el método `DoctorSearch` en tu AuthProvider
+const DoctorSearch = async () => {
+  try {
+    const response = await DoctorSearchRequest();
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    throw error;
+  }
+};
+
+// Definimos el método `Appointment` en tu AuthProvider
+const Appointment = async (appointmentData) => {
+  try {
+    const response = await AppointmentRequest(appointmentData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating appointment:', error);
+    throw error;
+  }
+};
+
+// const getUserAppointments = useCallback(async (userId) => {
+//   try {
+//     setLoading(true);
+//     const response = await getUserAppointmentsRequest(userId);
+//     setAppointments(response.data); // Actualiza el estado con las citas obtenidas
+//     setLoading(false);
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error fetching appointments:', error);
+//     setErrors(prevErrors => [...prevErrors, error.message]);
+//     setLoading(false);
+//     throw error;
+//   } 
+// }, [getUserAppointmentsRequest]);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -160,9 +205,12 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         errors,
         addMedicalHistory,
-        loading,
+        loading,  
         uploadPatientPhoto,
-        getMedicalHistoryPhoto
+        getMedicalHistory,
+        DoctorSearch,
+        Appointment,
+    
       }}
     >
       {children}

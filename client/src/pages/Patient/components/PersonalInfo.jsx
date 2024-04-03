@@ -23,7 +23,7 @@ const ProfilePicture = styled.img`
   height: 120px;
   border-radius: 50%;
   border: 5px solid white;
-  margin-top: -60px; // Para que se sobreponga a la división del encabezado
+  margin-top: -0px; // Para que se sobreponga a la división del encabezado
   background-color: white;
 `;
 
@@ -59,57 +59,64 @@ const Value = styled.div`
   font-size: 0.95rem;
 `;
 
-const PersonalInfo = ({ patientInfo }) => (
-  <ProfileCard>
-    <ProfileHeader>
-      <ProfilePicture
-        src={patientInfo.profilePictureUrl}
-        alt="Foto de Perfil"
-      />
-      <FullName>{patientInfo.fullName}</FullName>
-    </ProfileHeader>
-    <ProfileDetails>
-      <DetailField>
-        <Label>Fecha de Nacimiento</Label>
-        <Value>{patientInfo.birthDate}</Value>
-      </DetailField>
-      <Divider />
-      <DetailField>
-        <Label>Género</Label>
-        <Value>{patientInfo.gender}</Value>
-      </DetailField>
-      <Divider />
-      <DetailField>
-        <Label>Dirección</Label>
-        <Value>{patientInfo.address}</Value>
-      </DetailField>
-      <Divider />
-      <DetailField>
-        <Label>Número de Teléfono</Label>
-        <Value>{patientInfo.phone}</Value>
-      </DetailField>
-      <Divider />
-      <DetailField>
-        <Label>Correo Electrónico</Label>
-        <Value>{patientInfo.email}</Value>
-      </DetailField>
-      <Divider />
-      <DetailField>
-        <Label>Tipo de Sangre</Label>
-        <Value>{patientInfo.bloodType}</Value>
-      </DetailField>
-      <Divider />
-      <DetailField>
-        <Label>Alergias Conocidas</Label>
-        <Value>{patientInfo.allergies}</Value>
-      </DetailField>
-      <Divider />
-      <DetailField>
-        <Label>Condiciones Médicas Preexistentes</Label>
-        <Value>{patientInfo.medicalConditions}</Value>
-      </DetailField>
-    </ProfileDetails>
-  </ProfileCard>
-);
+const PersonalInfo = ({ patientInfo }) => {
+  // Construcción de la URL de la imagen dentro del componente para que se actualice correctamente
+  const imageUrl =
+    patientInfo && patientInfo.patientPhoto
+      ? `http://localhost:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
+      : "https://via.placeholder.com/100";
+
+      const birthDate = patientInfo.birthdate ? patientInfo.birthdate.split("T")[0] : "";
+
+  return (
+    <ProfileCard>
+      <ProfileHeader>
+        <ProfilePicture src={imageUrl} alt="Foto de Perfil" />
+        <FullName>{patientInfo.fullName}</FullName>
+      </ProfileHeader>
+      <ProfileDetails>
+        <DetailField>
+          <Label>Fecha de Nacimiento</Label>
+          <Value>{birthDate}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Género</Label>
+          <Value>{patientInfo.gender}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Dirección</Label>
+          <Value>{patientInfo.address}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Número de Teléfono</Label>
+          <Value>{patientInfo.contactNumber}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Correo Electrónico</Label>
+          <Value>{patientInfo.email}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Tipo de Sangre</Label>
+          <Value>{patientInfo.bloodType}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Alergias Conocidas</Label>
+          <Value>{patientInfo.allergies}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Condiciones Médicas Preexistentes</Label>
+          <Value>{patientInfo.currentMedications}</Value>
+        </DetailField>
+      </ProfileDetails>
+    </ProfileCard>
+  );
+};
 
 export { PersonalInfo };

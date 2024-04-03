@@ -29,19 +29,19 @@ export const upload = multer({ storage: storage });
 
 export const getMedicalHistory = async (req, res) => {
   try {
-      const { userId } = req.params;
-      const history = await MedicalHistory.findOne({ userId });
+    const { userId } = req.params;
 
-      if (!history) {
-          return res.status(404).json({ message: "Historial médico no encontrado" });
-      }
+    const history = await MedicalHistory.findOne({ userId });
 
+    if (history) {
       res.status(200).json(history);
+    } else {
+      res.status(404).json({ message: 'Historial médico no encontrado' });
+    }
   } catch (error) {
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Error al obtener el historial médico', error });
   }
 };
-
 
 export const uploadPatientPhoto = async (req, res) => {
   const { userId } = req.params;

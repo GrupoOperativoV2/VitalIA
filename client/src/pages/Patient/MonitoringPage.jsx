@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Sidebar } from "./Sidebar.jsx";
 import styled from "styled-components";
 import Chatbot from "./Chatbot.jsx";
@@ -43,23 +43,15 @@ const BodyContainer = styled.div`
 
 
 export function MonitoringPage() {
-  const { isAuthenticated, logout, user, getMedicalHistoryPhoto } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const [showChatbot, setShowChatbot] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState(null);
 
   const togglePopup = () => {
     setPopupVisible(!popupVisible);
   };
 
-  useEffect(() => {
-    if (user) {
-        getMedicalHistoryPhoto(user.id)
-            .then(photo => setPhotoUrl(photo))
-            .catch(error => console.error('Error al obtener la foto:', error));
-    }
-}, [user]);
 
 
   return (
@@ -68,9 +60,7 @@ export function MonitoringPage() {
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
       <BodyContainer>
-      {photoUrl && (
-      <img src={photoUrl} alt="Patient's Medical History Photo" />
-    )}
+      
       </BodyContainer>
       
       <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>

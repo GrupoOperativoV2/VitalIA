@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar.jsx";
 import styled from "styled-components";
 import { ProfilePatient } from "./containers/ProfilePatient.jsx";
@@ -28,9 +28,23 @@ const BodyContainer = styled.div`
 
 
 export function ProfilePage() {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { getMedicalHistory , user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
+
+
+  useEffect(() => {
+    if (user) {
+        getMedicalHistory(user.id)
+            .then(history => {
+                // console.log('Historial Médico:', history);
+                // Procesa los datos del historial médico como sea necesario
+            })
+            .catch(error => {
+                console.error('Error al obtener el historial médico:', error);
+            });
+    }
+}, [user, getMedicalHistory]);
 
   const togglePopup = () => {
     setPopupVisible(!popupVisible);

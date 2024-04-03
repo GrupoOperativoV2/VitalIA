@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { PersonalInfo } from '../components/PersonalInfo';
 import { MedicalHistory } from '../components/MedicalHistory';
 import { HealthGoals } from '../components/HealthGoals';
 import { InterestsHobbies } from '../components/InterestsHobbies';
 import { PersonalBlog } from '../components/PersonalBlog';
+import { useAuth } from "../../../context/authContext";
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -46,19 +47,29 @@ const NavContainer = styled.div`
 
 export function ProfilePatient() {
     const [activeTab, setActiveTab] = useState('medicalHistory');
+    const { getMedicalHistory , user } = useAuth();
+    const [patientInfo, setPatientInfo] = useState(null);
 
-    const patientInfo = {
-        fullName: 'Juan Pérez',
-        birthDate: '1990-01-01',
-        gender: 'Masculino',
-        address: '123 Calle Principal, Ciudad, País',
-        phone: '1234567890',
-        email: 'juan.perez@example.com',
-        bloodType: 'O+',
-        allergies: 'Polen, Penicilina',
-        medicalConditions: 'Diabetes Tipo 2',
-        profilePictureUrl: 'https://via.placeholder.com/100',
+    useEffect(() => {
+      if (user) {
+          getMedicalHistory(user.id)
+              .then(history => {
+                  // console.log('Historial Médico:', history);
+                  setPatientInfo(history); // Actualiza el estado con los datos obtenidos
+              })
+              .catch(error => {
+                  console.error('Error al obtener el historial médico:', error);
+              });
+      }
+    }, [user, getMedicalHistory]);
 
+    // Maneja el caso en que los datos aún no estén cargados
+    if (!patientInfo) {
+      return <div>Cargando información del paciente...</div>;
+  }
+
+    const info = {
+    
         blogPosts: [
             { title: 'Mi Viaje con la Salud', content: 'Hoy quiero compartir mi experiencia ...' },
             { title: 'Aprendiendo a Cocinar Saludable', content: 'Recientemente he empezado a explorar ...' },
@@ -135,13 +146,13 @@ export function ProfilePatient() {
         </NavContainer>
           <Content>
             <div style={{ flex: 1 }}>
-              {activeTab === 'medicalHistory' && <MedicalHistory patientInfo={patientInfo} />}
-              {activeTab === 'blog' && <PersonalBlog patientInfo={patientInfo} />}
-              {activeTab === 'healthGoals' && <HealthGoals patientInfo={patientInfo} />}
-              {activeTab === 'interestsHobbies' && <InterestsHobbies patientInfo={patientInfo} />}
+              {activeTab === 'medicalHistory' && <MedicalHistory info={info} />}
+              {activeTab === 'blog' && <PersonalBlog patientInfo={info} />}
+              {activeTab === 'healthGoals' && <HealthGoals patientInfo={info} />}
+              {activeTab === 'interestsHobbies' && <InterestsHobbies patientInfo={info} />}
             </div>
             <Sidebar>
-              <PersonalInfo patientInfo={patientInfo} />
+            <PersonalInfo patientInfo={patientInfo} />
             </Sidebar>
           </Content>
         </ProfileContainer>
