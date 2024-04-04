@@ -7,7 +7,8 @@ import {
   registerDoctorRequest,
   addMedicalHistoryRequest,
   uploadPatientPhotoRequest,
-  getMedicalHistoryRequest
+  getMedicalHistoryRequest,
+  photoUserRequest 
 } from "../api/auth";
 import {AppointmentRequest,  // Importamos la función de solicitud de citas
 DoctorSearchRequest  } from "../api/appointments";
@@ -169,6 +170,16 @@ const Appointment = async (appointmentData) => {
 //   } 
 // }, [getUserAppointmentsRequest]);
 
+const photoUser = async (userId) => {
+  try {
+    const photoPath = await photoUserRequest(userId); // Llamamos a la función para obtener la ruta de la foto del usuario
+    return photoPath;
+  } catch (error) {
+    console.error('Error fetching user photo:', error);
+    throw error;
+  }
+};
+
   useEffect(() => {
     const checkLogin = async () => {
       const cookies = Cookies.get();
@@ -209,6 +220,7 @@ const Appointment = async (appointmentData) => {
         getMedicalHistory,
         DoctorSearch,
         Appointment,
+        photoUser
     
       }}
     >

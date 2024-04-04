@@ -5,7 +5,25 @@ import Logo from "../../../Godev.svg";
 import { useAuth } from "../../../context/authContext";  
 
 export function Contacts({ contacts, changeChat }) {
-    const { user, isAuthenticated    } = useAuth();
+    const { user, isAuthenticated, photoUser } = useAuth();
+    const [userPhoto, setUserPhoto] = useState(defaultAvatar);
+
+    useEffect(() => {
+      const fetchUserPhoto = async () => {
+        try {
+          const photoPath = await photoUser(user.id); // Llamamos a la función photoUser para obtener la ruta de la foto
+          const formattedPhotoPath = `http://localhost:4000/${photoPath.replace(/\\+/g, "/")}`; // Formateamos la ruta de la foto como una URL válida
+          setUserPhoto(formattedPhotoPath); // Actualizamos el estado con la ruta de la foto formateada
+        } catch (error) {
+          console.error("Error fetching user photo:", error);
+          // Aquí puedes manejar el error según tu lógica de la aplicación
+        }
+      };
+  
+      if (isAuthenticated) {
+        fetchUserPhoto(); // Llamamos a la función al cargar el componente si el usuario está autenticado
+      }
+    }, [isAuthenticated, user.id, photoUser]);
 
   return (
     <Container>
@@ -31,12 +49,13 @@ export function Contacts({ contacts, changeChat }) {
         ))}
       </div>
       <div className="current-user">
-            <div className="avatar">
-              <img
-                src={defaultAvatar}
-                alt="avatar"
-              />
-            </div>
+      <div className="avatar">
+          {userPhoto ? (
+            <img src={userPhoto} alt="avatar" style={{ width: 50, height: 50, borderRadius: "50%" }} />
+          ) : (
+            <img src={defaultAvatar} alt="avatar" style={{ width: 50, height: 50, borderRadius: "50%" }} />
+          )}
+        </div>
             <div className="username">
               <h2>{user.username}</h2>
             </div>

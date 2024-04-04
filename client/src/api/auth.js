@@ -17,6 +17,16 @@ export const registerDoctorRequest = async (user) =>
   axios.post(`/auth/registerDoctor`, user);
 
 
+  export const photoUserRequest = async (userId) => {
+    try {
+      const response = await axios.get(`/auth/photoUser/${userId}`);
+      return response.data.photoPath; // Devuelve la ruta de la foto del usuario desde la respuesta
+    } catch (error) {
+      console.error('Error al obtener la ruta de la foto del usuario:', error);
+      throw new Error('Error al obtener la ruta de la foto del usuario');
+    }
+  };
+
   export const addMedicalHistoryRequest = async (userId, medicalHistoryData) => {
     const config = {
       headers: {
