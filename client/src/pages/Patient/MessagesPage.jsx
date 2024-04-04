@@ -3,6 +3,7 @@ import { Sidebar } from "./Sidebar.jsx";
 import styled from "styled-components";
 import Chatbot from "./Chatbot.jsx";
 import { useAuth } from "../../context/authContext";
+import { Chat } from "./containers/Chat.jsx";
 
 
 const PositionedButton = styled.button`
@@ -58,7 +59,7 @@ export function MessagesPage() {
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
       <BodyContainer>
-        <h1>Ponganse a chambear 1</h1>
+        <Chat/>
       </BodyContainer>
       
       <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>

@@ -8,6 +8,6 @@ export const DoctorSearchRequest = async () => {
   return axios.get('/appointments/doctors');
 };
 
-export const getUserAppointmentsRequest = async (userId) => {
-    return axios.get(`/appointments/appointments/user/${userId}`);
-  };
+// export const getUserAppointmentsRequest = async (userId) => {
+//     return axios.get(`/appointments/appointments/user/${userId}`);
+//   };

@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import Doctor from "../models/medico.model.js";
+import MedicalHistory from '../models/medicalHistory.model.js '; 
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { TOKEN_SECRET } from "../config.js";
@@ -213,4 +214,24 @@ export const logout = async (req, res) => {
     expires: new Date(0),
   });
   return res.sendStatus(200);
+};
+
+
+export const getMedicalHistoryPhoto = async (req, res) => {
+  const { userId } = req.params; // Suponiendo que el ID de usuario se pasa como parámetro en la URL
+
+  try {
+    const medicalHistory = await MedicalHistory.findOne({ userId });
+
+    if (!medicalHistory) {
+      return res.status(404).json({ message: 'No se encontró historial médico para este usuario.' });
+    }
+
+    const photoPath = medicalHistory.patientPhoto;
+
+    res.status(200).json({ photoPath });
+  } catch (error) {
+    console.error('Error al obtener la ruta de la foto del paciente:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  }
 };

@@ -1,43 +1,83 @@
 import express from "express";
+import { createServer } from 'http';
+import { Server as SocketIOServer } from "socket.io";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
-
 import authRoutes from "./routes/auth.routes.js";
-import taksRoutes from "./routes/tasks.routes.js";
+import taskRoutes from "./routes/tasks.routes.js";
 import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';  
 import appointmentRoutes from './routes/appointment.routes.js';
+import messageRoutes from './routes/messagesRoutes.js';
 import { FRONTEND_URL } from "./config.js";
 
-
 const app = express();
+const server = createServer(app);  // Create an HTTP server for Express and Socket.io
 
-app.use(
-  cors({
-    credentials: true,
-    origin: FRONTEND_URL,
-  })
-);
+// Middleware setup
+app.use(cors({ credentials: true, origin: FRONTEND_URL }));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
+// Static files and routes setup
+app.use('/uploads', express.static('uploads'));
+app.use("/api/messages", messageRoutes);
 app.use("/api/medicalHistory", medicalHistoryRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api", taksRoutes);
+app.use("/api/tasks", taskRoutes);  // Fixed typo in the route name
 app.use("/api/appointments", appointmentRoutes);
-app.use('/uploads', express.static('uploads'));
 
+// Production-specific setup
 if (process.env.NODE_ENV === "production") {
   const path = await import("path");
   app.use(express.static("client/dist"));
-
   app.get("*", (req, res) => {
-    console.log(path.resolve("client", "dist", "index.html") );
     res.sendFile(path.resolve("client", "dist", "index.html"));
   });
 }
 
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: FRONTEND_URL,  // Asegúrate de que esto refleje la URL de tu cliente, en desarrollo y producción
+    methods: ["GET", "POST"],  // Especifica los métodos permitidos si es necesario
+    credentials: true
+  }
+});
 
-export default app;
+global.onlineUsers = new Map();
+io.on("connection", (socket) => {
+  global.chatSocket = socket;
+
+  socket.on("add-user", (userId) => {
+    if (userId) {
+      onlineUsers.set(userId, socket.id);
+      // Enviar confirmación al cliente
+      socket.emit("user-added", { userId, status: "success" });
+    } else {
+      // Enviar una respuesta de fallo si el userId no se proporcionó o es inválido
+      socket.emit("user-added", { userId, status: "failed" });
+    }
+  });
+
+  socket.on("send-msg", (data) => {
+    const sendUserSocket = onlineUsers.get(data.to);
+    if (sendUserSocket) {
+        socket.to(sendUserSocket).emit("msg-recieve", data.message);
+    }
+});
+
+  // Manejador para cuando un cliente se desconecta
+  socket.on("disconnect", () => {
+    console.log(`Cliente desconectado: ${socket.id}`);
+    onlineUsers.forEach((value, key) => {
+      if (value === socket.id) {
+        onlineUsers.delete(key);
+        console.log(`Usuario ${key} eliminado de onlineUsers`);
+      }
+    });
+  });
+});
+
+export { app, server };

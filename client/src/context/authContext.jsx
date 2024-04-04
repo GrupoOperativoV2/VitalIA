@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [appointments, setAppointments] = useState([]); 
 
   useEffect(() => {
     if (errors.length > 0) {

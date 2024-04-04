@@ -113,6 +113,7 @@ const CenteredMessage = styled.h1`
 `;
 
 const MedicalHistoryForm = ({ userData }) => {
+  
   const [formData, setFormData] = useState({
     userId: userData?.id || "", // Asegurarse de tener el userId en los datos del usuario
     name: userData?.name || "",
