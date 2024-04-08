@@ -68,7 +68,6 @@ export const uploadPatientPhoto = async (req, res) => {
 export const addMedicalHistory = async (req, res) => {
     try {
       console.log("Datos recibidos en addMedicalHistory:", req.body); // Verificar datos del body
-      console.log("Archivos recibidos:", req.files); 
         const { userId } = req.params;
         const data = req.body;
 

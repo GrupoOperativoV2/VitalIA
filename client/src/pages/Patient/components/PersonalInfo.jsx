@@ -1,6 +1,87 @@
 import React from "react";
 import styled from "styled-components";
 
+const PersonalInfo = ({ patientInfo }) => {
+
+  const personal = patientInfo.personalInformation || {};
+  const medical = patientInfo.medicalHistory || {};
+  const familyHistory = medical.familyHistory || [];
+
+  // Construcción de la URL de la imagen
+  const imageUrl = patientInfo.patientPhoto
+    ? `http://localhost:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
+    : "https://via.placeholder.com/100";
+
+  const birthDate = personal.birthdate ? personal.birthdate.split("T")[0] : "";
+
+  // Unir enfermedades y cirugías en una cadena, si están presentes
+  const diseases = medical.diseases && medical.diseases.length > 0
+    ? medical.diseases.join(', ')
+    : "No especificado";
+
+  // Unir el historial familiar en una cadena, si está presente
+  const familyHistoryString = familyHistory.length > 0
+    ? familyHistory.join(', ')
+    : "No especificado";
+
+    return (
+      <ProfileCard>
+        <ProfileHeader>
+          <ProfilePicture src={imageUrl} alt="Foto de Perfil" />
+          <FullName>{personal.name}</FullName>
+        </ProfileHeader>
+        <ProfileDetails>
+          <DetailField>
+            <Label>Fecha de Nacimiento</Label>
+            <Value>{birthDate}</Value>
+          </DetailField>
+          <Divider />
+          <DetailField>
+            <Label>Género</Label>
+            <Value>{personal.gender}</Value>
+          </DetailField>
+          <Divider />
+          <DetailField>
+            <Label>Dirección</Label>
+            <Value>{personal.address}</Value>
+          </DetailField>
+          <Divider />
+          <DetailField>
+            <Label>Número de Teléfono</Label>
+            <Value>{personal.contactNumber}</Value>
+          </DetailField>
+          <Divider />
+          <DetailField>
+            <Label>Correo Electrónico</Label>
+            <Value>{personal.email}</Value>
+          </DetailField>
+          <Divider />
+          <DetailField>
+            <Label>Tipo de Sangre</Label>
+            <Value>{medical.bloodType}</Value>
+          </DetailField>
+          <Divider />
+          <DetailField>
+            <Label>Alergias Conocidas</Label>
+            <Value>{medical.allergies && medical.allergies.join(', ')}</Value>
+          </DetailField>
+          <DetailField>
+          <Label>Condiciones Médicas Preexistentes</Label>
+          <Value>{diseases}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Historial Familiar</Label>
+          <Value>{familyHistoryString}</Value>
+        </DetailField>
+        </ProfileDetails>
+      </ProfileCard>
+    );
+  };
+  
+export { PersonalInfo };
+
+
 // Estilos generales para la tarjeta de perfil
 const ProfileCard = styled.div`
   background-color: #fff;
@@ -58,65 +139,3 @@ const Value = styled.div`
   color: #333;
   font-size: 0.95rem;
 `;
-
-const PersonalInfo = ({ patientInfo }) => {
-  // Construcción de la URL de la imagen dentro del componente para que se actualice correctamente
-  const imageUrl =
-    patientInfo && patientInfo.patientPhoto
-      ? `http://localhost:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
-      : "https://via.placeholder.com/100";
-
-      const birthDate = patientInfo.birthdate ? patientInfo.birthdate.split("T")[0] : "";
-
-  return (
-    <ProfileCard>
-      <ProfileHeader>
-        <ProfilePicture src={imageUrl} alt="Foto de Perfil" />
-        <FullName>{patientInfo.fullName}</FullName>
-      </ProfileHeader>
-      <ProfileDetails>
-        <DetailField>
-          <Label>Fecha de Nacimiento</Label>
-          <Value>{birthDate}</Value>
-        </DetailField>
-        <Divider />
-        <DetailField>
-          <Label>Género</Label>
-          <Value>{patientInfo.gender}</Value>
-        </DetailField>
-        <Divider />
-        <DetailField>
-          <Label>Dirección</Label>
-          <Value>{patientInfo.address}</Value>
-        </DetailField>
-        <Divider />
-        <DetailField>
-          <Label>Número de Teléfono</Label>
-          <Value>{patientInfo.contactNumber}</Value>
-        </DetailField>
-        <Divider />
-        <DetailField>
-          <Label>Correo Electrónico</Label>
-          <Value>{patientInfo.email}</Value>
-        </DetailField>
-        <Divider />
-        <DetailField>
-          <Label>Tipo de Sangre</Label>
-          <Value>{patientInfo.bloodType}</Value>
-        </DetailField>
-        <Divider />
-        <DetailField>
-          <Label>Alergias Conocidas</Label>
-          <Value>{patientInfo.allergies}</Value>
-        </DetailField>
-        <Divider />
-        <DetailField>
-          <Label>Condiciones Médicas Preexistentes</Label>
-          <Value>{patientInfo.currentMedications}</Value>
-        </DetailField>
-      </ProfileDetails>
-    </ProfileCard>
-  );
-};
-
-export { PersonalInfo };

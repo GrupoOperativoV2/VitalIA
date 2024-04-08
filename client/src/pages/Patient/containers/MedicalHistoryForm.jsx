@@ -112,12 +112,19 @@ const CenteredMessage = styled.h1`
   margin-top: 20px; // Ajusta según sea necesario para tu diseño
 `;
 
-const MedicalHistoryForm = ({ userData }) => {
-  
+const MedicalHistoryForm = ({  userData, onClose }) => {
   const [formData, setFormData] = useState({
     userId: userData?.id || "", // Asegurarse de tener el userId en los datos del usuario
     name: userData?.name || "",
-    birthdate: userData?.birthDate || "",
+    birthdateDay: userData?.birthDate
+      ? new Date(userData.birthDate).getDate() + 1
+      : "",
+    birthdateMonth: userData?.birthDate
+      ? new Date(userData.birthDate).getMonth() + 1
+      : "",
+    birthdateYear: userData?.birthDate
+      ? new Date(userData.birthDate).getFullYear()
+      : "",
     gender: "",
     address: "",
     contactNumber: "",
@@ -128,19 +135,60 @@ const MedicalHistoryForm = ({ userData }) => {
     emergencyContactName: "",
     emergencyContactRelation: "",
     emergencyContactNumber: "",
-    pastDiseases: "",
-    surgeries: "",
     hospitalizations: "",
-    allergies: "",
-    currentMedications: "",
     familyHistory: "",
+    bloodType:  "",
     lifestyle: {
-      diet: "",
-      exercise: "",
-      alcohol: "",
-      smoking: "",
+      vegetarian: false,
+      glutenFree: false,
+      vegan: false,
+      keto: false,
+      paleo: false,
+      dietDescription: "",
+      exercise: "none",
+      alcohol: "none",
+      smoking: "none",
     },
-    vaccinations: "",
+    pastDiseases: {
+      diabetes: false,
+      hypertension: false,
+      obesity: false,
+      asthma: false,
+      cardiovascular: false,
+      otherDiseases: "",
+    },
+    surgeries: {
+      appendectomy: false,
+      cholecystectomy: false,
+      herniaRepair: false,
+      hipReplacement: false,
+      kneeReplacement: false,
+      otherSurgeries: "",
+    },
+    allergies: {
+      pollen: false,
+      dust: false,
+      nuts: false,
+      latex: false,
+      animalDander: false,
+      otherAllergies: "",
+    },
+    familyHistory: {
+      familyDiabetes: false,
+      familyHypertension: false,
+      familyCardiacDiseases: false,
+      familyCancer: false,
+      familyAutoimmuneDiseases: false,
+      otherFamilyDiseases: "",
+    },
+    vaccinations: {
+      influenza: false,
+      tetanus: false,
+      hepatitisB: false,
+      measles: false,
+      covid19: false,
+      otherVaccinations: "",
+    },
     labResults: "",
     patientPhoto: null,
   });
@@ -152,6 +200,8 @@ const MedicalHistoryForm = ({ userData }) => {
   const [imagePreview, setImagePreview] = useState(profile);
 
   const { addMedicalHistory, uploadPatientPhoto } = useAuth();
+
+  const [medications, setMedications] = useState([]);
 
   const validate = () => {
     let tempErrors = {};
@@ -255,7 +305,7 @@ const MedicalHistoryForm = ({ userData }) => {
     if (!formData.bloodType) {
       tempErrors.bloodType = "Por favor, selecciona el tipo de sangre";
     }
-    
+
     // Validación de número de contacto (números y caracteres especiales permitidos)
     if (
       !formData.contactNumber ||
@@ -293,87 +343,193 @@ const MedicalHistoryForm = ({ userData }) => {
     document.getElementById("patientPhotoUpload").click(); // Abre el cuadro de diálogo de archivo
   };
 
-  
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, type, files } = e.target;
+    let fieldName = name.split('_')[1]; // Obtener el nombre real del campo, si aplica
 
-    // Validación al cambiar los campos
-    let newErrors = { ...errors };
-    if (!value && name !== "patientPhoto") {
-      newErrors[name] = "Por favor, llena este campo";
-    } else {
-      delete newErrors[name];
-    }
-    setErrors(newErrors);
-
+    // Manejo de la carga de imágenes
     if (name === "patientPhoto" && files.length) {
-      const file = files[0];
-      const fileExtension = file.name.split(".").pop().toLowerCase();
-      if (["jpg", "jpeg", "png"].includes(fileExtension)) {
-        setFormData((prevState) => ({
-          ...prevState,
-          [name]: file,
-        }));
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreview(reader.result);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Solo se permiten imágenes en formato JPG o PNG.");
-      }
-    } else if (name in formData.lifestyle) {
-      setFormData((prevState) => ({
-        ...prevState,
-        lifestyle: { ...prevState.lifestyle, [name]: value },
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (validate()) {
-      // Extraer patientPhoto de formData y preparar los demás datos para el envío
-      const { patientPhoto, ...dataWithoutPhoto } = formData;
-      const formattedData = {
-        ...dataWithoutPhoto,
-        lifestyle: dataWithoutPhoto.lifestyle, // Asumiendo que lifestyle ya es un objeto adecuado
-      };
-
-      try {
-        await addMedicalHistory(formData.userId, formattedData);
-        setFormSubmitted(true); // Esto ocultará el formulario
-        toast.success("Historial médico llenado con éxito");
-
-        // Si hay una foto para subir, hazlo después de enviar el formulario
-        if (patientPhoto) {
-          await uploadPatientPhoto(formData.userId, patientPhoto);
+        const file = files[0];
+        const fileExtension = file.name.split(".").pop().toLowerCase();
+        if (["jpg", "jpeg", "png"].includes(fileExtension)) {
+            setFormData((prevState) => ({
+                ...prevState,
+                [name]: file,
+            }));
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert("Solo se permiten imágenes en formato JPG o PNG.");
         }
-      } catch (error) {
-        console.error("Error al enviar el historial médico:", error);
-        toast.error("Error al enviar el historial médico");
-      }
+    } else {
+        // Actualizar el estado formData para campos regulares y anidados
+        setFormData((prevState) => {
+            // Si el campo pertenece a una subcategoría, como 'lifestyle' o 'familyHistory'
+            if (name.includes('_')) {
+                const category = name.split('_')[0];
+                return {
+                    ...prevState,
+                    [category]: {
+                        ...prevState[category],
+                        [fieldName]: type === 'checkbox' ? e.target.checked : value,
+                    },
+                };
+            } else {
+                return {
+                    ...prevState,
+                    [name]: type === 'checkbox' ? e.target.checked : value,
+                };
+            }
+        });
+
+        // Validar el campo actual y actualizar errores si es necesario
+        let newErrors = { ...errors };
+        if (!value && type !== "checkbox" && name !== "patientPhoto") {
+            newErrors[name] = "Por favor, llena este campo";
+        } else {
+            delete newErrors[name];
+        }
+        setErrors(newErrors);
     }
+};
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const birthdate = new Date(formData.birthdateYear, formData.birthdateMonth - 1, formData.birthdateDay);
+  if (isNaN(birthdate.getTime())) {
+    toast.error("Fecha de nacimiento inválida.");
+    return;
+  }
+  
+  const selectedDiseases = Object.keys(formData.pastDiseases)
+    .filter(key => formData.pastDiseases[key])
+    .concat(formData.pastDiseases.otherDiseases.trim() ? [formData.pastDiseases.otherDiseases.trim()] : []);
+  
+  const selectedSurgeries = Object.keys(formData.surgeries)
+    .filter(key => formData.surgeries[key])
+    .concat(formData.surgeries.otherSurgeries.trim() ? [formData.surgeries.otherSurgeries.trim()] : []);
+  
+  const selectedAllergies = Object.keys(formData.allergies)
+    .filter(key => formData.allergies[key])
+    .concat(formData.allergies.otherAllergies.trim() ? [formData.allergies.otherAllergies.trim()] : []);
+
+  const selectedHospitalizations = formData.hospitalizations.trim() ||
+    (!selectedDiseases.length && !selectedSurgeries.length && !selectedAllergies.length ? "Ninguna" : [formData.hospitalizations.trim()]);
+
+    const selectedFamilyHistory = Object.keys(formData.familyHistory)
+    .filter(key => formData.familyHistory[key])
+    .concat(formData.familyHistory.otherFamilyDiseases.trim() ? [formData.familyHistory.otherFamilyDiseases.trim()] : []);
+
+  const medicalHistory = {
+    diseases: selectedDiseases.length ? selectedDiseases : ["Ninguna"],
+    surgeries: selectedSurgeries.length ? selectedSurgeries : ["Ninguna"],
+    hospitalizations: selectedHospitalizations.length ? selectedHospitalizations : ["Ninguna"],
+    allergies: selectedAllergies.length ? selectedAllergies : ["Ninguna"],
+    familyHistory: selectedFamilyHistory.length ? selectedFamilyHistory : ["Ninguna"],
+    medications: medications.map(med => ({ name: med.name, dose: med.dose })),
+    bloodType: formData.bloodType
   };
 
-  if (formSubmitted) {
-    return (
-      <div>
-        <CenteredMessage>
-          Gracias por enviar su historial médico.
-        </CenteredMessage>
-        <br></br>
-        <ToastContainer position="top-center" autoClose={5000} />
-      </div>
-    );
+  const { patientPhoto, ...rest } = formData;
+  const dataToSend = {
+    userId: rest.userId,
+    personalInformation: {
+      name: rest.name,
+      birthdate: birthdate,
+      gender: rest.gender,
+      address: rest.address,
+      contactNumber: rest.contactNumber,
+      email: rest.email
+    },
+    physicalInformation: {
+      weight: Number(rest.weight),
+      height: Number(rest.height),
+      bloodPressure: rest.bloodPressure
+    },
+    emergencyInformation: {
+      contactName: rest.emergencyContactName,
+      contactRelation: rest.emergencyContactRelation,
+      contactNumber: rest.emergencyContactNumber
+    },
+    medicalHistory,
+    lifestyle: {
+      diet: {
+        vegetarian: rest.lifestyle.vegetarian,
+        glutenFree: rest.lifestyle.glutenFree,
+        vegan: rest.lifestyle.vegan,
+        keto: rest.lifestyle.keto,
+        paleo: rest.lifestyle.paleo,
+        description: rest.lifestyle.dietDescription
+      },
+      exercise: rest.lifestyle.exercise,
+      alcoholConsumption: rest.lifestyle.alcohol,
+      smokingHabits: rest.lifestyle.smoking
+    },
+    vaccinations: {
+      influenza: rest.vaccinations.influenza,
+      tetanus: rest.vaccinations.tetanus,
+      hepatitisB: rest.vaccinations.hepatitisB,
+      measles: rest.vaccinations.measles,
+      covid19: rest.vaccinations.covid19,
+      otherVaccinations: rest.vaccinations.otherVaccinations
+    },
+    labResults: rest.labResults,
+    patientPhoto: patientPhoto ? patientPhoto.name : null // Asumiendo que se manejará la carga del archivo por separado
+  };
+
+  console.log(dataToSend)
+  try {
+    await addMedicalHistory(formData.userId, dataToSend);
+    setFormSubmitted(true);
+    toast.success("Historial médico enviado con éxito");
+
+    // Si hay una foto para subir, hazlo después de enviar el formulario
+    if (patientPhoto) {
+      await uploadPatientPhoto(formData.userId, patientPhoto);
+    }
+  } catch (error) {
+    console.error("Error al enviar el historial médico:", error);
+    toast.error("Error al enviar el historial médico");
   }
+};
+
+if (formSubmitted) {
+  return (
+    <div>
+      <CenteredMessage>
+        Gracias por enviar su historial médico.
+      </CenteredMessage>
+      <CloseButton onClick={onClose}>Cerrar</CloseButton>
+      <ToastContainer position="top-center" autoClose={5000} />
+    </div>
+  );
+}
+
+
+  const handleAddMedication = () => {
+    setMedications([...medications, { name: "", dose: "" }]);
+  };
+
+  const handleRemoveMedication = (index) => {
+    setMedications(medications.filter((_, i) => i !== index));
+  };
+
+  const handleChangeMedication = (index, field, value) => {
+    setMedications(
+      medications.map((medication, i) => {
+        if (i === index) {
+          return { ...medication, [field]: value };
+        }
+        return medication;
+      })
+    );
+  };
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -390,21 +546,46 @@ const MedicalHistoryForm = ({ userData }) => {
         {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
 
         <Label>Fecha de nacimiento</Label>
-        <Input
-          type="date"
-          name="birthdate"
-          value={formData.birthdate}
-          onChange={handleChange}
-          placeholder="AAAA-MM-DD"
-        />
-        {errors.birthdate && <ErrorMessage>{errors.birthdate}</ErrorMessage>}
 
-        <Label>Género</Label>
+        <DateSelectContainer>
+          <Select
+            name="birthdateDay"
+            value={formData.birthdateDay}
+            onChange={handleChange}
+          >
+            {Array.from({ length: 31 }, (_, i) => (
+              <option key={i + 1} value={i + 1}>
+                {i + 1}
+              </option>
+            ))}
+          </Select>
+
+          <Select
+            name="birthdateMonth"
+            value={formData.birthdateMonth}
+            onChange={handleChange}
+          >
+            {Array.from({ length: 12 }, (_, i) => (
+              <option key={i + 1} value={i + 1}>
+                {i + 1}
+              </option>
+            ))}
+          </Select>
+
+          <Input
+            type="number"
+            name="birthdateYear"
+            value={formData.birthdateYear}
+            onChange={handleChange}
+            placeholder="Año"
+          />
+        </DateSelectContainer>
+
+        <Label>Sexo</Label>
         <Select name="gender" value={formData.gender} onChange={handleChange}>
           <option value="">Seleccione...</option>
           <option value="Masculino">Masculino</option>
           <option value="Femenino">Femenino</option>
-          <option value="Otro">Otro</option>
         </Select>
         {errors.gender && <ErrorMessage>{errors.gender}</ErrorMessage>}
 
@@ -534,58 +715,211 @@ const MedicalHistoryForm = ({ userData }) => {
           <option value="O+">O+</option>
           <option value="O-">O-</option>
         </Select>
-        {errors.bloodType && <ErrorMessage>{errors.bloodType}</ErrorMessage>}
 
-        <Label>Enfermedades previas</Label>
-        <TextArea
-          name="pastDiseases"
-          value={formData.pastDiseases}
+        <Legend>Enfermedades previas</Legend>
+        <CheckboxContainer>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="pastDiseases_diabetes"
+              checked={formData.pastDiseases.diabetes}
+              onChange={handleChange}
+            />
+            Diabetes
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="pastDiseases_hypertension"
+              checked={formData.pastDiseases.hypertension}
+              onChange={handleChange}
+            />
+            Hipertensión
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="pastDiseases_obesity"
+              checked={formData.pastDiseases.obesity}
+              onChange={handleChange}
+            />
+            Obesidad
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="pastDiseases_asthma"
+              checked={formData.pastDiseases.asthma}
+              onChange={handleChange}
+            />
+            Asma
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="pastDiseases_cardiovascular"
+              checked={formData.pastDiseases.cardiovascular}
+              onChange={handleChange}
+            />
+            Enfermedades cardiovasculares
+          </label>
+        </CheckboxContainer>
+        <Label>Otras enfermedades</Label>
+        <OtherInput
+          type="text"
+          name="pastDiseases_otherDiseases"
+          value={formData.pastDiseases.otherDiseases}
           onChange={handleChange}
-          placeholder="Ej: Diabetes Tipo 2"
+          placeholder="Otras enfermedades"
         />
-        {errors.pastDiseases && (
-          <ErrorMessage>{errors.pastDiseases}</ErrorMessage>
-        )}
 
-        <Label>Cirugías</Label>
-        <TextArea
-          name="surgeries"
-          value={formData.surgeries}
+        <CheckboxContainer>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="surgeries_appendectomy"
+              checked={formData.surgeries.appendectomy}
+              onChange={handleChange}
+            />
+            Apendicectomía
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="surgeries_cholecystectomy"
+              checked={formData.surgeries.cholecystectomy}
+              onChange={handleChange}
+            />
+            Colecistectomía
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="surgeries_herniaRepair"
+              checked={formData.surgeries.herniaRepair}
+              onChange={handleChange}
+            />
+            Reparación de hernia
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="surgeries_hipReplacement"
+              checked={formData.surgeries.hipReplacement}
+              onChange={handleChange}
+            />
+            Reemplazo de cadera
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="surgeries_kneeReplacement"
+              checked={formData.surgeries.kneeReplacement}
+              onChange={handleChange}
+            />
+            Reemplazo de rodilla
+          </label>
+        </CheckboxContainer>
+        <Label>Otras cirugías</Label>
+        <OtherInput
+          type="text"
+          name="surgeries_otherSurgeries"
+          value={formData.surgeries.otherSurgeries}
           onChange={handleChange}
-          placeholder="Ej: Apendicectomía en 2010"
+          placeholder="Otras cirugías"
         />
-        {errors.surgeries && <ErrorMessage>{errors.surgeries}</ErrorMessage>}
+
+        <Legend>Alergias</Legend>
+        <CheckboxContainer>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="allergies_pollen"
+              checked={formData.allergies.pollen}
+              onChange={handleChange}
+            />
+            Polen
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="allergies_dust"
+              checked={formData.allergies.dust}
+              onChange={handleChange}
+            />
+            Polvo
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="allergies_nuts"
+              checked={formData.allergies.nuts}
+              onChange={handleChange}
+            />
+            Frutos secos
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="allergies_latex"
+              checked={formData.allergies.latex}
+              onChange={handleChange}
+            />
+            Látex
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="allergies_animalDander"
+              checked={formData.allergies.animalDander}
+              onChange={handleChange}
+            />
+            Caspa de animales
+          </label>
+        </CheckboxContainer>
+
+        <Label>Otras alergias</Label>
+
+        <OtherInput
+          type="text"
+          name="allergies_otherAllergies"
+          value={formData.allergies.otherAllergies}
+          onChange={handleChange}
+          placeholder="Otras cirugías"
+        />
 
         <Label>Hospitalizaciones</Label>
-        <TextArea
-          name="hospitalizations"
-          value={formData.hospitalizations}
-          onChange={handleChange}
-          placeholder="Ej: Hospitalización por neumonía en 2015"
-        />
-        {errors.hospitalizations && (
-          <ErrorMessage>{errors.hospitalizations}</ErrorMessage>
-        )}
+        <Input name="hospitalizations"  onChange={handleChange} />
 
-        <Label>Alergias</Label>
-        <TextArea
-          name="allergies"
-          value={formData.allergies}
-          onChange={handleChange}
-          placeholder="Ej: Alergia al polen"
-        />
-        {errors.allergies && <ErrorMessage>{errors.allergies}</ErrorMessage>}
-
-        <Label>Medicamentos actuales</Label>
-        <TextArea
-          name="currentMedications"
-          value={formData.currentMedications}
-          onChange={handleChange}
-          placeholder="Ej: Metformina 500 mg diarios"
-        />
-        {errors.currentMedications && (
-          <ErrorMessage>{errors.currentMedications}</ErrorMessage>
-        )}
+        <Legend>Medicamentos actuales</Legend>
+        {medications.map((medication, index) => (
+          <MedicationContainer key={index}>
+            <MedicationInput
+              type="text"
+              name={`medicationName-${index}`}
+              value={medication.name}
+              onChange={(e) =>
+                handleChangeMedication(index, "name", e.target.value)
+              }
+              placeholder="Nombre del medicamento"
+            />
+            <MedicationInput
+              type="text"
+              name={`medicationDose-${index}`}
+              value={medication.dose}
+              onChange={(e) =>
+                handleChangeMedication(index, "dose", e.target.value)
+              }
+              placeholder="Dosis"
+            />
+            <button type="button" onClick={() => handleRemoveMedication(index)}>
+              Eliminar
+            </button>
+          </MedicationContainer>
+        ))}
+        <button type="button" onClick={handleAddMedication}>
+          Agregar medicamento
+        </button>
       </Fieldset>
 
       <Fieldset>
@@ -593,84 +927,229 @@ const MedicalHistoryForm = ({ userData }) => {
         <Label>
           Enfermedades hereditarias o condiciones de salud en la familia
         </Label>
-        <TextArea
-          name="familyHistory"
-          value={formData.familyHistory}
+        <CheckboxContainer>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="familyHistory_familyDiabetes"
+              checked={formData.familyHistory.familyDiabetes}
+              onChange={handleChange}
+            />
+            Diabetes
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="familyHistory_familyHypertension"
+              checked={formData.familyHistory.familyHypertension}
+              onChange={handleChange}
+            />
+            Hipertensión
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="familyHistory_familyCardiacDiseases"
+              checked={formData.familyHistory.familyCardiacDiseases}
+              onChange={handleChange}
+            />
+            Enfermedades cardíacas
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="familyHistory_familyCancer"
+              checked={formData.familyHistory.familyCancer}
+              onChange={handleChange}
+            />
+            Cáncer
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="familyHistory_familyAutoimmuneDiseases"
+              checked={formData.familyHistory.familyAutoimmuneDiseases}
+              onChange={handleChange}
+            />
+            Enfermedades autoinmunes
+          </label>
+        </CheckboxContainer>
+        <Label>Otra</Label>
+        <OtherInput
+          type="text"
+          name="familyHistory_otherFamilyDiseases"
+          value={formData.familyHistory.otherFamilyDiseases}
           onChange={handleChange}
-          placeholder="Ej: Abuelo con enfermedad cardíaca"
+          placeholder="Otra"
         />
-        {errors.familyHistory && (
-          <ErrorMessage>{errors.familyHistory}</ErrorMessage>
-        )}
       </Fieldset>
 
       <Fieldset>
         <Legend>Estilo de Vida</Legend>
+
         <Label>Hábitos de alimentación</Label>
-        <Input
+        <CheckboxContainer>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="lifestyle_vegetarian"
+              checked={formData.lifestyle.vegetarian}
+              onChange={handleChange}
+            />
+            Vegetariana
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="lifestyle_glutenFree"
+              checked={formData.lifestyle.glutenFree}
+              onChange={handleChange}
+            />
+            Sin gluten
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="lifestyle_vegan"
+              checked={formData.lifestyle.vegan}
+              onChange={handleChange}
+            />
+            Vegana
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="lifestyle_keto"
+              checked={formData.lifestyle.keto}
+              onChange={handleChange}
+            />
+            Keto
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="lifestyle_paleo"
+              checked={formData.lifestyle.paleo}
+              onChange={handleChange}
+            />
+            Paleo
+          </label>
+        </CheckboxContainer>
+
+        <Label>Descripción de otros hábitos alimenticios</Label>
+        <OtherInput
           type="text"
-          name="diet"
-          value={formData.diet}
+          name="lifestyle_dietDescription"
+          value={formData.lifestyle.dietDescription}
           onChange={handleChange}
-          placeholder="Ej: Vegetariana, sin gluten"
+          placeholder="Describa otros hábitos alimenticios"
         />
-        {errors.diet && <ErrorMessage>{errors.diet}</ErrorMessage>}
 
         <Label>Ejercicio</Label>
-        <Input
-          type="text"
-          name="exercise"
-          value={formData.exercise}
+        <Select
+          name="lifestyle_exercise"
+          value={formData.lifestyle.exercise}
           onChange={handleChange}
-          placeholder="Ej: Correr 30 min diarios"
-        />
-        {errors.exercise && <ErrorMessage>{errors.exercise}</ErrorMessage>}
+        >
+          <option value="none">Ninguno</option>
+          <option value="occasionally">Ocasionalmente</option>
+          <option value="regularly">Regularmente</option>
+          <option value="frequently">Frecuentemente</option>
+        </Select>
 
         <Label>Consumo de alcohol</Label>
-        <Input
-          type="text"
-          name="alcohol"
-          value={formData.alcohol}
+        <Select
+          name="lifestyle_alcohol"
+          value={formData.lifestyle.alcohol}
           onChange={handleChange}
-          placeholder="Ej: Ocasionalmente, fines de semana"
-        />
-        {errors.alcohol && <ErrorMessage>{errors.alcohol}</ErrorMessage>}
+        >
+          <option value="none">Ninguno</option>
+          <option value="occasionally">Ocasionalmente</option>
+          <option value="regularly">Regularmente</option>
+          <option value="frequently">Frecuentemente</option>
+        </Select>
 
         <Label>Tabaquismo</Label>
-        <Input
-          type="text"
-          name="smoking"
-          value={formData.smoking}
+        <Select
+          name="lifestyle_smoking"
+          value={formData.lifestyle.smoking}
           onChange={handleChange}
-          placeholder="Ej: No fumador"
-        />
-        {errors.smoking && <ErrorMessage>{errors.smoking}</ErrorMessage>}
+        >
+          <option value="none">Ninguno</option>
+          <option value="occasionally">Ocasionalmente</option>
+          <option value="regularly">Regularmente</option>
+          <option value="frequently">Frecuentemente</option>
+        </Select>
       </Fieldset>
 
       <Fieldset>
         <Legend>Vacunas</Legend>
         <Label>Registro de vacunas recibidas</Label>
-        <TextArea
-          name="vaccinations"
-          value={formData.vaccinations}
+        <CheckboxContainer>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="vaccinations_influenza"
+              checked={formData.vaccinations.influenza}
+              onChange={handleChange}
+            />
+            Influenza
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="vaccinations_tetanus"
+              checked={formData.vaccinations.tetanus}
+              onChange={handleChange}
+            />
+            Tétanos
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="vaccinations_hepatitisB"
+              checked={formData.vaccinations.hepatitisB}
+              onChange={handleChange}
+            />
+            Hepatitis B
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="vaccinations_measles"
+              checked={formData.vaccinations.measles}
+              onChange={handleChange}
+            />
+            Sarampión
+          </label>
+          <label>
+            <CheckboxInput
+              type="checkbox"
+              name="vaccinations_covid19"
+              checked={formData.vaccinations.covid19}
+              onChange={handleChange}
+            />
+            COVID-19
+          </label>
+        </CheckboxContainer>
+        <Label>Otras vacunas</Label>
+        <OtherInput
+          type="text"
+          name="vaccinations_otherVaccinations"
+          value={formData.vaccinations.otherVaccinations}
           onChange={handleChange}
-          placeholder="Ej: Vacuna contra la gripe anual"
+          placeholder="Otras vacunas recibidas"
         />
-        {errors.vaccinations && (
-          <ErrorMessage>{errors.vaccinations}</ErrorMessage>
-        )}
       </Fieldset>
 
       <Fieldset>
         <Legend>Exámenes de Laboratorio</Legend>
         <Label>Resultados de exámenes de laboratorio recientes</Label>
-        <TextArea
+        <Input
           name="labResults"
-          value={formData.labResults}
-          onChange={handleChange}
           placeholder="Ej: Resultados normales, sin anomalías"
+          onChange={handleChange}
         />
-        {errors.labResults && <ErrorMessage>{errors.labResults}</ErrorMessage>}
       </Fieldset>
 
       <Fieldset>
@@ -699,3 +1178,65 @@ const MedicalHistoryForm = ({ userData }) => {
 };
 
 export { MedicalHistoryForm };
+
+const DateSelectContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+const CheckboxContainer = styled.div`
+  margin-bottom: 10px;
+  > label {
+    display: block;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+`;
+
+const CheckboxInput = styled.input`
+  margin-right: 5px;
+`;
+
+const OtherInput = styled(Input)`
+  margin-top: 5px;
+`;
+
+const MedicationContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  & > * {
+    margin-right: 10px;
+  }
+
+  & > button {
+    padding: 5px 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+      background-color: #e2e2e2;
+    }
+  }
+`;
+
+const MedicationInput = styled(Input)`
+  flex: 1;
+`;
+
+const CloseButton = styled.button`
+  display: block;
+  margin: auto;
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
