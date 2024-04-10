@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import Doctor from "../models/medico.model.js";
+import Manager from "../models/manager.model.js";
 import MedicalHistory from '../models/medicalHistory.model.js '; 
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -136,6 +137,9 @@ export const login = async (req, res) => {
     if (!userFound) {
       userFound = await Doctor.findOne({ email });
     }
+    if (!userFound) {
+      userFound = await Manager.findOne({ email });
+    }
 
     if (!userFound) {
       errors.push("The email does not exist");
@@ -174,11 +178,12 @@ export const login = async (req, res) => {
       name: userFound.name,
       tipo: userFound.tipo,
       birthDate: userFound.birthDate
-  });
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
+
 
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
@@ -188,12 +193,14 @@ export const verifyToken = async (req, res) => {
     if (error) return res.sendStatus(401);
 
     let userFound = await User.findById(user.id);
-
     if (!userFound) {
       userFound = await Doctor.findById(user.id);
-
-      if (!userFound) return res.sendStatus(401);
     }
+    if (!userFound) {
+      userFound = await Manager.findById(user.id);
+    }
+
+    if (!userFound) return res.sendStatus(401);
 
     return res.json({
       id: userFound._id,
@@ -202,10 +209,10 @@ export const verifyToken = async (req, res) => {
       name: userFound.name,
       tipo: userFound.tipo,
       birthDate: userFound.birthDate
-  });
-  
+    });
   });
 };
+
 
 export const logout = async (req, res) => {
   res.cookie("token", "", {

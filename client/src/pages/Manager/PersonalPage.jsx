@@ -1,7 +1,22 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
-import { DoctorRegister } from "../../containers/RegisterDoctor/DoctorRegister.jsx";
+import { Personal } from "./Containers/Personal.jsx";
+
+export function PersonalPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <GestorPageContainer>
+      <SidebarContainer isOpen={sidebarOpen}>
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      </SidebarContainer>
+      <BodyContainer>
+        <Personal />
+      </BodyContainer>
+    </GestorPageContainer>
+  );
+}
 
 const GestorPageContainer = styled.div`
   display: flex; // Cambiado a flex para un mejor control del layout
@@ -23,19 +38,3 @@ const BodyContainer = styled.div`
   transition: all 0.3s;
   overflow: auto; // Para el desplazamiento del contenido si es necesario
 `;
-
-export function PersonalPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  return (  
-    <GestorPageContainer>
-      <SidebarContainer isOpen={sidebarOpen}>
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      </SidebarContainer>
-      <BodyContainer>
-      <DoctorRegister />
-        </BodyContainer>
-    </GestorPageContainer>
-  );
-}
-

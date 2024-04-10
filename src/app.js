@@ -15,7 +15,7 @@ import { FRONTEND_URL } from "./config.js";
 const app = express();
 const server = createServer(app);  // Create an HTTP server for Express and Socket.io
 
-//Agregamo un manager por defecto 
+// //Agregamo un manager por defecto 
 initializeManager();
 
 // Middleware setup

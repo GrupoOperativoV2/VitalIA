@@ -1,4 +1,4 @@
-import Manager from "../models/manager.model";
+import Manager from "../models/manager.model.js";
 import bcrypt from "bcryptjs";
 
 const initializeManager = async () => {
