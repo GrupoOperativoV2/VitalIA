@@ -8,6 +8,7 @@ import {
   addMedicalHistoryRequest,
   uploadPatientPhotoRequest,
   getMedicalHistoryRequest,
+  updateMedicalHistoryRequest,
   photoUserRequest 
 } from "../api/auth";
 import {AppointmentRequest,  // Importamos la función de solicitud de citas
@@ -99,11 +100,11 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const addMedicalHistory = async (userId, medicalHistoryData) => {
+  const addMedicalHistory = async (userId, dataToSend) => {
     try {
       const response = await addMedicalHistoryRequest(
         userId,
-        medicalHistoryData
+        dataToSend
       );
       console.log("Historial médico añadido:", response.data);
       // Aquí puedes realizar más acciones como actualizar el estado o redirigir al usuario
@@ -180,6 +181,19 @@ const photoUser = async (userId) => {
   }
 };
 
+
+const updateMedicalHistory = async (userId, updatedData) => {
+  try {
+      const response = await updateMedicalHistoryRequest(userId, updatedData);
+      console.log("Historial médico actualizado con éxito:", response.data);
+      // Aquí puedes realizar más acciones como actualizar el estado o redirigir al usuario
+  } catch (error) {
+      console.error("Error al actualizar el historial médico:", error);
+      throw error; // Lanzar el error para manejarlo en el formulario
+  }
+};
+
+
   useEffect(() => {
     const checkLogin = async () => {
       const cookies = Cookies.get();
@@ -220,8 +234,8 @@ const photoUser = async (userId) => {
         getMedicalHistory,
         DoctorSearch,
         Appointment,
-        photoUser
-    
+        photoUser,
+        updateMedicalHistory
       }}
     >
       {children}

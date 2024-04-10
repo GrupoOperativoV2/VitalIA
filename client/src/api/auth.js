@@ -27,13 +27,13 @@ export const registerDoctorRequest = async (user) =>
     }
   };
 
-  export const addMedicalHistoryRequest = async (userId, medicalHistoryData) => {
+  export const addMedicalHistoryRequest = async (userId, dataToSend) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    return axios.post(`/medicalHistory/user/${userId}/medicalHistory`, JSON.stringify(medicalHistoryData), config);
+    return axios.post(`/medicalHistory/user/${userId}/medicalHistory`, JSON.stringify(dataToSend), config);
 };
 
 export const uploadPatientPhotoRequest = async (userId, file) => {
@@ -63,3 +63,14 @@ export const getMedicalHistoryRequest = async (userId) => {
     throw new Error(error.response.data.message || 'Error al obtener el historial médico');
   }
 };
+
+export const updateMedicalHistoryRequest = async (userId, medicalHistoryData) => {
+  const config = {
+      headers: {
+          'Content-Type': 'application/json',
+      },
+  };
+  return axios.put(`/medicalHistory/user/${userId}/medicalHistory`, JSON.stringify(medicalHistoryData), config);
+};
+
+

@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
 import { Dashboard } from "./containers/Dashboard.jsx";
 import { MedicalDiscoveryTab } from "./containers/MedicalDiscoveryTab.jsx";
 import { MedicalHistoryForm } from "./containers/MedicalHistoryForm.jsx";
 import Chatbot from "./Chatbot.jsx";
-import { useAuth } from "../../context/authContext";  
-
-
+import { useAuth } from "../../context/authContext";
 
 const PositionedButton = styled.button`
   position: fixed;
@@ -22,7 +20,6 @@ const PositionedButton = styled.button`
   font-size: 24px;
   cursor: pointer;
 `;
-
 
 // Contendores principales
 const PatientPageContainer = styled.div`
@@ -115,16 +112,6 @@ const ActionButton = styled.button`
   }
 `;
 
-const Popup = ({ show, onClose, title, children, customStyle, width }) => (
-  <>
-    <Overlay show={show} />
-    <PopupContainer show={show} customStyle={customStyle} width={width}>
-      {title && <WelcomeHeader>{title}</WelcomeHeader>}
-      {children}
-      <CloseButton onClick={onClose}>Cerrar</CloseButton>
-    </PopupContainer>
-  </>
-);
 const CloseButton = styled.button`
   display: block;
   margin: auto;
@@ -139,12 +126,27 @@ const CloseButton = styled.button`
   }
 `;
 
+const Popup = ({ show, onClose, title, children, customStyle, width }) => (
+  <>
+    <Overlay show={show} />
+    <PopupContainer show={show} customStyle={customStyle} width={width}>
+      {title && <WelcomeHeader>{title}</WelcomeHeader>}
+      {children}
+    </PopupContainer>
+  </>
+);
+
 export function PatientPage() {
-  const { user, isAuthenticated    } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
   const [historyPopupVisible, setHistoryPopupVisible] = useState(false);
+
+  const handleClosePopups = () => {
+    setHistoryPopupVisible(false);
+    // Cerrar otros popups si es necesario
+  };
 
   const togglePopup = () => {
     setPopupVisible(!popupVisible);
@@ -154,14 +156,19 @@ export function PatientPage() {
     setHistoryPopupVisible(!historyPopupVisible);
   };
 
+  const handleHistorySubmit = () => {
+    setIsHistorySubmitted(true);
+    toggleHistoryPopup(); // Cierra el popup después de enviar el formulario
+  };
+
   useEffect(() => {
     // Verifica si el usuario está autenticado y si es la primera vez que accede después de registrarse
-    const isFirstLogin = localStorage.getItem('isFirstLogin');
+    const isFirstLogin = localStorage.getItem("isFirstLogin");
 
     if (isAuthenticated && isFirstLogin) {
-      setPopupVisible(true);  
+      setPopupVisible(true);
       // Elimina la bandera para no mostrar el popup después del primer inicio de sesión
-      localStorage.removeItem('isFirstLogin');
+      localStorage.removeItem("isFirstLogin");
     }
   }, [isAuthenticated]);
 
@@ -170,9 +177,9 @@ export function PatientPage() {
       <SidebarContainer isOpen={sidebarOpen}>
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
-      
+
       <BodyContainer>
-        <button onClick={togglePopup}>Mostrar popup</button>
+        {/* <button onClick={togglePopup}>Mostrar popup</button> */}
 
         <MedicalDiscoveryTab />
 
@@ -190,7 +197,8 @@ export function PatientPage() {
             }
           >
             <WelcomeMessage>
-              Estamos encantados de tenerte aquí. Completa tu historial médico para comenzar.
+              Estamos encantados de tenerte aquí. Completa tu historial médico
+              para comenzar.
             </WelcomeMessage>
             <ActionButton
               onClick={() => {
@@ -200,10 +208,8 @@ export function PatientPage() {
             >
               Completar Historial Médico
             </ActionButton>
-           
           </Popup>
         )}
-
 
         {/* Popup del historial médico */}
         <Popup
@@ -217,15 +223,19 @@ export function PatientPage() {
     padding: 30px;
   `}
         >
-         <MedicalHistoryForm userData={user} />
+          <MedicalHistoryForm userData={user} onClose={handleClosePopups} />
         </Popup>
       </BodyContainer>
 
       <ContentSidebarContainer>
         <Dashboard user={user} />
       </ContentSidebarContainer>
-      <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
-        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
+      <PositionedButton onClick={() => setShowChatbot(true)}>
+        💬
+      </PositionedButton>
+      {showChatbot && (
+        <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />
+      )}
     </PatientPageContainer>
   );
 }

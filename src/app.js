@@ -6,14 +6,17 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
-import taskRoutes from "./routes/tasks.routes.js";
 import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';  
 import appointmentRoutes from './routes/appointment.routes.js';
 import messageRoutes from './routes/messagesRoutes.js';
+import initializeManager from "../src/controllers/initializeManager.js";
 import { FRONTEND_URL } from "./config.js";
 
 const app = express();
 const server = createServer(app);  // Create an HTTP server for Express and Socket.io
+
+//Agregamo un manager por defecto 
+initializeManager();
 
 // Middleware setup
 app.use(cors({ credentials: true, origin: FRONTEND_URL }));
@@ -26,7 +29,6 @@ app.use('/uploads', express.static('uploads'));
 app.use("/api/messages", messageRoutes);
 app.use("/api/medicalHistory", medicalHistoryRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/tasks", taskRoutes);  // Fixed typo in the route name
 app.use("/api/appointments", appointmentRoutes);
 
 // Production-specific setup

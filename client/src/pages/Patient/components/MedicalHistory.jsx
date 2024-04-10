@@ -3,6 +3,160 @@ import styled from "styled-components";
 import { ChangeFrom } from "./ChangeFrom";
 import { useAuth } from "../../../context/authContext";
 
+export const MedicalHistory = ({ info, patientInfo }) => {
+  const { Appointment, DoctorSearch, user  } = useAuth();
+  const [showNewAppointmentForm, setShowNewAppointmentForm] = useState(false);
+  const [doctors, setDoctors] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState({});
+  const [appointmentData, setAppointmentData] = useState({
+    date: new Date().toISOString().split("T")[0], // Fecha actual como valor por defecto
+    time: "09:00", // Hora por defecto
+    status: "scheduled", // Estado por defecto
+    doctorId: "",
+    details: "",
+    patientId: "",
+  });
+
+  
+
+  useEffect(() => {
+    if (user) {
+      setAppointmentData(prev => ({
+        ...prev,
+        patientId: user.id, // Asumiendo que el objeto user contiene un campo _id
+      }));
+    }
+    DoctorSearch()
+      .then((doctorsList) => {
+        setDoctors(doctorsList);
+        if (doctorsList.length > 0) {
+          setSelectedDoctor(doctorsList[0]);
+          setAppointmentData((prev) => ({
+            ...prev,
+            doctorId: doctorsList[0]._id,
+          }));
+        }
+      })
+      .catch((error) => {
+        console.error("Error al obtener los doctores:", error);
+      });
+  }, [user, DoctorSearch]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAppointmentData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevenir el comportamiento predeterminado
+    console.log("Formulario enviado:", appointmentData); // Depuración
+
+    try {
+      const result = await Appointment(appointmentData);
+      console.log("Cita creada con éxito:", result);
+      setShowNewAppointmentForm(false); // Ocultar formulario tras el éxito
+    } catch (error) {
+      console.error("Error creando cita:", error);
+    }
+  };
+
+  const handleDoctorChange = (e) => {
+    const doctorId = e.target.value;
+    const doctor = doctors.find((doc) => doc._id === doctorId);
+    setSelectedDoctor(doctor);
+    setAppointmentData((prev) => ({ ...prev, doctorId }));
+  };
+  // // Maneja el caso en que los datos aún no estén cargados
+  if (!patientInfo) {
+    return <div>Cargando información del paciente...</div>;
+  }
+
+  const toggleNewAppointmentForm = () => {
+    setShowNewAppointmentForm(!showNewAppointmentForm);
+  };
+
+  return (
+    <Section>
+      <HistoryHeader>Historial Médico</HistoryHeader>
+      <RecordList>
+        {info.medicalHistory.map((record, index) => (
+          <RecordItem key={index}>
+            <RecordTitle>{record.title}</RecordTitle>
+            <RecordText>{record.description}</RecordText>
+          </RecordItem>
+        ))}
+      </RecordList>
+
+      <Button onClick={() => setShowNewAppointmentForm(true)}>
+        Registrar Nueva Cita
+      </Button>
+
+      {showNewAppointmentForm && (
+        <NewAppointmentForm onSubmit={handleSubmit}>
+          <Label>Fecha:</Label>
+          <Input
+            type="date"
+            name="date"
+            value={appointmentData.date}
+            onChange={handleInputChange}
+          />
+
+          <Label>Hora:</Label>
+          <Input
+            type="time"
+            name="time"
+            value={appointmentData.time}
+            onChange={handleInputChange}
+          />
+
+          <Label>Estado:</Label>
+          <Select
+            name="status"
+            value={appointmentData.status}
+            onChange={handleInputChange}
+          >
+            <option value="scheduled">Programada</option>
+            <option value="completed">Completada</option>
+            <option value="cancelled">Cancelada</option>
+          </Select>
+
+          <Label>Médico:</Label>
+          <Select
+            name="doctorId"
+            value={appointmentData.doctorId}
+            onChange={handleDoctorChange}
+          >
+            {doctors.map((doctor) => (
+              <option key={doctor._id} value={doctor._id}>
+                {doctor.name}
+              </option>
+            ))}
+          </Select>
+          <SpecializationLabel>
+            Especialidad: {selectedDoctor.specialization}
+          </SpecializationLabel>
+
+          <Label>Detalles:</Label>
+          <Input
+            type="text"
+            name="details"
+            value={appointmentData.details}
+            onChange={handleInputChange}
+            placeholder="Detalles de la cita"
+          />
+
+          <Button type="submit">Guardar Cita</Button>
+        </NewAppointmentForm>
+      )}
+
+      <EditFrom>
+        <ChangeFrom patientInfo={patientInfo} />
+      </EditFrom>
+    </Section>
+  );
+};
+
+
 const Section = styled.section`
   background-color: #fff;
   padding: 20px;
@@ -136,162 +290,3 @@ const TimeStatusContainer = styled.div`
   justify-content: space-between;
   margin-bottom: 10px;
 `;
-
-export const MedicalHistory = ({ info }) => {
-  const { getMedicalHistory, Appointment, DoctorSearch, user  } = useAuth();
-  const [patientInfo, setPatientInfo] = useState(null);
-  const [showNewAppointmentForm, setShowNewAppointmentForm] = useState(false);
-  const [doctors, setDoctors] = useState([]);
-  const [selectedDoctor, setSelectedDoctor] = useState({});
-  const [appointmentData, setAppointmentData] = useState({
-    date: new Date().toISOString().split("T")[0], // Fecha actual como valor por defecto
-    time: "09:00", // Hora por defecto
-    status: "scheduled", // Estado por defecto
-    doctorId: "",
-    details: "",
-  });
-
-  
-
-  useEffect(() => {
-    if (user) {
-      getMedicalHistory(user.id)
-        .then((history) => {
-          console.log("Historial Médico:", history);
-          setPatientInfo(history); // Actualiza el estado con los datos obtenidos
-          setAppointmentData((prev) => ({ ...prev, patientId: user.id }));
-        })
-        .catch((error) => {
-          console.error("Error al obtener el historial médico:", error);
-        });
-    }
-    DoctorSearch()
-      .then((doctorsList) => {
-        setDoctors(doctorsList);
-        if (doctorsList.length > 0) {
-          setSelectedDoctor(doctorsList[0]);
-          setAppointmentData((prev) => ({
-            ...prev,
-            doctorId: doctorsList[0]._id,
-          }));
-        }
-      })
-      .catch((error) => {
-        console.error("Error al obtener los doctores:", error);
-      });
-  }, [user, getMedicalHistory, DoctorSearch]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAppointmentData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevenir el comportamiento predeterminado
-    console.log("Formulario enviado:", appointmentData); // Depuración
-    alert("Formulario enviado, revisa la consola para los detalles.");
-
-    try {
-      const result = await Appointment(appointmentData);
-      console.log("Cita creada con éxito:", result);
-      setShowNewAppointmentForm(false); // Ocultar formulario tras el éxito
-    } catch (error) {
-      console.error("Error creando cita:", error);
-    }
-  };
-
-  const handleDoctorChange = (e) => {
-    const doctorId = e.target.value;
-    const doctor = doctors.find((doc) => doc._id === doctorId);
-    setSelectedDoctor(doctor);
-    setAppointmentData((prev) => ({ ...prev, doctorId }));
-  };
-  // // Maneja el caso en que los datos aún no estén cargados
-  if (!patientInfo) {
-    return <div>Cargando información del paciente...</div>;
-  }
-
-  const toggleNewAppointmentForm = () => {
-    setShowNewAppointmentForm(!showNewAppointmentForm);
-  };
-
-  return (
-    <Section>
-      <HistoryHeader>Historial Médico</HistoryHeader>
-      <RecordList>
-        {info.medicalHistory.map((record, index) => (
-          <RecordItem key={index}>
-            <RecordTitle>{record.title}</RecordTitle>
-            <RecordText>{record.description}</RecordText>
-          </RecordItem>
-        ))}
-      </RecordList>
-
-      <Button onClick={() => setShowNewAppointmentForm(true)}>
-        Registrar Nueva Cita
-      </Button>
-
-      {showNewAppointmentForm && (
-        <NewAppointmentForm onSubmit={handleSubmit}>
-          <Label>Fecha:</Label>
-          <Input
-            type="date"
-            name="date"
-            value={appointmentData.date}
-            onChange={handleInputChange}
-          />
-
-          <Label>Hora:</Label>
-          <Input
-            type="time"
-            name="time"
-            value={appointmentData.time}
-            onChange={handleInputChange}
-          />
-
-          <Label>Estado:</Label>
-          <Select
-            name="status"
-            value={appointmentData.status}
-            onChange={handleInputChange}
-          >
-            <option value="scheduled">Programada</option>
-            <option value="completed">Completada</option>
-            <option value="cancelled">Cancelada</option>
-          </Select>
-
-          <Label>Médico:</Label>
-          <Select
-            name="doctorId"
-            value={appointmentData.doctorId}
-            onChange={handleDoctorChange}
-          >
-            {doctors.map((doctor) => (
-              <option key={doctor._id} value={doctor._id}>
-                {doctor.name}
-              </option>
-            ))}
-          </Select>
-          <SpecializationLabel>
-            Especialidad: {selectedDoctor.specialization}
-          </SpecializationLabel>
-
-          <Label>Detalles:</Label>
-          <Input
-            type="text"
-            name="details"
-            value={appointmentData.details}
-            onChange={handleInputChange}
-            placeholder="Detalles de la cita"
-          />
-
-          <Button type="submit">Guardar Cita</Button>
-        </NewAppointmentForm>
-      )}
-
-      <EditFrom>
-        <ChangeFrom patientInfo={patientInfo} />
-      </EditFrom>
-    </Section>
-  );
-};
