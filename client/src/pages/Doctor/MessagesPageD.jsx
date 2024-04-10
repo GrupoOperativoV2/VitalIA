@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
-import Chatbot from "../Patient/Chatbot.jsx";
 
 const DoctorPageContainer = styled.div`
   display: flex; // Cambiado a flex para un mejor control del layout
@@ -24,23 +23,8 @@ const BodyContainer = styled.div`
   overflow: auto; // Para el desplazamiento del contenido si es necesario
 `;
 
-const PositionedButton = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-`;
-
 export function MessagesPageD() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showChatbot, setShowChatbot] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
 
   return (  
@@ -50,8 +34,6 @@ export function MessagesPageD() {
       </SidebarContainer>
       <BodyContainer>
         <h1>Hola</h1>
-        <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
-        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
         </BodyContainer>
     </DoctorPageContainer>
   );

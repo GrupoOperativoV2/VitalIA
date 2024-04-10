@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import logo from "../../Godev.svg";
+import logo from "../../Godev-.svg";
 import { v } from "../../styles/Variables";
 
 import { FaHome } from "react-icons/fa";
@@ -20,6 +20,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const { setTheme, theme } = useContext(ThemeContext);
   const CambiarTheme = () => {
     setTheme((theme) => (theme === "light" ? "dark" : "light"));
+    
   };
 
   const { logout } = useAuth();
@@ -31,6 +32,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
       </button>
       <div className="Logocontent">
         <div className="imgcontent">
+          
           <img src={logo} />
         </div>
         <h2>VitalIA</h2>

@@ -25,20 +25,6 @@ const BodyContainer = styled.div`
   overflow: auto; // Para el desplazamiento del contenido si es necesario
 `;
 
-const PositionedButton = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-`;
-
 const PopupContainer = styled.div`
   position: fixed;
   top: 50%;
@@ -91,8 +77,6 @@ export function DoctorPage() {
 
 
 
-        <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
-        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
       </BodyContainer>
     </DoctorPageContainer>
   );
