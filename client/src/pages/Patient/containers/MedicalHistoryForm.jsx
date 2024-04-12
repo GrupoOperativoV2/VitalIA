@@ -114,7 +114,7 @@ const CenteredMessage = styled.h1`
 
 const MedicalHistoryForm = ({  userData, onClose }) => {
   const [formData, setFormData] = useState({
-    userId: userData?.id || "", // Asegurarse de tener el userId en los datos del usuario
+    userId: userData?.id || "", 
     name: userData?.name || "",
     birthdateDay: userData?.birthDate
       ? new Date(userData.birthDate).getDate() + 1
@@ -203,126 +203,7 @@ const MedicalHistoryForm = ({  userData, onClose }) => {
 
   const [medications, setMedications] = useState([]);
 
-  const validate = () => {
-    let tempErrors = {};
-
-    // Validación de nombre
-    if (!formData.name) tempErrors.name = "Por favor, llena este campo";
-
-    // Validación de fecha de nacimiento
-    if (!formData.birthdate)
-      tempErrors.birthdate = "Por favor, llena este campo";
-
-    // Validación de género
-    if (!formData.gender)
-      tempErrors.gender = "Por favor, selecciona una opción";
-
-    // Validación de dirección
-    if (!formData.address) tempErrors.address = "Por favor, llena este campo";
-
-    // Validación de número de contacto
-    if (!formData.contactNumber)
-      tempErrors.contactNumber = "Por favor, llena este campo";
-
-    // Validación de correo electrónico
-    if (!formData.email) tempErrors.email = "Por favor, llena este campo";
-
-    // Validación de peso
-    if (!formData.weight) tempErrors.weight = "Por favor, llena este campo";
-
-    // Validación de altura
-    if (!formData.height) tempErrors.height = "Por favor, llena este campo";
-
-    // Validación de presión arterial
-    if (!formData.bloodPressure)
-      tempErrors.bloodPressure = "Por favor, llena este campo";
-
-    // Validación de nombre de contacto de emergencia
-    if (!formData.emergencyContactName)
-      tempErrors.emergencyContactName = "Por favor, llena este campo";
-
-    // Validación de relación de contacto de emergencia
-    if (!formData.emergencyContactRelation)
-      tempErrors.emergencyContactRelation = "Por favor, llena este campo";
-
-    // Validación de número de contacto de emergencia
-    if (!formData.emergencyContactNumber)
-      tempErrors.emergencyContactNumber = "Por favor, llena este campo";
-
-    // Validación de enfermedades previas
-    if (!formData.pastDiseases)
-      tempErrors.pastDiseases = "Por favor, llena este campo";
-
-    // Validación de cirugías
-    if (!formData.surgeries)
-      tempErrors.surgeries = "Por favor, llena este campo";
-
-    // Validación de hospitalizaciones
-    if (!formData.hospitalizations)
-      tempErrors.hospitalizations = "Por favor, llena este campo";
-
-    // Validación de alergias
-    if (!formData.allergies)
-      tempErrors.allergies = "Por favor, llena este campo";
-
-    // Validación de medicamentos actuales
-    if (!formData.currentMedications)
-      tempErrors.currentMedications = "Por favor, llena este campo";
-
-    // Validación de historia familiar
-    if (!formData.familyHistory)
-      tempErrors.familyHistory = "Por favor, llena este campo";
-
-    // Validaciones para campos de estilo de vida (ejemplo: dieta, ejercicio, alcohol, tabaquismo)
-    if (!formData.lifestyle.diet)
-      tempErrors.diet = "Por favor, llena este campo";
-    if (!formData.lifestyle.exercise)
-      tempErrors.exercise = "Por favor, llena este campo";
-    if (!formData.lifestyle.alcohol)
-      tempErrors.alcohol = "Por favor, llena este campo";
-    if (!formData.lifestyle.smoking)
-      tempErrors.smoking = "Por favor, llena este campo";
-
-    // Validación de vacunas
-    if (!formData.vaccinations)
-      tempErrors.vaccinations = "Por favor, llena este campo";
-
-    // Validación de resultados de laboratorio
-    if (!formData.labResults)
-      tempErrors.labResults = "Por favor, llena este campo";
-
-    // Validación de nombre (solo letras)
-    if (!formData.name || !/^[\p{L} \p{M}'-]+$/u.test(formData.name)) {
-      tempErrors.name =
-        "Por favor, introduce un nombre válido (letras, acentos y guiones permitidos)";
-    }
-
-    // Validación de correo electrónico (formato estándar de email)
-    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
-      tempErrors.email = "Por favor, introduce un correo electrónico válido";
-    }
-
-    if (!formData.bloodType) {
-      tempErrors.bloodType = "Por favor, selecciona el tipo de sangre";
-    }
-
-    // Validación de número de contacto (números y caracteres especiales permitidos)
-    if (
-      !formData.contactNumber ||
-      !/^\+?[0-9\- ]+$/.test(formData.contactNumber)
-    ) {
-      tempErrors.contactNumber =
-        "Por favor, introduce un número de contacto válido";
-    }
-
-    // Validación de dirección (combinación de números y letras permitida)
-    if (!formData.address) {
-      tempErrors.address = "Por favor, llena este campo";
-    }
-
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0; // Retorna true si no hay errores
-  };
+  
 
   useEffect(() => {
     if (userData) {
@@ -889,7 +770,7 @@ if (formSubmitted) {
         />
 
         <Label>Hospitalizaciones</Label>
-        <Input name="hospitalizations"  onChange={handleChange} />
+        <Input name="hospitalizations"  placeholder="Ninguna" onChange={handleChange} />
 
         <Legend>Medicamentos actuales</Legend>
         {medications.map((medication, index) => (

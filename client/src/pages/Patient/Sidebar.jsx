@@ -1,10 +1,9 @@
 import styled from "styled-components";
-import logo from "../../Godev-.svg";
+import logo from "../../Godev.svg";
 import { v } from "../../styles/Variables";
 
 import { FaHome } from "react-icons/fa";
 import { CiMonitor } from "react-icons/ci";
-import { AiOutlineSetting } from "react-icons/ai";
 import { LuMessagesSquare } from "react-icons/lu";
 import { IoPerson } from "react-icons/io5";
 import {MdLogout } from "react-icons/md";

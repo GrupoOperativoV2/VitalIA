@@ -4,14 +4,13 @@ import LoginForm from "../components/Login/LoginForm";
 import RegisterForm from "../components/Login/RegisterForm";
 import { useAuth } from "../context/authContext";
 import "./../styles/Login.css";
-import ai from '../assets/ai.png'; 
+import ai from '../assets/loginPage.png'; 
 
 export function SesionPage() {
-  const location = useLocation(); // Usa useLocation para obtener el objeto de ubicación actual
+  const location = useLocation(); 
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // Determina si la vista es de login basándose en la ruta actual
   const isLoginPath = location.pathname === "/login";
   const [isLoginView, setIsLoginView] = useState(isLoginPath); 
 
@@ -22,7 +21,6 @@ export function SesionPage() {
   }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    // Actualiza el estado basado en la ruta cada vez que esta cambie
     setIsLoginView(location.pathname === "/login");
   }, [location]);
 
