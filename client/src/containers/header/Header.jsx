@@ -112,7 +112,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="gpt3__header" ref={neonRef} id="neon">
+    <div className="gpt3__header">
       <div className="gpt3__header-content">
         <h1 className="gradient__text">Con VitalIA, lleva el cuidado de la salud al siguiente nivel</h1>
         <p>En la búsqueda de bienestar, ninguna innovación es demasiado grande. No hay descanso en el avance de la tecnología. El progreso trae consigo una transformación jubilosa, rompiendo las barreras de la medicina tradicional. Unidos en nuestra misión, nos adelantamos a los años, respondiendo al llamado de cuidado y precisión.</p>

@@ -4,7 +4,7 @@ import { CTA, Navbar } from '../components';
 
 function HomePage() {
   return (
-    <div className="App">
+    <div className="App" id="fondo">
       <div className="gradient__bg">
        <Navbar />
        <Header />

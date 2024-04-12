@@ -1,9 +1,9 @@
-#neon {
-    width: 100%; /* Ajusta al ancho del viewport o contenedor padre */
-    height: 100vh; /* Ajusta al alto del viewport, cambia según necesidad */
-    position: relative; /* Importante para contener correctamente el canvas */
-}
 
+#fondo {
+    --color-bg: #040C18;
+    background-color: var(--color-bg);
+  }
+  
 
 .container{
     width: 100%;
