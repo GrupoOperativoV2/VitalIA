@@ -203,7 +203,12 @@ const MedicalHistoryForm = ({  userData, onClose }) => {
 
   const [medications, setMedications] = useState([]);
 
-  
+  // Esta función se debería llamar después de un registro exitoso
+const handleUserRegistration = () => {
+  localStorage.setItem("isFirstLogin", "true");
+  localStorage.setItem("isFormSubmitted", "false");
+};
+
 
   useEffect(() => {
     if (userData) {
@@ -369,6 +374,7 @@ const handleSubmit = async (e) => {
     await addMedicalHistory(formData.userId, dataToSend);
     setFormSubmitted(true);
     toast.success("Historial médico enviado con éxito");
+    handleUserRegistration();
 
     // Si hay una foto para subir, hazlo después de enviar el formulario
     if (patientPhoto) {

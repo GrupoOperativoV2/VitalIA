@@ -7,6 +7,124 @@ import { MedicalHistoryForm } from "./containers/MedicalHistoryForm.jsx";
 import Chatbot from "./Chatbot.jsx";
 import { useAuth } from "../../context/authContext";
 
+const Popup = ({ show, onClose, title, children, customStyle, width }) => (
+  <>
+    <Overlay show={show} />
+    <PopupContainer show={show} customStyle={customStyle} width={width}>
+      {title && <WelcomeHeader>{title}</WelcomeHeader>}
+      {children}
+    </PopupContainer>
+  </>
+);
+
+export function PatientPage() {
+  const { user, isAuthenticated } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showChatbot, setShowChatbot] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [historyPopupVisible, setHistoryPopupVisible] = useState(false);
+  const [isHistorySubmitted, setIsHistorySubmitted] = useState(false);
+
+  const handleClosePopups = () => {
+    setHistoryPopupVisible(false);
+  };
+
+  const togglePopup = () => {
+    setPopupVisible(!popupVisible);
+  };
+
+  const toggleHistoryPopup = () => {
+    setHistoryPopupVisible(!historyPopupVisible);
+  };
+
+
+  
+
+  useEffect(() => {
+    const isFormSubmitted = localStorage.getItem("isFormSubmitted") === "true";
+    setIsHistorySubmitted(isFormSubmitted);
+  
+    const isFirstLogin = localStorage.getItem("isFirstLogin") === "true";
+    if (isAuthenticated && isFirstLogin && !isFormSubmitted) {
+      setPopupVisible(true);
+    }
+  }, [isAuthenticated]);
+  
+  const handleHistorySubmit = () => {
+    setIsHistorySubmitted(true);
+    localStorage.setItem("isFormSubmitted", "true"); // Marca el formulario como enviado
+    setPopupVisible(false); // Cierra el popup después de enviar el formulario
+    toggleHistoryPopup();
+  };
+  
+
+  return (
+    <PatientPageContainer>
+      <SidebarContainer isOpen={sidebarOpen}>
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      </SidebarContainer>
+
+      <BodyContainer>
+        {/* <button onClick={togglePopup}>Mostrar popup</button> */}
+
+        <MedicalDiscoveryTab />
+
+
+        {!isHistorySubmitted && popupVisible && (
+  <Popup
+            show={popupVisible}
+            onClose={togglePopup}
+            title={
+              user
+                ? `Bienvenido, ${user.username}!`
+                : "Bienvenido a nuestra aplicación!"
+            }
+          >
+            <WelcomeMessage>
+              Estamos encantados de tenerte aquí. Completa tu historial médico
+              para comenzar.
+            </WelcomeMessage>
+            <ActionButton
+              onClick={() => {
+                togglePopup();
+                toggleHistoryPopup();
+              }}
+            >
+              Completar Historial Médico
+            </ActionButton>
+          </Popup>
+        )}
+
+        <Popup
+          show={historyPopupVisible}
+          onClose={toggleHistoryPopup}
+          title="Historial Médico"
+          width="600px" // Puedes ajustar esto según el diseño que desees
+          customStyle={`
+    background-color: #f0f0f0; 
+    border-radius: 20px; 
+    padding: 30px;
+  `}
+        >
+          <MedicalHistoryForm userData={user} onClose={handleClosePopups} />
+        </Popup>
+      </BodyContainer>
+
+      <ContentSidebarContainer>
+        <Dashboard user={user} />
+      </ContentSidebarContainer>
+      <PositionedButton onClick={() => setShowChatbot(true)}>
+        💬
+      </PositionedButton>
+      {showChatbot && (
+        <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />
+      )}
+    </PatientPageContainer>
+  );
+}
+
+
+
 const PositionedButton = styled.button`
   position: fixed;
   bottom: 20px;
@@ -125,117 +243,3 @@ const CloseButton = styled.button`
     background-color: #0056b3;
   }
 `;
-
-const Popup = ({ show, onClose, title, children, customStyle, width }) => (
-  <>
-    <Overlay show={show} />
-    <PopupContainer show={show} customStyle={customStyle} width={width}>
-      {title && <WelcomeHeader>{title}</WelcomeHeader>}
-      {children}
-    </PopupContainer>
-  </>
-);
-
-export function PatientPage() {
-  const { user, isAuthenticated } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showChatbot, setShowChatbot] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [historyPopupVisible, setHistoryPopupVisible] = useState(false);
-
-  const handleClosePopups = () => {
-    setHistoryPopupVisible(false);
-    // Cerrar otros popups si es necesario
-  };
-
-  const togglePopup = () => {
-    setPopupVisible(!popupVisible);
-  };
-
-  const toggleHistoryPopup = () => {
-    setHistoryPopupVisible(!historyPopupVisible);
-  };
-
-  const handleHistorySubmit = () => {
-    setIsHistorySubmitted(true);
-    toggleHistoryPopup(); // Cierra el popup después de enviar el formulario
-  };
-
-  useEffect(() => {
-    // Verifica si el usuario está autenticado y si es la primera vez que accede después de registrarse
-    const isFirstLogin = localStorage.getItem("isFirstLogin");
-
-    if (isAuthenticated && isFirstLogin) {
-      setPopupVisible(true);
-      // Elimina la bandera para no mostrar el popup después del primer inicio de sesión
-      localStorage.removeItem("isFirstLogin");
-    }
-  }, [isAuthenticated]);
-
-  return (
-    <PatientPageContainer>
-      <SidebarContainer isOpen={sidebarOpen}>
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      </SidebarContainer>
-
-      <BodyContainer>
-        {/* <button onClick={togglePopup}>Mostrar popup</button> */}
-
-        <MedicalDiscoveryTab />
-
-        {/* Funcionamiento del popup */}
-
-        {/* Popup de bienvenida */}
-        {popupVisible && (
-          <Popup
-            show={popupVisible}
-            onClose={togglePopup}
-            title={
-              user
-                ? `Bienvenido, ${user.username}!`
-                : "Bienvenido a nuestra aplicación!"
-            }
-          >
-            <WelcomeMessage>
-              Estamos encantados de tenerte aquí. Completa tu historial médico
-              para comenzar.
-            </WelcomeMessage>
-            <ActionButton
-              onClick={() => {
-                togglePopup();
-                toggleHistoryPopup();
-              }}
-            >
-              Completar Historial Médico
-            </ActionButton>
-          </Popup>
-        )}
-
-        {/* Popup del historial médico */}
-        <Popup
-          show={historyPopupVisible}
-          onClose={toggleHistoryPopup}
-          title="Historial Médico"
-          width="600px" // Puedes ajustar esto según el diseño que desees
-          customStyle={`
-    background-color: #f0f0f0; 
-    border-radius: 20px; 
-    padding: 30px;
-  `}
-        >
-          <MedicalHistoryForm userData={user} onClose={handleClosePopups} />
-        </Popup>
-      </BodyContainer>
-
-      <ContentSidebarContainer>
-        <Dashboard user={user} />
-      </ContentSidebarContainer>
-      <PositionedButton onClick={() => setShowChatbot(true)}>
-        💬
-      </PositionedButton>
-      {showChatbot && (
-        <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />
-      )}
-    </PatientPageContainer>
-  );
-}
