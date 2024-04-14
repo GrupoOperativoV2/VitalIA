@@ -1,7 +1,6 @@
-// MedicalDiscoveryTab.jsx
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const DiscoveryTab = styled.div`
   background-color: #e8f4f8;
@@ -48,92 +47,62 @@ const NewsTitle = styled.h4`
   font-size: 18px;
 `;
 
+const NewsLink = styled.a`
+  color: #1a0dab;  // Un color típico de enlace
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const NewsText = styled.p`
   margin: 5px 0;
 `;
 
-const MedicalDiscoveryTab = () => (
-  <DiscoveryTab>
-    <WelcomeMessage>
-      <h1>Bienvenido al Centro de Descubrimientos Médicos</h1>
-      <p>Explora los últimos avances y descubrimientos en el mundo de la medicina.</p>
-    </WelcomeMessage>
-    <h2>Últimas Noticias</h2>
-    <NewsSection>
-      <NewsImage src="https://via.placeholder.com/120" alt="Noticia" />
-      <NewsContent>
-        <NewsTitle>Avance significativo en la cura de la diabetes tipo 1</NewsTitle>
-        <NewsText>
-          Investigadores han identificado un nuevo tratamiento que promete una mejor calidad de vida para los pacientes con diabetes tipo 1.
-        </NewsText>
-      </NewsContent>
-    </NewsSection>  
-    
-    <NewsSection>
-      <NewsImage src="https://via.placeholder.com/120" alt="Noticia" />
-      <NewsContent>
-        <NewsTitle>Avance significativo en la cura de la diabetes tipo 1</NewsTitle>
-        <NewsText>
-          Investigadores han identificado un nuevo tratamiento que promete una mejor calidad de vida para los pacientes con diabetes tipo 1.
-        </NewsText>
-      </NewsContent>
-    </NewsSection>
+// Componente MedicalDiscoveryTab
+const MedicalDiscoveryTab = () => {
+  const [articles, setArticles] = useState([]);
 
-    <NewsSection>
-      <NewsImage src="https://via.placeholder.com/120" alt="Noticia" />
-      <NewsContent>
-        <NewsTitle>Avance significativo en la cura de la diabetes tipo 1</NewsTitle>
-        <NewsText>
-          Investigadores han identificado un nuevo tratamiento que promete una mejor calidad de vida para los pacientes con diabetes tipo 1.
-        </NewsText>
-      </NewsContent>
-    </NewsSection>
+  useEffect(() => {
+    const fetchMedicalNews = async () => {
+      const apiKey = '21ca2e9bdb9e4571ba261935c08ce793'; // Reemplaza 'your_api_key' con tu clave API real
+      const url = `https://newsapi.org/v2/everything?q=medicina+biotecnología&language=es&apiKey=${apiKey}`; //Pendejos, acá se le mueve a las noticias
+      try {
+        const response = await axios.get(url);
+        setArticles(response.data.articles);
+      } catch (error) {
+        console.error('Error fetching medical news:', error);
+      }
+    };
 
+    fetchMedicalNews();
+  }, []);
 
-    <NewsSection>
-      <NewsImage src="https://via.placeholder.com/120" alt="Noticia" />
-      <NewsContent>
-        <NewsTitle>Avance significativo en la cura de la diabetes tipo 1</NewsTitle>
-        <NewsText>
-          Investigadores han identificado un nuevo tratamiento que promete una mejor calidad de vida para los pacientes con diabetes tipo 1.
-        </NewsText>
-      </NewsContent>
-    </NewsSection>
-
-
-    <NewsSection>
-      <NewsImage src="https://via.placeholder.com/120" alt="Noticia" />
-      <NewsContent>
-        <NewsTitle>Avance significativo en la cura de la diabetes tipo 1</NewsTitle>
-        <NewsText>
-          Investigadores han identificado un nuevo tratamiento que promete una mejor calidad de vida para los pacientes con diabetes tipo 1.
-        </NewsText>
-      </NewsContent>
-    </NewsSection>
-
-
-    <NewsSection>
-      <NewsImage src="https://via.placeholder.com/120" alt="Noticia" />
-      <NewsContent>
-        <NewsTitle>Avance significativo en la cura de la diabetes tipo 1</NewsTitle>
-        <NewsText>
-          Investigadores han identificado un nuevo tratamiento que promete una mejor calidad de vida para los pacientes con diabetes tipo 1.
-        </NewsText>
-      </NewsContent>
-    </NewsSection>
-
-
-    <NewsSection>
-      <NewsImage src="https://via.placeholder.com/120" alt="Noticia" />
-      <NewsContent>
-        <NewsTitle>Avance significativo en la cura de la diabetes tipo 1</NewsTitle>
-        <NewsText>
-          Investigadores han identificado un nuevo tratamiento que promete una mejor calidad de vida para los pacientes con diabetes tipo 1.
-        </NewsText>
-      </NewsContent>
-    </NewsSection>
-    {/* Aquí se puede agregar más contenido como artículos, enlaces, etc. */}
-  </DiscoveryTab>
-);
+  return (
+    <DiscoveryTab>
+      <WelcomeMessage>
+        <h1>Bienvenido al Centro de Descubrimientos Médicos</h1>
+        <p>Explora los últimos avances y descubrimientos en el mundo de la medicina.</p>
+      </WelcomeMessage>
+      <h2>Últimas Noticias</h2>
+      {articles.length > 0 ? (
+        articles.map((article, index) => (
+          <NewsSection key={index}>
+            <NewsImage src={article.urlToImage || 'https://via.placeholder.com/120'} alt="Noticia" />
+            <NewsContent>
+              <NewsTitle>
+                <NewsLink href={article.url} target="_blank">{article.title}</NewsLink>
+              </NewsTitle>
+              <NewsText>{article.description || 'No hay descripción disponible.'}</NewsText>
+            </NewsContent>
+          </NewsSection>
+        ))
+      ) : (
+        <p>No se encontraron noticias médicas recientes.</p>
+      )}
+    </DiscoveryTab>
+  );
+};
 
 export { MedicalDiscoveryTab };
