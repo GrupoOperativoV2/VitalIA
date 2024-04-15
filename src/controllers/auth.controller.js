@@ -300,7 +300,8 @@ export const requestPasswordReset = async (req, res) => {
 
   const transporter = await createTransporter();
 
-  const resetLink = `http://localhost:5173/recover`;
+  const resetLink = `http://localhost:5173/recover?userId=${user._id}&token=${token}`;
+
 
   await transporter.sendMail({
     to: user.email,

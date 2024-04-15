@@ -82,12 +82,13 @@ const LoginForm = () => {
       </form>
 
       {showForgotPasswordModal && (
-        <div className="modal" onClick={closeModal}>
-          <div className="modal-contenido" onClick={(e) => e.stopPropagation()}>
-            <RecoverForm/>
-          </div>
-        </div>
-      )}
+  <div className="modal" onClick={closeModal}>
+    <div className="modal-contenido" onClick={(e) => e.stopPropagation()}>
+      <RecoverForm onClose={() => setShowForgotPasswordModal(false)}/>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

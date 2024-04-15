@@ -59,7 +59,7 @@ export function SesionPage() {
   return (
     <div className="contenedor-login">
       <div className="contenedor-imagen">
-        {/* <div className={`slogan ${animationClass}`}>{slogans[sloganIndex]}</div> */}
+        <div className={`slogan ${animationClass}`}>{slogans[sloganIndex]}</div>
         <img src={ai} alt="Visual Content" />
       </div>
       <div className="contenedor-texto">

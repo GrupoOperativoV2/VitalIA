@@ -9,8 +9,9 @@
     uploadPatientPhotoRequest,
     getMedicalHistoryRequest,
     updateMedicalHistoryRequest,
-    requestPasswordReset,
-    photoUserRequest,resetPassword 
+    resetPasswordRequest,
+    passwordRequest,
+    photoUserRequest,  
   } from "../api/auth";
   import {AppointmentRequest,  // Importamos la función de solicitud de citas
   DoctorSearchRequest  } from "../api/appointments";
@@ -196,7 +197,7 @@
 
   const resetPassword = async (email) => {
     try {
-      const response = await requestPasswordReset(email);
+      const response = await resetPasswordRequest(email);
       if (response.status === 200) {
         console.log("Solicitud de restablecimiento de contraseña enviada:", response.data);
         // Aquí podrías actualizar el estado para informar al usuario que el correo fue enviado
@@ -208,19 +209,19 @@
     }
   };
 
-  const resetPasswordChange = async (userId, token, newPassword) => {
+  const updatePassword = async (userId, token, newPassword) => {
     try {
-      const response = await resetPassword(userId, token, newPassword); // Asumiendo que tienes una función resetPasswordRequest definida correctamente
-      if (response.status === 200) {
-        console.log("Contraseña restablecida con éxito:", response.data);
-      }
+      const response = await passwordRequest(userId, token, newPassword);
+      console.log("Respuesta de restablecimiento de contraseña:", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error al restablecer la contraseña:", error);
-      setErrors([...errors, error.response ? error.response.data.message : "Un error ocurrió al intentar restablecer la contraseña"]);
-      throw error; // Opcional: Lanzar el error para manejarlo en la interfaz de usuario
+      console.error("Error al actualizar la contraseña:", error);
+      throw error;
     }
   };
+
+
+ 
 
 
     useEffect(() => {
@@ -264,7 +265,8 @@
           DoctorSearch,
           Appointment,
           photoUser,
-          updateMedicalHistory, resetPassword
+          resetPassword,
+          updateMedicalHistory, updatePassword
         }}
       >
         {children}

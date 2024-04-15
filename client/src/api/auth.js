@@ -13,19 +13,21 @@ export const verifyTokenRequest = async () =>
   axios.get(`/auth/verify`);
 
 
-  export const requestPasswordReset = async (email) => {
+  export const resetPasswordRequest = async (email) => {
     return axios.post('/auth/request-password-reset', {
-      email: email  // Enviamos el correo electrónico como parte del cuerpo de la solicitud
+      email: email  
     });
   };
 
-  export const resetPassword = async (userId, token, newPassword) => {
-    return axios.post('/password-reset', {
+  export const passwordRequest = async (userId, token, newPassword) => {
+    return axios.post('/auth/password-reset', {
       userId,
       token,
       newPassword
     });
   };
+  
+  
 
 
 // Nueva función para registro de doctores
