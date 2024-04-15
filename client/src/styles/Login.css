@@ -31,74 +31,45 @@ Estilos generales
     position: relative; /* Establecer como relativo para posicionar el eslogan absolutamente dentro */
 }
 
-@keyframes enterSlogan {
+@keyframes typing {
     0% {
-      transform: translate(-50%, -50%) perspective(600px) rotateY(90deg);
-      opacity: 0;
+      max-width: 0;
+    }
+    50% {
+      white-space: nowrap;
     }
     100% {
-      transform: translate(-50%, -50%) perspective(600px) rotateY(0deg);
-      opacity: 1;
+      max-width: 50%; 
+      white-space: pre-wrap; /* Cambia a pre-wrap para permitir saltos de línea */
     }
-  }
-  
-  @keyframes exitSlogan {
-    0% {
-      transform: translate(-50%, -50%) perspective(600px) rotateY(0deg);
-      opacity: 1;
-    }
-    100% {
-      transform: translate(-50%, -50%) perspective(600px) rotateY(-90deg);
-      opacity: 0;
-    }
-  }
-  
-  @keyframes typing {
-    from {
-      width: 0;
-    }
-    to {
-      width: 90%;
-    }
-  }
-  
-  @keyframes blinkCaret {
-    from, to { border-color: transparent }
-    50% { border-color: black }
   }
   
   .slogan {
     position: absolute;
-    top: 20%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 0;
+    width: 50%;
     padding: 1rem;
-    color: black;
-    font-size: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
     text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
+    overflow: hidden; /* Si deseas asegurarte de que no se desborde el texto */
     border-right: .15em solid black; /* The caret */
     background-color: rgba(255, 255, 255, 0.8);
     opacity: 0.8;
     z-index: 10;
-    /* Remove previous box-shadow and border-radius if not needed */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+    /* Nuevas propiedades para permitir múltiples líneas */
+    height: auto; /* Ajustar según sea necesario para acomodar dos líneas */
+    max-height: 20%; /* Asegúrate de que tenga espacio para expandirse */
+    white-space: nowrap; 
   }
   
   .slogan.typing {
-    animation: typing 3s steps(40, end) forwards, blinkCaret .75s step-end infinite;
-    width: 50%;
-  }
-  
-
-  
-  .slogan.enter {
-      animation: enterSlogan 0.5s forwards;
-  }
-  
-  .slogan.exit {
-      animation: exitSlogan 0.5s forwards;
+    animation: typing 5s steps(40, end) forwards, blinkCaret .75s step-end infinite;
   }
   
 

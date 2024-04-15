@@ -2,11 +2,15 @@ import User from "../models/user.model.js";
 import Doctor from "../models/medico.model.js";
 import Manager from "../models/manager.model.js";
 import MedicalHistory from '../models/medicalHistory.model.js '; 
+import RecoveryToken from "../models/recoveryToken.model.js";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { TOKEN_SECRET } from "../config.js";
 import { createAccessToken } from "../libs/jwt.js";
 import { registerSchema, registerDoctorSchema} from "../schemas/auth.schema.js";
+import nodemailer from 'nodemailer';
+import { google } from 'googleapis';
 
 export const register = async (req, res) => {
   try {
@@ -240,5 +244,105 @@ export const getMedicalHistoryPhoto = async (req, res) => {
   } catch (error) {
     console.error('Error al obtener la ruta de la foto del paciente:', error);
     res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
+
+
+
+
+const OAuth2 = google.auth.OAuth2;
+
+const createTransporter = async () => {
+  const oauth2Client = new OAuth2(
+    "217205102651-2vefguedu5qsou1t1o7h4blr7dotvvoj.apps.googleusercontent.com", // Client ID
+    "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", // Client Secret
+    "https://developers.google.com/oauthplayground" 
+  );
+
+  oauth2Client.setCredentials({
+    refresh_token: "1//04KMuLu9T8HJHCgYIARAAGAQSNwF-L9Iro8yQqMna-Mu0SaTu4xPo9-KQR6GImtj7mX2UwjezKRWg9zCyvfPDSiO4IXZX7CpP3xg"
+  });
+
+  const accessToken = await new Promise((resolve, reject) => {
+    oauth2Client.getAccessToken((err, token) => {
+      if (err) reject(err);
+      resolve(token);
+    });
+  });
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: "grupo.operativo.84@gmail.com",
+      accessToken,
+      clientId: "217205102651-2vefguedu5qsou1t1o7h4blr7dotvvoj.apps.googleusercontent.com",
+      clientSecret: "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",
+      refreshToken: "1//04KMuLu9T8HJHCgYIARAAGAQSNwF-L9Iro8yQqMna-Mu0SaTu4xPo9-KQR6GImtj7mX2UwjezKRWg9zCyvfPDSiO4IXZX7CpP3xg"
+    }
+  });
+
+  return transporter;
+};
+
+
+export const requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+  console.log(email);
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ message: "No existe un usuario con ese correo electrónico." });
+  }
+
+  const token = crypto.randomBytes(20).toString('hex');
+  const recoveryToken = new RecoveryToken({ userId: user._id, token });
+  await recoveryToken.save();
+
+  const transporter = await createTransporter();
+
+  const resetLink = `http://localhost:5173`;
+
+  await transporter.sendMail({
+    to: user.email,
+    subject: "Recuperación de Contraseña",
+    html: `Por favor, haz clic en el siguiente enlace para restablecer tu contraseña: <a href="${resetLink}">${resetLink}</a>`
+  });
+
+  res.json({ message: "Se ha enviado un enlace de recuperación de contraseña al correo electrónico proporcionado." });
+};
+
+export const resetPassword = async (req, res) => {
+  // Obtener datos del cuerpo de la solicitud
+  const { userId, token, newPassword } = req.body;
+
+  try {
+    // Buscar el token de recuperación en la base de datos
+    const recoveryToken = await RecoveryToken.findOne({ userId, token });
+
+    // Verificar si el token existe y es válido
+    if (!recoveryToken) {
+      return res.status(400).json({ message: "Token de recuperación inválido o ha expirado." });
+    }
+
+    // Buscar el usuario por ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado." });
+    }
+
+    // Establecer la nueva contraseña
+    // Aquí deberías encriptar la contraseña antes de guardarla, por ejemplo, usando bcrypt
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
+    // Guardar el usuario actualizado en la base de datos
+    await user.save();
+
+    // Eliminar el token de recuperación de la base de datos ya que ya no se necesita
+    await recoveryToken.deleteOne();
+
+    res.json({ message: "Contraseña restablecida con éxito." });
+  } catch (error) {
+    res.status(500).json({ message: "Ocurrió un error al intentar restablecer la contraseña.", error: error.message });
   }
 };

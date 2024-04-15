@@ -5,7 +5,7 @@ import {
   register,
   verifyToken,
   registerDoctor, 
-  getMedicalHistoryPhoto
+  getMedicalHistoryPhoto,requestPasswordReset, resetPassword 
 } from "../controllers/auth.controller.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
 import { loginSchema, registerSchema, registerDoctorSchema } from "../schemas/auth.schema.js"; 
@@ -21,5 +21,8 @@ router.get("/verify", verifyToken);
 router.post("/logout", verifyToken, logout);
 
 router.get('/photoUser/:userId', getMedicalHistoryPhoto);
+
+router.post("/request-password-reset", requestPasswordReset);
+router.post("/password-reset", resetPassword);
 
 export default router;

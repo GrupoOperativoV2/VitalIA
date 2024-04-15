@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/authContext";
+import { RecoverForm } from  "./RecoverForm"
 import "../../styles/popup.css"
 
 const LoginForm = () => {
@@ -83,21 +84,7 @@ const LoginForm = () => {
       {showForgotPasswordModal && (
         <div className="modal" onClick={closeModal}>
           <div className="modal-contenido" onClick={(e) => e.stopPropagation()}>
-            <h2>¿Olvidaste tu contraseña?</h2>
-            <p>
-              Por favor, introduce tu correo electrónico registrado para
-              restablecer tu contraseña.
-            </p>
-            <form className="formularioModal">
-              <input
-                type="text"
-                placeholder="Correo electrónico"
-                className="input-text"
-              />
-              <button className="btn" type="submit">
-                Enviar
-              </button>
-            </form>
+            <RecoverForm/>
           </div>
         </div>
       )}
