@@ -12,6 +12,22 @@ export const loginRequest = async (user) =>
 export const verifyTokenRequest = async () => 
   axios.get(`/auth/verify`);
 
+
+  export const requestPasswordReset = async (email) => {
+    return axios.post('/auth/request-password-reset', {
+      email: email  // Enviamos el correo electrónico como parte del cuerpo de la solicitud
+    });
+  };
+
+  export const resetPassword = async (userId, token, newPassword) => {
+    return axios.post('/password-reset', {
+      userId,
+      token,
+      newPassword
+    });
+  };
+
+
 // Nueva función para registro de doctores
 export const registerDoctorRequest = async (user) =>
   axios.post(`/auth/registerDoctor`, user);

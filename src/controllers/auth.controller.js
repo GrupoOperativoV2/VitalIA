@@ -300,7 +300,7 @@ export const requestPasswordReset = async (req, res) => {
 
   const transporter = await createTransporter();
 
-  const resetLink = `http://localhost:5173`;
+  const resetLink = `http://localhost:5173/recover`;
 
   await transporter.sendMail({
     to: user.email,
@@ -312,33 +312,25 @@ export const requestPasswordReset = async (req, res) => {
 };
 
 export const resetPassword = async (req, res) => {
-  // Obtener datos del cuerpo de la solicitud
   const { userId, token, newPassword } = req.body;
 
   try {
-    // Buscar el token de recuperación en la base de datos
     const recoveryToken = await RecoveryToken.findOne({ userId, token });
 
-    // Verificar si el token existe y es válido
     if (!recoveryToken) {
       return res.status(400).json({ message: "Token de recuperación inválido o ha expirado." });
     }
 
-    // Buscar el usuario por ID
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado." });
     }
 
-    // Establecer la nueva contraseña
-    // Aquí deberías encriptar la contraseña antes de guardarla, por ejemplo, usando bcrypt
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
 
-    // Guardar el usuario actualizado en la base de datos
     await user.save();
 
-    // Eliminar el token de recuperación de la base de datos ya que ya no se necesita
     await recoveryToken.deleteOne();
 
     res.json({ message: "Contraseña restablecida con éxito." });

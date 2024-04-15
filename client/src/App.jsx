@@ -13,6 +13,7 @@ import HomePage from "./pages/HomePage";
 
 
 import { SesionPage } from "./pages/SesionPage";
+import { Recover } from "./pages/Recover";
 
 //Paciente
 import { PatientPage } from "./pages/Patient/PatientPage";
@@ -58,14 +59,9 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/login" element={<SesionPage />} />
                     <Route path="/register" element={<SesionPage />} />
+                    <Route path="/recover" element={<Recover />} />
                     <Route element={<ProtectedRoute />}>
-                      {/*
-                  Después de agregar los módulos faltantes, deberán ser 
-                  agregados dentro del elemento de cada tipo de usuario.
-                  Para definir a qué ruta deberá ser referenciado el usuario 
-                  como su principal, se deberá consultar ./routes y realizar los
-                  cambios indicados
-                  */}
+              
 
                       <Route element={<ManagerPages />}>
                       <Route path="/gestor" element={<GestorPage />} />
@@ -75,16 +71,7 @@ function App() {
                       <Route path="/settingM" element={<SettingPageM />} />
 
 
-                        {/* <Route path="/tasks" element={<TasksPage />} />
-                        <Route path="/add-task" element={<TaskFormPage />} />
-                        <Route path="/tasks/:id" element={<TaskFormPage />} />
-                        <Route path="/profile" element={<h1>Profile</h1>} /> */}
-                        {/* Nuevas rutas para Rooms */}
-                        {/* <Route path="/rooms" element={<RoomPage />} />
-                        <Route path="/add-room" element={<RoomFormPage />} />
-                        <Route path="/gestor" element={<GestorPage />} />
-                        <Route path="/gestionH" element={<GestorH />} /> */}
-                        {/* Si tienes más páginas relacionadas con Rooms, pueden ir aquí */}
+            
 
                       </Route>
 
