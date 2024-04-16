@@ -102,11 +102,11 @@ const ChatbotContainer = styled.div`
 `;
 
 
-const Chatbot = ({ showChatbot, setShowChatbot }) => {
+const Chatbot = ({ showChatbot, setShowChatbot, history }) => {
   var num = 0;
   useEffect(() => {
     firstMessage();
-    console.log("holaa");
+    console.log(history);
   }, []);
 
   const firstMessage = async () => {
@@ -116,7 +116,7 @@ const Chatbot = ({ showChatbot, setShowChatbot }) => {
       const [headerEncoded, payloadEncoded, signature] = tokenString.split(".");
       const payload = JSON.parse(atob(payloadEncoded));
       const nom = payload.username;
-      const initialBotMessage = `Hola ${nom}, soy Stella, tu chatbot personal, estoy aquí para responder todas tus preguntas sobre tu salud, puedes elegir sobre qué quieras que te responda, ¿Empezamos?`;
+      const initialBotMessage = `Hola ${nom}, soy Toast, tu chatbot personal, estoy aquí para responder todas tus preguntas sobre tu salud, puedes elegir sobre qué quieras que te responda, ¿Empezamos?`;
       sendMessage(initialBotMessage, "bot");
     }
   };
