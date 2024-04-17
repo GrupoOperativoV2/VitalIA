@@ -126,15 +126,15 @@
     };
 
 
-  const getMedicalHistory = async (userId) => {
-    try {
-        const history = await getMedicalHistoryRequest(userId);
-        return history;
-    } catch (error) {
-        console.error('Error fetching medical history:', error);
-        throw error;
-    }
-  };
+    const getMedicalHistory = async (userId) => {
+      try {
+          const history = await getMedicalHistoryRequest(userId);
+          return history;
+      } catch (error) {
+          console.error('Error fetching medical history:', error);
+          throw error;
+      }
+    };
 
   // Definimos el método `DoctorSearch` en tu AuthProvider
   const DoctorSearch = async () => {
