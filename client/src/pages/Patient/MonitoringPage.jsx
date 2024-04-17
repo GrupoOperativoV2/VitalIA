@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar.jsx";
 import styled from "styled-components";
 import Chatbot from "./Chatbot.jsx";
@@ -43,15 +43,25 @@ const BodyContainer = styled.div`
 
 
 export function MonitoringPage() {
+  const { getMedicalHistory } = useAuth();
   const { isAuthenticated, logout, user } = useAuth();
   const [showChatbot, setShowChatbot] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [history, setHistory] = useState(null);
 
   const togglePopup = () => {
     setPopupVisible(!popupVisible);
   };
 
+  useEffect(() => {
+    const initialize = async () => {
+      const historyData = await getMedicalHistory(user?.id);
+      setHistory(historyData); // Guarda el historial médico en el estado
+    };
+
+    initialize();
+  }, [getMedicalHistory]);
 
 
   return (
@@ -64,7 +74,7 @@ export function MonitoringPage() {
       </BodyContainer>
       
       <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
-        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
+        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} history={history} />}
     </PatientPageContainer>
   );
 }

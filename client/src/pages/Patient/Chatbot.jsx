@@ -3,14 +3,57 @@ import styled from 'styled-components';
 import { getCompletion } from '../../containers/IA/api';
 import Cookies from "js-cookie";
 
+
+let datospaciente = "";
 const Chatbot = ({ showChatbot, setShowChatbot, history}) => {
   var num = 0;
   useEffect(() => {
     firstMessage();
     console.log("holaa");
-    console.log(history)
-  }, []);
 
+    console.log(history );
+    const {
+      physicalInformation,
+      medicalHistory,
+      lifestyle,
+      vaccinations
+    } = history;
+    
+    // Función para crear una descripción detallada como una sola cadena
+    const createDescription = () => {
+      return `
+        Physical Information:
+        Weight: ${physicalInformation.weight} kg, Height: ${physicalInformation.height} cm, Blood Pressure: ${physicalInformation.bloodPressure}
+        
+        Medical History:
+        Blood Type: ${medicalHistory.bloodType},
+        Diseases: ${medicalHistory.diseases.join(', ')},
+        Surgeries: ${medicalHistory.surgeries.join(', ')},
+        Hospitalizations: ${medicalHistory.hospitalizations.join(', ')},
+        Allergies: ${medicalHistory.allergies.join(', ')},
+        Family History: ${medicalHistory.familyHistory.join(', ')},
+        Medications: ${medicalHistory.medications.join(', ') || 'None'}
+    
+        Lifestyle:
+        Diet: ${Object.entries(lifestyle.diet).filter(([key, value]) => value).map(([key]) => key).join(', ') || 'No specific diet'},
+        Exercise: ${lifestyle.exercise},
+        Alcohol Consumption: ${lifestyle.alcoholConsumption},
+        Smoking Habits: ${lifestyle.smokingHabits}
+    
+        Vaccinations:
+        Influenza: ${vaccinations.influenza ? 'Yes' : 'No'},
+        Tetanus: ${vaccinations.tetanus ? 'Yes' : 'No'},
+        Hepatitis B: ${vaccinations.hepatitisB ? 'Yes' : 'No'},
+        Measles: ${vaccinations.measles ? 'Yes' : 'No'},
+        COVID-19: ${vaccinations.covid19 ? 'Yes' : 'No'}
+      `;
+    };
+    
+    // Almacenar la descripción en una variable
+    const patientDescription = createDescription();
+    datospaciente = patientDescription;
+    console.log(patientDescription);
+  }, []);
   const firstMessage = async () => {
     num++;
     const tokenString = Cookies.get("token");
@@ -18,7 +61,7 @@ const Chatbot = ({ showChatbot, setShowChatbot, history}) => {
       const [headerEncoded, payloadEncoded, signature] = tokenString.split(".");
       const payload = JSON.parse(atob(payloadEncoded));
       const nom = payload.username;
-      const initialBotMessage = `Hola ${nom}, soy Stella, tu chatbot personal, estoy aquí para responder todas tus preguntas sobre tu salud, puedes elegir sobre qué quieras que te responda, ¿Empezamos?`;
+      const initialBotMessage = `Hola 👋 ${nom}, soy Toast, tu chatbot personal, estoy aquí para responder todas tus preguntas sobre tu salud 🩺. ¿Empezamos?`;
       sendMessage(initialBotMessage, "bot");
     }
   };
@@ -56,8 +99,8 @@ const processUserInput = async () => {
 
   if (userMessage !== "") {
     sendMessage(userMessage, "user");
-
-    const response = handleQuery(userMessage) || await getCompletion(`(Responde muy brevemente a la siguiente petición en base a los siguientes datos si se trata de cuestiones de salud, si no se trata de cuestiones de salud decir: No puedo responder eso). petición= ${userMessage}`);
+    
+    const response = handleQuery(userMessage) || await getCompletion(`(Responde muy brevemente a la siguiente petición en base a los siguientes datos si se trata de cuestiones de salud, si no se trata de cuestiones de salud decir: No puedo responder eso). datos = (${datospaciente}). petición= (${userMessage})`);
     sendMessage(response, "bot");
 
     userInput.value = "";
@@ -67,7 +110,7 @@ const processUserInput = async () => {
   return (
     <ChatbotContainer className={showChatbot ? "open" : ""}>
       <div className="chat-header">
-        <h3>Chatbot</h3>
+        <h3>🤖 Toast </h3>
         <button className="close-button"
           onClick={() => {
             setShowChatbot(false);

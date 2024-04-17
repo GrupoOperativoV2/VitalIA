@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar.jsx";
 import styled from "styled-components";
 import Chatbot from "./Chatbot.jsx";
@@ -48,22 +48,29 @@ export function MessagesPage() {
   const [showChatbot, setShowChatbot] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
+  const {getMedicalHistory } = useAuth();
+  const [history, setHistory] = useState(null); 
+  
 
-  const togglePopup = () => {
-    setPopupVisible(!popupVisible);
-  };
+  useEffect(() => {
+    const initialize = async () => {
+           const historyData = await getMedicalHistory(user?.id);
+          setHistory(historyData); // Guarda el historial médico en el estado
+    };
 
+    initialize();
+  }, [getMedicalHistory]);
   return (
     <PatientPageContainer>
       <SidebarContainer isOpen={sidebarOpen}>
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
       <BodyContainer>
-        <Chat/>
+        <Chat />
       </BodyContainer>
-      
+
       <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
-        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
+      {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} history={history} />}
     </PatientPageContainer>
   );
 }
