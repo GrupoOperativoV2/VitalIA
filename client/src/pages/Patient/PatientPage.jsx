@@ -75,7 +75,7 @@ export function PatientPage() {
         </SidebarContainer>
 
         <BodyContainer>
-          {/* <button onClick={togglePopup}>Mostrar popup</button> */}
+          <button onClick={togglePopup}>Mostrar popup</button> 
 
           <MedicalDiscoveryTab />
 
@@ -109,11 +109,11 @@ export function PatientPage() {
           show={historyPopupVisible}
           onClose={toggleHistoryPopup}
           title="Historial Médico"
-          width="600px" // Puedes ajustar esto según el diseño que desees
+          width="1200px" // Puedes ajustar esto según el diseño que desees
           customStyle={`
     background-color: #f0f0f0; 
     border-radius: 20px; 
-    padding: 30px;
+    padding: 50px;
   `}
         >
           <MedicalHistoryForm userData={user} onClose={handleClosePopups} />
