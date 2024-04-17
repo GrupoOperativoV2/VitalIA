@@ -18,12 +18,13 @@ const Popup = ({ show, onClose, title, children, customStyle, width }) => (
 );
 
 export function PatientPage() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, getMedicalHistory } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
   const [historyPopupVisible, setHistoryPopupVisible] = useState(false);
   const [isHistorySubmitted, setIsHistorySubmitted] = useState(false);
+  const [history, setHistory] = useState(null); 
 
   const handleClosePopups = () => {
     setHistoryPopupVisible(false);
@@ -41,21 +42,30 @@ export function PatientPage() {
   
 
   useEffect(() => {
-    const isFormSubmitted = localStorage.getItem("isFormSubmitted") === "true";
-    setIsHistorySubmitted(isFormSubmitted);
-  
-    const isFirstLogin = localStorage.getItem("isFirstLogin") === "true";
-    if (isAuthenticated && isFirstLogin && !isFormSubmitted) {
-      setPopupVisible(true);
-    }
-  }, [isAuthenticated]);
-  
-  const handleHistorySubmit = () => {
-    setIsHistorySubmitted(true);
-    localStorage.setItem("isFormSubmitted", "true"); // Marca el formulario como enviado
-    setPopupVisible(false); // Cierra el popup después de enviar el formulario
-    toggleHistoryPopup();
-  };
+    const initialize = async () => {
+      const isFormSubmitted = localStorage.getItem("isFormSubmitted") === "true";
+      setIsHistorySubmitted(isFormSubmitted);
+      const isFirstLogin = localStorage.getItem("isFirstLogin") === "true";
+    
+      if (isAuthenticated) {
+        try {
+          const historyData = await getMedicalHistory(user?.id);
+          setHistory(historyData); // Guarda el historial médico en el estado
+          if (!isFormSubmitted && isFirstLogin && !historyData) {
+            setPopupVisible(true);
+          }
+        } catch (error) {
+          console.error('Failed to fetch medical history:', error.message);
+          if (!isFormSubmitted && isFirstLogin) {
+            setPopupVisible(true);
+          }
+        }
+      }
+    };
+    
+    initialize();
+  }, [user, isAuthenticated, getMedicalHistory]);
+
   
 
     return (
@@ -117,7 +127,7 @@ export function PatientPage() {
         💬
       </PositionedButton>
       {showChatbot && (
-        <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />
+        <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot}  history={history}/>
       )}
     </PatientPageContainer>
   );
