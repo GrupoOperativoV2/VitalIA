@@ -9,6 +9,7 @@ import { PersonalBlog } from "../components/PersonalBlog";
 export function ProfilePatient({ patientInfo }) {
   const [activeTab, setActiveTab] = useState("medicalHistory");
 
+
   if (!patientInfo) {
     return <div>Cargando información del paciente...</div>;
   }

@@ -141,7 +141,6 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
     emergencyContactRelation: "",
     emergencyContactNumber: "",
     hospitalizations: "",
-    familyHistory: "",
     bloodType: "",
     lifestyle: {
       vegetarian: false,
@@ -197,21 +196,13 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
     labResults: "",
     patientPhoto: null,
   });
-
   const [errors, setErrors] = useState({});
-
   const [formSubmitted, setFormSubmitted] = useState(false);
-
   const [imagePreview, setImagePreview] = useState(profile);
-
   const { addMedicalHistory, uploadPatientPhoto } = useAuth();
-
   const [medications, setMedications] = useState([]);
-
   const [systolic, setSystolic] = useState("");
-
   const [diastolic, setDiastolic] = useState("");
-
   const [showOtherDiseases, setShowOtherDiseases] = useState(false);
   const [showOtherSurgeries, setShowOtherSurgeries] = useState(false);
   const [showOtherAllergies, setShowOtherAllergies] = useState(false);
@@ -222,19 +213,19 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
 
   const handleAddLabTest = () => {
     const newTest = {
-      date: '',
-      diagnosis: '',
-      doctor: '',
-      aspect: '',
-      results: ''
+      date: "",
+      diagnosis: "",
+      doctor: "",
+      aspect: "",
+      results: "",
     };
     setLabTests([...labTests, newTest]);
   };
-  
+
   const handleRemoveLabTest = (index) => {
     setLabTests(labTests.filter((_, i) => i !== index));
   };
-  
+
   const handleChangeLabTest = (index, field, value) => {
     const updatedTests = labTests.map((test, i) => {
       if (i === index) {
@@ -244,25 +235,28 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
     });
     setLabTests(updatedTests);
   };
-  
-
 
   const handleAddHospitalization = () => {
-    setHospitalizations([...hospitalizations, ""]); // Agrega un campo vacío
+    setHospitalizations([...hospitalizations, { description: "", date: "" }]);
   };
+
   const toggleOtherVaccinations = () => {
     setShowOtherVaccinations(!showOtherVaccinations);
   };
 
   const handleRemoveHospitalization = (index) => {
-    setHospitalizations(hospitalizations.filter((_, i) => i !== index));
+    setHospitalizations(hospitalizations.filter((_, idx) => idx !== index));
   };
 
-  const handleChangeHospitalization = (value, index) => {
-    const updatedHospitalizations = hospitalizations.map((item, i) =>
-      i === index ? value : item
+  const handleChangeHospitalization = (value, index, field) => {
+    setHospitalizations(
+      hospitalizations.map((item, idx) => {
+        if (idx === index) {
+          return { ...item, [field]: value };
+        }
+        return item;
+      })
     );
-    setHospitalizations(updatedHospitalizations);
   };
 
   const toggleOtherFamilyHistory = () => {
@@ -356,142 +350,79 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const birthdate = new Date(
-      formData.birthdateYear,
-      formData.birthdateMonth - 1,
-      formData.birthdateDay
-    );
-    if (isNaN(birthdate.getTime())) {
-      toast.error("Fecha de nacimiento inválida.");
-      return;
-    }
-
-    const fullPhoneNumber = `${phonePrefix} ${formData.contactNumber}`;
-
-    const selectedDiseases = Object.keys(formData.pastDiseases)
-      .filter((key) => formData.pastDiseases[key])
-      .concat(
-        formData.pastDiseases.otherDiseases.trim()
-          ? [formData.pastDiseases.otherDiseases.trim()]
-          : []
-      );
-
-    const selectedSurgeries = Object.keys(formData.surgeries)
-      .filter((key) => formData.surgeries[key])
-      .concat(
-        formData.surgeries.otherSurgeries.trim()
-          ? [formData.surgeries.otherSurgeries.trim()]
-          : []
-      );
-
-    const selectedAllergies = Object.keys(formData.allergies)
-      .filter((key) => formData.allergies[key])
-      .concat(
-        formData.allergies.otherAllergies.trim()
-          ? [formData.allergies.otherAllergies.trim()]
-          : []
-      );
-
-    const selectedHospitalizations =
-      formData.hospitalizations.trim() ||
-      (!selectedDiseases.length &&
-      !selectedSurgeries.length &&
-      !selectedAllergies.length
-        ? "Ninguna"
-        : [formData.hospitalizations.trim()]);
-
-    const selectedFamilyHistory = Object.keys(formData.familyHistory)
-      .filter((key) => formData.familyHistory[key])
-      .concat(
-        formData.familyHistory.otherFamilyDiseases.trim()
-          ? [formData.familyHistory.otherFamilyDiseases.trim()]
-          : []
-      );
-
-    const medicalHistory = {
-      diseases: selectedDiseases.length ? selectedDiseases : ["Ninguna"],
-      surgeries: selectedSurgeries.length ? selectedSurgeries : ["Ninguna"],
-      hospitalizations: selectedHospitalizations.length
-        ? selectedHospitalizations
-        : ["Ninguna"],
-      allergies: selectedAllergies.length ? selectedAllergies : ["Ninguna"],
-      familyHistory: selectedFamilyHistory.length
-        ? selectedFamilyHistory
-        : ["Ninguna"],
-      medications: medications.map((med) => ({
-        name: med.name,
-        dose: med.dose,
-      })),
-      bloodType: formData.bloodType,
-    };
-
-    const fullAddress = `${formData.street}, ${formData.municipality}, ${formData.postalCode}, ${formData.state}`;
-    const fullEmergencyPhoneNumber = `${emergencyPhonePrefix} ${formData.emergencyContactNumber}`;
-    const { patientPhoto, ...rest } = formData;
+    // Formateo de la presión arterial
     const bloodPressure = `${systolic}/${diastolic}`;
 
-    const dataToSend = {
-      userId: rest.userId,
+    // Preparar datos para envío
+    const formattedData = {
+      userId: formData.userId,
       personalInformation: {
-        name: rest.name,
-        birthdate: birthdate,
-        gender: rest.gender,
-        address: fullAddress,
-        contactNumber: fullPhoneNumber,
-        email: rest.email,
+        name: formData.name,
+        birthdate: new Date(
+          formData.birthdateYear,
+          formData.birthdateMonth - 1,
+          formData.birthdateDay
+        ).toISOString(),
+        gender: formData.gender,
+        address: `${formData.street}, ${formData.municipality}, ${formData.postalCode}, ${formData.state}`,
+        contactNumber: `${phonePrefix} ${formData.contactNumber}`,
+        email: formData.email,
       },
       physicalInformation: {
-        weight: Number(rest.weight),
-        height: Number(rest.height),
-        bloodPressure: bloodPressure,
+        weight: formData.weight,
+        height: formData.height,
+        bloodPressure,
       },
       emergencyInformation: {
-        contactName: rest.emergencyContactName,
-        contactRelation: rest.emergencyContactRelation,
-        contactNumber: fullEmergencyPhoneNumber,
+        contactName: formData.emergencyContactName,
+        contactRelation: formData.emergencyContactRelation,
+        contactNumber: `${phonePrefix} ${formData.emergencyContactNumber}`,
       },
-      medicalHistory,
+      medicalHistory: {
+        bloodType: formData.bloodType,
+        diseases: formData.pastDiseases,
+        surgeries: formData.surgeries,
+        hospitalizations: hospitalizations,
+        allergies: formData.allergies,
+        familyHistory: formData.familyHistory,
+        medications: medications,
+      },
       lifestyle: {
-        diet: {
-          vegetarian: rest.lifestyle.vegetarian,
-          glutenFree: rest.lifestyle.glutenFree,
-          vegan: rest.lifestyle.vegan,
-          keto: rest.lifestyle.keto,
-          paleo: rest.lifestyle.paleo,
-          description: rest.lifestyle.dietDescription,
-        },
-        exercise: rest.lifestyle.exercise,
-        alcoholConsumption: rest.lifestyle.alcohol,
-        smokingHabits: rest.lifestyle.smoking,
+        diet: formData.lifestyle,
+        exercise: formData.lifestyle.exercise,
+        alcoholConsumption: formData.lifestyle.alcohol,
+        smokingHabits: formData.lifestyle.smoking,
       },
-      vaccinations: {
-        influenza: rest.vaccinations.influenza,
-        tetanus: rest.vaccinations.tetanus,
-        hepatitisB: rest.vaccinations.hepatitisB,
-        measles: rest.vaccinations.measles,
-        covid19: rest.vaccinations.covid19,
-        otherVaccinations: rest.vaccinations.otherVaccinations,
-      },
+      vaccinations: formData.vaccinations,
       labResults: labTests,
-      patientPhoto: patientPhoto ? patientPhoto.name : null, // Asumiendo que se manejará la carga del archivo por separado
+      patientPhoto: formData.patientPhoto ? formData.patientPhoto.name : null,
     };
 
-    console.log(dataToSend);
+    // Envío de datos al backend
     try {
-      await addMedicalHistory(formData.userId, dataToSend);
+      await addMedicalHistory(formattedData.userId, formattedData);
       setFormSubmitted(true);
-      toast.success("Historial médico enviado con éxito");
+      toast.success("Historial médico enviado con éxito.");
       handleUserRegistration();
-
-      // Si hay una foto para subir, hazlo después de enviar el formulario
-      if (patientPhoto) {
-        await uploadPatientPhoto(formData.userId, patientPhoto);
+      
+      if (formData.patientPhoto) {
+        await uploadPatientPhoto(formData.userId, formData.patientPhoto);
       }
     } catch (error) {
       console.error("Error al enviar el historial médico:", error);
-      toast.error("Error al enviar el historial médico");
+      toast.error("Error al enviar el historial médico.");
     }
   };
+
+
+  function extractCheckedItems(items) {
+    return Object.entries(items)
+      .filter(
+        ([key, value]) =>
+          value === true || (typeof value === "string" && value.trim() !== "")
+      )
+      .map(([key, value]) => (typeof value === "boolean" ? key : value));
+  }
 
   if (formSubmitted) {
     return (
@@ -499,6 +430,7 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
         <CenteredMessage>
           Gracias por enviar su historial médico.
         </CenteredMessage>
+        <br></br>
         <CloseButton onClick={onClose}>Cerrar</CloseButton>
         <ToastContainer position="top-center" autoClose={5000} />
       </div>
@@ -1001,7 +933,6 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
         <br></br>
         <br></br>
 
-        <Label>Hospitalizaciones</Label>
         {hospitalizations.map((hospitalization, index) => (
           <div
             key={index}
@@ -1013,11 +944,24 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
           >
             <Input
               type="text"
-              value={hospitalization}
+              value={hospitalization.description}
               onChange={(e) =>
-                handleChangeHospitalization(e.target.value, index)
+                handleChangeHospitalization(
+                  e.target.value,
+                  index,
+                  "description"
+                )
               }
               placeholder="Describa la hospitalización"
+              style={{ marginRight: "10px" }}
+            />
+            <Input
+              type="date"
+              value={hospitalization.date}
+              onChange={(e) =>
+                handleChangeHospitalization(e.target.value, index, "date")
+              }
+              style={{ marginRight: "10px" }}
             />
             <button
               type="button"
@@ -1031,6 +975,7 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
         <button type="button" onClick={handleAddHospitalization}>
           Agregar Hospitalización
         </button>
+
         <br></br>
         <br></br>
 
@@ -1300,56 +1245,64 @@ const MedicalHistoryForm = ({ userData, onClose }) => {
       </Fieldset>
 
       <Fieldset>
-  <Legend>Exámenes de Laboratorio</Legend>
-  {labTests.map((test, index) => (
-    <div key={index}>
-      <Label>Fecha del examen</Label>
-      <Input
-        type="date"
-        value={test.date}
-        onChange={(e) => handleChangeLabTest(index, 'date', e.target.value)}
-      />
+        <Legend>Exámenes de Laboratorio</Legend>
+        {labTests.map((test, index) => (
+          <div key={index}>
+            <Label>Fecha del examen</Label>
+            <Input
+              type="date"
+              value={test.date}
+              onChange={(e) =>
+                handleChangeLabTest(index, "date", e.target.value)
+              }
+            />
 
-      <Label>Diagnóstico</Label>
-      <Input
-        type="text"
-        value={test.diagnosis}
-        onChange={(e) => handleChangeLabTest(index, 'diagnosis', e.target.value)}
-      />
+            <Label>Diagnóstico</Label>
+            <Input
+              type="text"
+              value={test.diagnosis}
+              onChange={(e) =>
+                handleChangeLabTest(index, "diagnosis", e.target.value)
+              }
+            />
 
-      <Label>Doctor encargado</Label>
-      <Input
-        type="text"
-        value={test.doctor}
-        onChange={(e) => handleChangeLabTest(index, 'doctor', e.target.value)}
-      />
+            <Label>Doctor encargado</Label>
+            <Input
+              type="text"
+              value={test.doctor}
+              onChange={(e) =>
+                handleChangeLabTest(index, "doctor", e.target.value)
+              }
+            />
 
-      <Label>Indicaciones</Label>
-      <Input
-        type="text"
-        value={test.aspect}
-        onChange={(e) => handleChangeLabTest(index, 'aspect', e.target.value)}
-      />
+            <Label>Indicaciones</Label>
+            <Input
+              type="text"
+              value={test.aspect}
+              onChange={(e) =>
+                handleChangeLabTest(index, "aspect", e.target.value)
+              }
+            />
 
-      <Label>Resultados</Label>
+            {/* <Label>Resultados</Label>
       <Input
         type="text"
         value={test.results}
         onChange={(e) => handleChangeLabTest(index, 'results', e.target.value)}
-      />
+      /> */}
 
-      <button type="button" onClick={() => handleRemoveLabTest(index)}>
-        Eliminar Examen
-      </button>
-    </div>
-  ))}
-  <Label><button type="button" onClick={handleAddLabTest}>
-    Agregar Examen de Laboratorio
-  </button></Label>
-  <br></br>
-</Fieldset>
-
-
+            <button type="button" onClick={() => handleRemoveLabTest(index)}>
+              Eliminar Examen
+            </button>
+          </div>
+        ))}
+        <Label>
+          <button type="button" onClick={handleAddLabTest}>
+            Agregar Examen de Laboratorio
+          </button>
+        </Label>
+        <br></br>
+      </Fieldset>
 
       <Fieldset>
         <Legend>Foto del Paciente</Legend>

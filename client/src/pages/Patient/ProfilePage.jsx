@@ -77,7 +77,6 @@ export function ProfilePage() {
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
       <BodyContainer>
-        {/* Pasar patientInfo como prop a ProfilePatient */}
         <ProfilePatient patientInfo={patientInfo} />
         <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
         {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} history={history} />}

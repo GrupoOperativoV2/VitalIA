@@ -1,13 +1,10 @@
 import { Router } from "express";
-import { createAppointment, getAllAppointments, getAppointmentById, updateAppointment, deleteAppointment, getAllDoctors, getAppointmentsByUserId} from '../controllers/appointment.controller.js';
+import { createAppointment, getAllAppointments, getAppointmentsByUserId, updateAppointment, deleteAppointment, getAllDoctors} from '../controllers/appointment.controller.js';
 
 const router = Router();
 
 // Ruta para obtener todas las citas
 router.get('/appointments', getAllAppointments);
-
-// Ruta para obtener una cita específica por ID
-router.get('/appointments/:id', getAppointmentById);
 
 // Ruta para crear una nueva cita
 router.post('/appointments', createAppointment);

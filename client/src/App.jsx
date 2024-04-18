@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/authContext";
+import { AppointmentsProvider } from "./context/appointmentContext";
 import { ProtectedRoute } from "./routes";
 import { PatientPages } from "./routes";
 import { DoctorPages } from "./routes";
@@ -53,6 +54,7 @@ function App() {
           {/* Agregando el RoomProvider en el árbol de componentes */}
           <BrowserRouter>
             <ThemeContext.Provider value={{ setTheme, theme }}>
+            <AppointmentsProvider>
               <ThemeProvider theme={themeStyle}>
                 <main className="container content-container mx-auto px-10 md:px-0">
                   <Routes>
@@ -94,6 +96,7 @@ function App() {
                   </Routes>
                 </main>
               </ThemeProvider>
+              </AppointmentsProvider>
             </ThemeContext.Provider>
           </BrowserRouter>
     </AuthProvider>

@@ -39,7 +39,7 @@ export function PatientPage() {
   };
 
 
-  
+  let userID = user?.id;
 
   useEffect(() => {
     const initialize = async () => {
@@ -75,7 +75,7 @@ export function PatientPage() {
         </SidebarContainer>
 
         <BodyContainer>
-          <button onClick={togglePopup}>Mostrar popup</button> 
+          {/* <button onClick={togglePopup}>Mostrar popup</button>  */}
 
           <MedicalDiscoveryTab />
 
@@ -121,7 +121,7 @@ export function PatientPage() {
       </BodyContainer>
 
       <ContentSidebarContainer>
-        <Dashboard user={user} />
+        <Dashboard userID={userID} />
       </ContentSidebarContainer>
       <PositionedButton onClick={() => setShowChatbot(true)}>
         💬
@@ -168,6 +168,8 @@ export function PatientPage() {
 
   const BodyContainer = styled.div`
     flex-grow: 1;
+    width: 1000;     
+    height: 1300px; 
     background: ${({ theme }) => theme.bg};
     overflow: auto;
   `;

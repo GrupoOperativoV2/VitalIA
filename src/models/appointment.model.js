@@ -23,6 +23,10 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  office: {
+    type: String,
+    trim: true,
+  },
   status: {
     type: String,
     enum: ['scheduled', 'completed', 'cancelled'],

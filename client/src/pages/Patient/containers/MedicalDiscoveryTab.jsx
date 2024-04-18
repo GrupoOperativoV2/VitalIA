@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 const DiscoveryTab = styled.div`
-  background-color: #e8f4f8;
+  background-color: #f0f4f8;
   margin: 20px;
   padding: 15px;
   border-radius: 10px;
@@ -17,6 +17,8 @@ const WelcomeMessage = styled.div`
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
+  font-family: 'Roboto', sans-serif;
+  color: #2c3e50;
 `;
 
 const NewsSection = styled.div`
@@ -28,6 +30,12 @@ const NewsSection = styled.div`
   display: flex;
   align-items: center;
   gap: 15px;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.02);
+    cursor: pointer;
+  }
 `;
 
 const NewsImage = styled.img`
@@ -39,18 +47,21 @@ const NewsImage = styled.img`
 
 const NewsContent = styled.div`
   flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 const NewsTitle = styled.h4`
   margin: 0;
   color: #333;
   font-size: 18px;
+  font-weight: 600;
 `;
 
 const NewsLink = styled.a`
-  color: #1a0dab;  // Un color típico de enlace
+  color: #007bff;
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -58,15 +69,35 @@ const NewsLink = styled.a`
 
 const NewsText = styled.p`
   margin: 5px 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
 `;
 
-// Componente MedicalDiscoveryTab
+const WelcomeTitle = styled.h1`
+  font-size: 32px;
+  color: #34495e;
+  font-weight: bold;
+  margin-bottom: 10px;
+`;
+
+
+
+const WelcomeText = styled.p`
+  font-size: 18px;
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin-top: 0;
+  margin-bottom: 20px;
+`;
+
+
 const MedicalDiscoveryTab = () => {
   const [articles, setArticles] = useState([]);
 
   useEffect(() => {
     const fetchMedicalNews = async () => {
-      const apiKey = '21ca2e9bdb9e4571ba261935c08ce793'; // Reemplaza 'your_api_key' con tu clave API real
+      const apiKey = '21ca2e9bdb9e4571ba261935c08ce793'; 
       const url = `https://newsapi.org/v2/everything?q=medicina+biotecnología&language=es&apiKey=${apiKey}`; //Pendejos, acá se le mueve a las noticias
       try {
         const response = await axios.get(url);
@@ -82,18 +113,16 @@ const MedicalDiscoveryTab = () => {
   return (
     <DiscoveryTab>
       <WelcomeMessage>
-        <h1>Bienvenido al Centro de Descubrimientos Médicos</h1>
-        <p>Explora los últimos avances y descubrimientos en el mundo de la medicina.</p>
+        <WelcomeTitle>Bienvenido al Centro de Descubrimientos Médicos</WelcomeTitle>
+        <WelcomeText>Explora los últimos avances y descubrimientos en el mundo de la medicina.</WelcomeText>
       </WelcomeMessage>
-      <h2>Últimas Noticias</h2>
+      <NewsTitle>Últimas Noticias</NewsTitle>
       {articles.length > 0 ? (
         articles.map((article, index) => (
-          <NewsSection key={index}>
+          <NewsSection key={index} onClick={() => window.open(article.url, '_blank')}>
             <NewsImage src={article.urlToImage || 'https://via.placeholder.com/120'} alt="Noticia" />
             <NewsContent>
-              <NewsTitle>
-                <NewsLink href={article.url} target="_blank">{article.title}</NewsLink>
-              </NewsTitle>
+              <NewsTitle>{article.title}</NewsTitle>
               <NewsText>{article.description || 'No hay descripción disponible.'}</NewsText>
             </NewsContent>
           </NewsSection>

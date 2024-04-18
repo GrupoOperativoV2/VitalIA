@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 
 let datospaciente = "";
 const Chatbot = ({ showChatbot, setShowChatbot, history}) => {
-  var num = 0;
+  var num = 0;  
   useEffect(() => {
     firstMessage();
     console.log("holaa");
@@ -19,35 +19,41 @@ const Chatbot = ({ showChatbot, setShowChatbot, history}) => {
       vaccinations
     } = history;
     
-    // Función para crear una descripción detallada como una sola cadena
+    const formatObjectToList = (obj) => 
+    Object.entries(obj)
+      .filter(([key, value]) => value)
+      .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim())
+      .join(', ');
+
     const createDescription = () => {
-      return `
-        Physical Information:
-        Weight: ${physicalInformation.weight} kg, Height: ${physicalInformation.height} cm, Blood Pressure: ${physicalInformation.bloodPressure}
-        
-        Medical History:
-        Blood Type: ${medicalHistory.bloodType},
-        Diseases: ${medicalHistory.diseases.join(', ')},
-        Surgeries: ${medicalHistory.surgeries.join(', ')},
-        Hospitalizations: ${medicalHistory.hospitalizations.join(', ')},
-        Allergies: ${medicalHistory.allergies.join(', ')},
-        Family History: ${medicalHistory.familyHistory.join(', ')},
-        Medications: ${medicalHistory.medications.join(', ') || 'None'}
+     
+  return `
+    Physical Information:
+    Weight: ${physicalInformation.weight} kg, Height: ${physicalInformation.height} cm, Blood Pressure: ${physicalInformation.bloodPressure}
     
-        Lifestyle:
-        Diet: ${Object.entries(lifestyle.diet).filter(([key, value]) => value).map(([key]) => key).join(', ') || 'No specific diet'},
-        Exercise: ${lifestyle.exercise},
-        Alcohol Consumption: ${lifestyle.alcoholConsumption},
-        Smoking Habits: ${lifestyle.smokingHabits}
-    
-        Vaccinations:
-        Influenza: ${vaccinations.influenza ? 'Yes' : 'No'},
-        Tetanus: ${vaccinations.tetanus ? 'Yes' : 'No'},
-        Hepatitis B: ${vaccinations.hepatitisB ? 'Yes' : 'No'},
-        Measles: ${vaccinations.measles ? 'Yes' : 'No'},
-        COVID-19: ${vaccinations.covid19 ? 'Yes' : 'No'}
-      `;
-    };
+    Medical History:
+    Blood Type: ${medicalHistory.bloodType},
+    Diseases: ${formatObjectToList(medicalHistory.diseases)},
+    Surgeries: ${formatObjectToList(medicalHistory.surgeries)},
+    Hospitalizations: ${formatObjectToList(medicalHistory.hospitalizations)},
+    Allergies: ${formatObjectToList(medicalHistory.allergies)},
+    Family History: ${formatObjectToList(medicalHistory.familyHistory)},
+    Medications: ${medicalHistory.medications.length > 0 ? medicalHistory.medications.join(', ') : 'None'}
+
+    Lifestyle:
+    Diet: ${formatObjectToList(lifestyle.diet) || 'No specific diet'},
+    Exercise: ${lifestyle.exercise},
+    Alcohol Consumption: ${lifestyle.alcoholConsumption},
+    Smoking Habits: ${lifestyle.smokingHabits}
+
+    Vaccinations:
+    Influenza: ${vaccinations.influenza ? 'Yes' : 'No'},
+    Tetanus: ${vaccinations.tetanus ? 'Yes' : 'No'},
+    Hepatitis B: ${vaccinations.hepatitisB ? 'Yes' : 'No'},
+    Measles: ${vaccinations.measles ? 'Yes' : 'No'},
+    COVID-19: ${vaccinations.covid19 ? 'Yes' : 'No'}
+  `;
+};
     
     // Almacenar la descripción en una variable
     const patientDescription = createDescription();

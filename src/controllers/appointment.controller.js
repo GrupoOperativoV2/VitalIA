@@ -44,23 +44,8 @@ export const getAllDoctors = async (req, res) => {
       res.status(500).json({ message: error.message });
     }
   };
-
-// Leer una cita por ID
-export const getAppointmentById = async (req, res) => {
-  try {
-    const appointmentData = await appointment.findById(req.params.id);
-    if (appointmentData) {
-      res.json(appointmentData);
-    } else {
-      res.status(404).json({ message: 'Appointment not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Leer citas por ID del usuario (patientId)
-export const getAppointmentsByUserId = async (req, res) => {
+  
+  export const getAppointmentsByUserId = async (req, res) => {
     try {
       const userId = req.params.id; // Asumiendo que el ID del usuario se pasa como parámetro en la URL
       const userAppointments = await appointment.find({ patientId: userId });
@@ -71,6 +56,7 @@ export const getAppointmentsByUserId = async (req, res) => {
         res.status(404).json({ message: 'No appointments found for this user' });
       }
     } catch (error) {
+      console.error('Error al obtener las citas por ID de usuario:', error);
       res.status(500).json({ message: error.message });
     }
   };

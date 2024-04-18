@@ -4,7 +4,54 @@ import { useAuth } from "../../../context/authContext";
 
 export const ChangeFrom = ({ patientInfo }) => {
   const [medications, setMedications] = useState([{ name: "", dose: "" }]);
-  const [formData, setFormData] = useState({ ...patientInfo });
+  const [hospitalizations, setHospitalizations] = useState(patientInfo.hospitalizations || []);
+  const [formData, setFormData] = useState({});
+  const [labTests, setLabTests] = useState(patientInfo.labResults || []);
+
+  useEffect(() => {
+    if (patientInfo.labResults) {
+      setLabTests(patientInfo.labResults);
+    }
+  }, [patientInfo]);
+
+  const handleAddLabTest = () => {
+    setLabTests([...labTests, { date: '', diagnosis: '', doctor: '', aspect: '', results: '' }]);
+  };
+
+  const handleRemoveLabTest = (index) => {
+    const updatedLabTests = labTests.filter((_, i) => i !== index);
+    setLabTests(updatedLabTests);
+  };
+
+  const handleChangeLabTest = (index, field, value) => {
+    const updatedLabTests = labTests.map((test, i) =>
+      i === index ? { ...test, [field]: value } : test
+    );
+    setLabTests(updatedLabTests);
+  };
+
+  useEffect(() => {
+    setFormData(patientInfo);
+    if (patientInfo.medicalHistory.hospitalizations) {
+      setHospitalizations(patientInfo.medicalHistory.hospitalizations);
+    }
+  }, [patientInfo]);
+
+  const handleAddHospitalization = () => {
+    setHospitalizations([...hospitalizations, { description: '', date: '' }]);
+  };
+
+  const handleRemoveHospitalization = (index) => {
+    const newHospitalizations = hospitalizations.filter((_, i) => i !== index);
+    setHospitalizations(newHospitalizations);
+  };
+
+  const handleChangeHospitalization = (index, field, value) => {
+    const updatedHospitalizations = hospitalizations.map((item, i) =>
+      i === index ? { ...item, [field]: value } : item
+    );
+    setHospitalizations(updatedHospitalizations);
+  };
 
   const handleFileButtonClick = (e) => {
     e.preventDefault();
@@ -61,19 +108,77 @@ export const ChangeFrom = ({ patientInfo }) => {
 
   useEffect(() => {
     if (patientInfo) {
-      setFormData({ ...patientInfo });
+      // Preprocesa los datos para configurar estados de los checkboxes, por ejemplo
+      const preprocessedInfo = {
+        ...patientInfo,
+        medicalHistory: {
+          ...patientInfo.medicalHistory,
+          diseases: Object.keys(patientInfo.medicalHistory.diseases).reduce(
+            (acc, key) => {
+              acc[key] = patientInfo.medicalHistory.diseases[key];
+              return acc;
+            },
+            {}
+          ),
+        },
+        vaccinations: {
+          ...patientInfo.vaccinations,
+          // convertir los valores booleanos a estados de checkbox
+        },
+      };
+      setFormData(preprocessedInfo);
     }
   }, [patientInfo]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      // Manejo de checkboxes para estructuras anidadas
+      const [parentKey, childKey] = name.split(".");
+      setFormData((prev) => ({
+        ...prev,
+        [parentKey]: {
+          ...prev[parentKey],
+          [childKey]: checked,
+        },
+      }));
+    } else {
+      // Manejo de inputs normales
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
-  // Asumiendo que tienes una función para manejar el envío del formulario
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Lógica para enviar los datos del formulario
+    await updatePatientInfo(formData);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    // Determina si el input es un checkbox para usar 'checked' en lugar de 'value'
+    const inputValue = type === "checkbox" ? checked : value;
+
+    // Si el nombre del campo incluye un punto, asumimos que es parte de un objeto anidado
+    if (name.includes(".")) {
+      const [section, key] = name.split(".");
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [section]: {
+          ...prevFormData[section],
+          [key]: inputValue,
+        },
+      }));
+    } else {
+      // Para inputs no anidados
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: inputValue,
+      }));
+    }
   };
 
   return (
@@ -277,81 +382,142 @@ export const ChangeFrom = ({ patientInfo }) => {
         <Legend>Enfermedades previas</Legend>
         <CheckboxContainer>
           <label>
-            <CheckboxInput type="checkbox" name="diabetes" />
+            <CheckboxInput
+              type="checkbox"
+              checked={formData.medicalHistory?.diseases?.diabetes || false}
+              name="diabetes"
+            />
             Diabetes
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="hypertension" />
+            <CheckboxInput
+              type="checkbox"
+              checked={
+                formData.medicalHistory?.diseases?.hypertension || false
+              }
+              name="hypertension"
+            />
             Hipertensión
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="obesity" />
+            <CheckboxInput type="checkbox" checked={
+                formData.medicalHistory?.diseases?.obesity || false
+              } name="obesity" />
             Obesidad
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="asthma" />
+            <CheckboxInput type="checkbox" name="asthma"  checked={
+                formData.medicalHistory?.diseases?.asthma || false
+              }/>
             Asma
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="cardiovascular" />
+            <CheckboxInput type="checkbox" name="cardiovascular"  checked={
+                formData.medicalHistory?.diseases?.cardiovascular || false
+              }/>
             Enfermedades cardiovasculares
           </label>
         </CheckboxContainer>
         <Label>Otras enfermedades</Label>
-        <OtherInput type="text" name="otherDiseases" />
+        <OtherInput
+          type="text"
+          name="medicalHistory.otherDiseases"
+          value={formData.medicalHistory?.diseases?.otherDiseases || ""}
+          onChange={handleInputChange}
+          placeholder="Otras enfermedades"
+        />
 
         <Legend>Cirugías</Legend>
         <CheckboxContainer>
           <label>
-            <CheckboxInput type="checkbox" name="appendectomy" />
+            <CheckboxInput type="checkbox" name="appendectomy"  checked={
+                formData.medicalHistory?.surgeries?.appendectomy || false
+              }/>
             Apendicectomía
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="cholecystectomy" />
+            <CheckboxInput type="checkbox" name="cholecystectomy" checked={
+                formData.medicalHistory?.surgeries?.cholecystectomy || false
+              }/>
             Colecistectomía
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="herniaRepair" />
+            <CheckboxInput type="checkbox" name="herniaRepair" checked={
+                formData.medicalHistory?.surgeries?.herniaRepair || false
+              }/>
             Reparación de hernia
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="hipReplacement" />
+            <CheckboxInput type="checkbox" name="hipReplacement" checked={
+                formData.medicalHistory?.surgeries?.hipReplacement || false
+              }/>
             Reemplazo de cadera
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="kneeReplacement" />
+            <CheckboxInput type="checkbox" name="kneeReplacement" checked={
+                formData.medicalHistory?.surgeries?.kneeReplacement || false
+              }/>
             Reemplazo de rodilla
           </label>
         </CheckboxContainer>
         <Label>Otras cirugías</Label>
-        <OtherInput type="text" name="otherSurgeries" />
+        <OtherInput type="text" name="otherSurgeries"  value={formData.medicalHistory?.surgeries?.otherSurgeries || ""}/>
 
-        <Label>Hospitalizaciones</Label>
-        <Input
-          name="hospitalizations"
-          value={formData.medicalHistory?.hospitalizations || ""}
-        />
+          <Legend>Hospitalizaciones</Legend>
+        {hospitalizations.map((hospitalization, index) => (
+          <div key={index} style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+            <Input
+              type="text"
+              value={hospitalization.description}
+              onChange={(e) => handleChangeHospitalization(index, 'description', e.target.value)}
+              placeholder="Describa la hospitalización"
+              style={{ marginRight: "10px" }}
+            />
+            <Input
+              type="date"
+              value={hospitalization.date.split('T')[0]}
+              onChange={(e) => handleChangeHospitalization(index, 'date', e.target.value)}
+              style={{ marginRight: "10px" }}
+            />
+            <button type="button" onClick={() => handleRemoveHospitalization(index)}>
+              Eliminar
+            </button>
+          </div>
+        ))}
+        <button type="button" onClick={handleAddHospitalization}>
+          Agregar Hospitalización
+        </button>
 
         <Legend>Alergias</Legend>
         <CheckboxContainer>
           <label>
-            <CheckboxInput type="checkbox" name="pollen" />
+            <CheckboxInput type="checkbox" name="pollen" checked={
+                formData.medicalHistory?. allergies?.pollen || false
+              }/>
             Polen
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="dust" />
+            <CheckboxInput type="checkbox" name="dust" checked={
+                formData.medicalHistory?.allergies?.dust || false
+              }/>
             Polvo
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="nuts" />
+            <CheckboxInput type="checkbox" name="nuts" checked={
+                formData.medicalHistory?.allergies?.nuts || false
+              }/>
             Frutos secos
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="latex" />
+            <CheckboxInput type="checkbox" name="latex" checked={
+                formData.medicalHistory?.allergies?.latex || false
+              }/>
             Látex
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="animalDander" />
+            <CheckboxInput type="checkbox" name="animalDander" checked={
+                formData.medicalHistory?.allergies?.animalDander || false
+              }/>
             Caspa de animales
           </label>
         </CheckboxContainer>
@@ -359,6 +525,7 @@ export const ChangeFrom = ({ patientInfo }) => {
         <OtherInput
           type="text"
           name="otherAllergies"
+          value={formData.medicalHistory?.allergies?.otherAllergies || ""}
           placeholder="Otras alergias"
         />
 
@@ -400,28 +567,38 @@ export const ChangeFrom = ({ patientInfo }) => {
         </Label>
         <CheckboxContainer>
           <label>
-            <CheckboxInput type="checkbox" name="familyDiabetes" />
+            <CheckboxInput type="checkbox" name="familyDiabetes" checked={
+                formData.medicalHistory?.familyHistory?.familyDiabetes || false
+              }/>
             Diabetes
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="familyHypertension" />
+            <CheckboxInput type="checkbox" name="familyHypertension" checked={
+                formData.medicalHistory?.familyHistory?.familyHypertension || false
+              }/>
             Hipertensión
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="familyCardiacDiseases" />
+            <CheckboxInput type="checkbox" name="familyCardiacDiseases" checked={
+                formData.medicalHistory?.familyHistory?.familyCardiacDiseases || false
+              }/>
             Enfermedades cardíacas
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="familyCancer" />
+            <CheckboxInput type="checkbox" name="familyCancer" checked={
+                formData.medicalHistory?.familyHistory?.familyCancer || false
+              }/>
             Cáncer
           </label>
           <label>
-            <CheckboxInput type="checkbox" name="familyAutoimmuneDiseases" />
+            <CheckboxInput type="checkbox" name="familyAutoimmuneDiseases" checked={
+                formData.medicalHistory?.familyHistory?.familyAutoimmuneDiseases || false
+              }/>
             Enfermedades autoinmunes
           </label>
         </CheckboxContainer>
         <Label>Otra</Label>
-        <OtherInput type="text" name="otherFamilyDiseases" placeholder="Otra" />
+        <OtherInput type="text" name="otherFamilyDiseases" placeholder="Otra" value={formData.medicalHistory?.familyHistory?.otherFamilyDiseases || ""}/>
       </Fieldset>
 
       <Fieldset>
@@ -433,7 +610,7 @@ export const ChangeFrom = ({ patientInfo }) => {
             <CheckboxInput
               type="checkbox"
               name="lifestyle.vegetarian"
-              checked={formData.lifestyle?.vegetarian || false}
+              checked={formData.lifestyle?.diet?.vegetarian || false}
               onChange={handleCheckboxChange}
             />
             Vegetariana
@@ -442,7 +619,7 @@ export const ChangeFrom = ({ patientInfo }) => {
             <CheckboxInput
               type="checkbox"
               name="lifestyle.glutenFree"
-              checked={formData.lifestyle?.glutenFree || false}
+              checked={formData.lifestyle?.diet?.glutenFree || false}
               onChange={handleCheckboxChange}
             />
             Sin gluten
@@ -451,7 +628,7 @@ export const ChangeFrom = ({ patientInfo }) => {
             <CheckboxInput
               type="checkbox"
               name="lifestyle.vegan"
-              checked={formData.lifestyle?.vegan || false}
+              checked={formData.lifestyle?.diet?.vegan || false}
               onChange={handleCheckboxChange}
             />
             Vegana
@@ -460,7 +637,7 @@ export const ChangeFrom = ({ patientInfo }) => {
             <CheckboxInput
               type="checkbox"
               name="lifestyle.keto"
-              checked={formData.lifestyle?.keto || false}
+              checked={formData.lifestyle?.diet?.keto || false}
               onChange={handleCheckboxChange}
             />
             Keto
@@ -469,20 +646,20 @@ export const ChangeFrom = ({ patientInfo }) => {
             <CheckboxInput
               type="checkbox"
               name="lifestyle.paleo"
-              checked={formData.lifestyle?.paleo || false}
+              checked={formData.lifestyle?.diet?.paleo || false}
               onChange={handleCheckboxChange}
             />
             Paleo
           </label>
         </CheckboxContainer>
 
-        <Label>Descripción de otros hábitos alimenticios</Label>
+        {/* <Label>Descripción de otros hábitos alimenticios</Label>
         <OtherInput
           type="text"
           name="lifestyle.dietDescription"
-          value={formData.lifestyle?.description || ""}
+          value={formData.lifestyle?.diet?.description || ""}
           onChange={handleInputChange}
-        />
+        /> */}
 
         <Label>Ejercicio</Label>
         <Select
@@ -582,16 +759,52 @@ export const ChangeFrom = ({ patientInfo }) => {
         />
       </Fieldset>
 
+     
       <Fieldset>
         <Legend>Exámenes de Laboratorio</Legend>
-        <Label>Resultados de exámenes de laboratorio recientes</Label>
-        <Input
-          type="text"
-          name="labResults"
-          value={formData.labResults || ""}
-          onChange={handleInputChange}
-          placeholder="Ej: Resultados normales, sin anomalías"
-        />
+        {labTests.map((test, index) => (
+          <div key={index}>
+            <Label>Fecha del examen</Label>
+            <Input
+              type="date"
+              value={test.date}
+              onChange={(e) => handleChangeLabTest(index, "date", e.target.value)}
+            />
+            <Label>Diagnóstico</Label>
+            <Input
+              type="text"
+              value={test.diagnosis}
+              onChange={(e) => handleChangeLabTest(index, "diagnosis", e.target.value)}
+            />
+            <Label>Doctor encargado</Label>
+            <Input
+              type="text"
+              value={test.doctor}
+              onChange={(e) => handleChangeLabTest(index, "doctor", e.target.value)}
+            />
+            <Label>Indicaciones</Label>
+            <Input
+              type="text"
+              value={test.aspect}
+              onChange={(e) => handleChangeLabTest(index, "aspect", e.target.value)}
+            />
+            {/* <Label>Resultados</Label>
+            <Input
+              type="text"
+              value={test.results}
+              onChange={(e) => handleChangeLabTest(index, 'results', e.target.value)}
+            /> */}
+            <button type="button" onClick={() => handleRemoveLabTest(index)}>
+              Eliminar Examen
+            </button>
+          </div>
+        ))}
+                <br></br>
+
+        <button type="button" onClick={handleAddLabTest}>
+          Agregar Examen de Laboratorio
+        </button>
+       
       </Fieldset>
 
       <Button type="submit">Enviar Historial Médico</Button>

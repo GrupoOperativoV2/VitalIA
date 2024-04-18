@@ -59,17 +59,16 @@ export function Chat() {
 
   return (
     <>
-      <Container>
+       <Container>
         <div className="container">
-          <Contacts contacts={doctors} changeChat={handleChatChange} />
-
           {currentChat === undefined ? (
             <Welcome />
           ) : (
             <ChatContainer currentChat={currentChat} socket={socket} user={user} />
           )}
+          <Contacts contacts={doctors} changeChat={handleChatChange} /> {/* Esto se mueve a la derecha */}
         </div>
-      </Container>
+      </Container>  
     </>
   );
 }
@@ -84,13 +83,14 @@ const Container = styled.div`
   align-items: center;
   background-color: #ffffff;
   .container {
-    height: 85vh;
+    display: grid;
+    grid-template-columns: 75% 25%; /* Invertir el orden aquí */
+    height: 85vh; 
     width: 85vw;
     background-color: #ffffff;
-    display: grid;
-    grid-template-columns: 25% 75%;
     @media screen and (min-width: 720px) and (max-width: 1080px) {
-      grid-template-columns: 35% 65%;
+      grid-template-columns: 65% 35%; /* También invertir el orden para la media query */
     }
+  }
   }
 `;

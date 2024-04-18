@@ -5,78 +5,89 @@ const PersonalInfo = ({ patientInfo }) => {
 
   const personal = patientInfo.personalInformation || {};
   const medical = patientInfo.medicalHistory || {};
-  const familyHistory = medical.familyHistory || [];
 
-  // Construcción de la URL de la imagen
   const imageUrl = patientInfo.patientPhoto
     ? `http://localhost:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
     : "https://via.placeholder.com/100";
 
   const birthDate = personal.birthdate ? personal.birthdate.split("T")[0] : "";
 
-  // Unir enfermedades y cirugías en una cadena, si están presentes
-  const diseases = medical.diseases && medical.diseases.length > 0
-    ? medical.diseases.join(', ')
-    : "No especificado";
+  const diseases = medical.diseases
+  ? Object.entries(medical.diseases)
+      .filter(([key, value]) => value)
+      .map(([key]) => key.replace(/([A-Z])/g, ' $1').trim())
+      .join(', ')
+  : "No especificado";
 
-  // Unir el historial familiar en una cadena, si está presente
-  const familyHistoryString = familyHistory.length > 0
-    ? familyHistory.join(', ')
-    : "No especificado";
+const allergiesList = medical.allergies
+  ? Object.entries(medical.allergies)
+      .filter(([key, value]) => value)
+      .map(([key]) => key.replace(/([A-Z])/g, ' $1').trim())
+      .join(', ')
+  : "No especificado";
 
-    return (
-      <ProfileCard>
-        <ProfileHeader>
-          <ProfilePicture src={imageUrl} alt="Foto de Perfil" />
-          <FullName>{personal.name}</FullName>
-        </ProfileHeader>
-        <ProfileDetails>
-          <DetailField>
-            <Label>Fecha de Nacimiento</Label>
-            <Value>{birthDate}</Value>
-          </DetailField>
-          <Divider />
-          <DetailField>
-            <Label>Género</Label>
-            <Value>{personal.gender}</Value>
-          </DetailField>
-          <Divider />
-          <DetailField>
-            <Label>Dirección</Label>
-            <Value>{personal.address}</Value>
-          </DetailField>
-          <Divider />
-          <DetailField>
-            <Label>Número de Teléfono</Label>
-            <Value>{personal.contactNumber}</Value>
-          </DetailField>
-          <Divider />
-          <DetailField>
-            <Label>Correo Electrónico</Label>
-            <Value>{personal.email}</Value>
-          </DetailField>
-          <Divider />
-          <DetailField>
-            <Label>Tipo de Sangre</Label>
-            <Value>{medical.bloodType}</Value>
-          </DetailField>
-          <Divider />
-          <DetailField>
-            <Label>Alergias Conocidas</Label>
-            <Value>{medical.allergies && medical.allergies.join(', ')}</Value>
-          </DetailField>
-          <DetailField>
+  const familyHistoryList = medical.familyHistory
+  ? Object.entries(medical.familyHistory)
+      .filter(([key, value]) => value)
+      .map(([key]) => key.replace(/([A-Z])/g, ' $1').trim())
+      .join(', ')
+  : "No especificado";
+
+  return (
+    <ProfileCard>
+      <ProfileHeader>
+        <ProfilePicture src={imageUrl} alt="Foto de Perfil" />
+        <FullName>{personal.name}</FullName>
+      </ProfileHeader>
+      <ProfileDetails>
+        <DetailField>
+          <Label>Fecha de Nacimiento</Label>
+          <Value>{birthDate}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Género</Label>
+          <Value>{personal.gender}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Dirección</Label>
+          <Value>{personal.address}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Número de Teléfono</Label>
+          <Value>{personal.contactNumber}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Correo Electrónico</Label>
+          <Value>{personal.email}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Tipo de Sangre</Label>
+          <Value>{medical.bloodType}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
+          <Label>Alergias Conocidas</Label>
+          <Value>{allergiesList}</Value>
+        </DetailField>
+        <Divider />
+        <DetailField>
           <Label>Condiciones Médicas Preexistentes</Label>
           <Value>{diseases}</Value>
         </DetailField>
         <Divider />
         <DetailField>
           <Label>Historial Familiar</Label>
-          <Value>{familyHistoryString}</Value>
+          <Value>{familyHistoryList}</Value>
         </DetailField>
-        </ProfileDetails>
-      </ProfileCard>
-    );
+      </ProfileDetails>
+    </ProfileCard>
+  );
+  
   };
   
 export { PersonalInfo };
