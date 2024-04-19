@@ -40,11 +40,13 @@ function descifrarMensaje(mensajeCifrado) {
 
     return resultado;
 }
-var llave = descifrarMensaje("tl_9a00nz33IECyZLX8rSbVU4CmclGKkfpkMKRoPf9vlwLjGEAD");
+//var llaveNueva = cifrarMensaje("La_Nueva_Llave");
 
+var llave = descifrarMensaje("tl_qspk_2AxRa7SUaa6kaEI9Ej2nU4CmclGK3QEA5wE2myWBaGirp1AV");
 var API_KEY = llave;
 export async function getCompletion(prompt) {
   try {
+    //console.log(llaveNueva);
     console.log(prompt);
     const response = await fetch(`https://api.openai.com/v1/chat/completions`, {
       method: "POST",
