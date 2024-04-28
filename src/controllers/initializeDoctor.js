@@ -12,9 +12,9 @@ const initializeDoctor = async () => {
         name: "Dr. Example",
         email: "doctor@example.com",
         password: passwordHash, // Guarda la contraseña encriptada
-        specialization: "General Medicine", // Especifica la especialización del doctor
+        specialization: "Medicina Interna", // Especifica la especialización del doctor
         tipo: '2', // Valor que indica que es un tipo doctor
-        doctorPhoto: "uplpads\patientPhoto-1713166188529..jpg" // Opcional, ruta a la foto del doctor
+        doctorPhoto: "uplpads\patientPhoto-1713166188529.jpg" // Opcional, ruta a la foto del doctor
       });
 
       await newDoctor.save();

@@ -1,8 +1,39 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
+import { PendingAppointments } from "./containers/PendingAppointments.jsx";
+import { ContainerDoctor } from "./containers/ContainerDoctor.jsx";
 import Chatbot from "../Patient/Chatbot.jsx";
 import { useAuth } from "../../context/authContext";  
+import {NoticeDoctor} from './containers/NoticeDoctor.jsx'
+
+export function DoctorPage() {
+  const { user } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+
+ 
+  return (
+    <DoctorPageContainer>
+
+      <SidebarContainer isOpen={sidebarOpen}>
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      </SidebarContainer>
+
+      <BodyContainer>
+        <ContainerDoctor user={user}/>
+          <NoticeDoctor/>
+      </BodyContainer>
+
+
+      <ContentSidebarContainer>
+        <PendingAppointments user={user}/>
+      </ContentSidebarContainer>
+
+
+    </DoctorPageContainer>
+  );
+}
 
 const DoctorPageContainer = styled.div`
   display: flex; // Cambiado a flex para un mejor control del layout
@@ -12,7 +43,7 @@ const DoctorPageContainer = styled.div`
 `;
 
 const SidebarContainer = styled.div`
-  width: ${({ isOpen }) => (isOpen ? "300px" : "90px")};
+  width: ${({ isOpen }) => (isOpen ? "400px" : "80px")};
   transition: width 0.3s;
   height: 1000px;
 `;
@@ -25,59 +56,10 @@ const BodyContainer = styled.div`
   overflow: auto; // Para el desplazamiento del contenido si es necesario
 `;
 
-const PopupContainer = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  background-color: white;
-  border: 2px solid #000;
-  z-index: 100;
-  padding: 20px;
-  display: ${({ show }) => (show ? "block" : "none")};
-`;
-
-const Popup = ({ show, onClose, children }) => (
-  <PopupContainer show={show}>
-    {children}
-    <button onClick={onClose}>Cerrar</button>
-  </PopupContainer>
-);
-
-export function DoctorPage() {
-  const { user } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
-
-  const togglePopup = () => {
-    setPopupVisible(!popupVisible);
-  };
-
-  return (
-    <DoctorPageContainer>
-      <SidebarContainer isOpen={sidebarOpen}>
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      </SidebarContainer>
-      <BodyContainer>
-        <h1>Bienvenido Doctor</h1>
-
-
-        <button onClick={togglePopup}>Mostrar popup</button>
-
-        <Popup show={popupVisible} onClose={togglePopup}>
-          <div>
-            {user ? (
-              <h1>Bienvenido, {user.username}!</h1>
-            ) : (
-              <h1>Bienvenido a nuestra aplicación!</h1>
-            )}
-          </div>
-        </Popup>
-
-
-
-      </BodyContainer>
-    </DoctorPageContainer>
-  );
-}
+ const ContentSidebarContainer = styled.div`
+    width: 500px;
+    height: 100vh;
+    background-color: #f5f5f5;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+  `;

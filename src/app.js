@@ -5,11 +5,13 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
+import initializeDoctor from "../src/controllers/initializeDoctor.js";
+import initializeManager from "../src/controllers/initializeManager.js";
+
 import authRoutes from "./routes/auth.routes.js";
 import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';  
 import appointmentRoutes from './routes/appointment.routes.js';
 import messageRoutes from './routes/messagesRoutes.js';
-import initializeManager from "../src/controllers/initializeManager.js";
 import { FRONTEND_URL } from "./config.js";
 
 const app = express();
@@ -17,6 +19,7 @@ const server = createServer(app);  // Create an HTTP server for Express and Sock
 
 // //Agregamo un manager por defecto 
 initializeManager();
+initializeDoctor();
 
 // Middleware setup
 app.use(cors({ credentials: true, origin: FRONTEND_URL }));
