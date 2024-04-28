@@ -4,7 +4,6 @@ import styled from "styled-components";
 import Chatbot from "./Chatbot.jsx";
 import { useAuth } from "../../context/authContext";
 
-
 const PositionedButton = styled.button`
   position: fixed;
   bottom: 20px;
@@ -20,7 +19,7 @@ const PositionedButton = styled.button`
 `;
 
 const PatientPageContainer = styled.div`
-  display: flex; 
+  display: flex;
   background: ${({ theme }) => theme.bgtotal};
   transition: all 0.3s;
   height: 100vh;
@@ -40,12 +39,9 @@ const BodyContainer = styled.div`
   overflow: auto; // Para el desplazamiento del contenido si es necesario
 `;
 
-
-
 export function MonitoringPage() {
   const { getMedicalHistory } = useAuth();
-  const { isAuthenticated, logout, user } = useAuth();
-  const [showChatbot, setShowChatbot] = useState(false);
+  const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
   const [history, setHistory] = useState(null);
@@ -57,12 +53,11 @@ export function MonitoringPage() {
   useEffect(() => {
     const initialize = async () => {
       const historyData = await getMedicalHistory(user?.id);
-      setHistory(historyData); // Guarda el historial médico en el estado
+      setHistory(historyData); 
     };
 
     initialize();
   }, [getMedicalHistory]);
-
 
   return (
     <PatientPageContainer>
@@ -70,11 +65,20 @@ export function MonitoringPage() {
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
       <BodyContainer>
-      
+        {/* <ChatbotContainer>
+          <Chatbot history={history} />
+        </ChatbotContainer> */}
       </BodyContainer>
-      
-      <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
-        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} history={history} />}
     </PatientPageContainer>
   );
 }
+
+const ChatbotContainer = styled.div`
+  width: 100%; // Toma todo el ancho disponible
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center; /* Centra los elementos verticalmente */
+  align-items: center; 
+  flex-direction: column;
+`;

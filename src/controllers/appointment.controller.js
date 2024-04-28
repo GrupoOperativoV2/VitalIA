@@ -3,27 +3,26 @@ import Doctor from '../models/medico.model.js';
 
 
 export const createAppointment = async (req, res) => {
-  
-    try {
-      const newAppointment = new appointment({
-        patientId: req.body.patientId,
-        doctorId: req.body.doctorId,
-        date: req.body.date,
-        time: req.body.time,
-        details: req.body.details,
-        status: req.body.status
-      });
-  
-  
-      const savedAppointment = await newAppointment.save();
-      
-  
-      res.status(201).json(savedAppointment);
-    } catch (error) {
-      console.error('Error al crear la cita:', error); // Usa console.error para imprimir errores
-      res.status(400).json({ message: error.message });
-    }
-  };
+  try {
+    const newAppointment = new appointment({
+      patientId: req.body.patientId,
+      doctorId: req.body.doctorId,
+      symptoms: req.body.symptoms, // Adding symptoms from request body
+      reason: req.body.reason, // Adding reason from request body
+      date: req.body.date,
+      time: req.body.time,
+      status: req.body.status
+    });
+
+    const savedAppointment = await newAppointment.save();
+    
+    res.status(201).json(savedAppointment);
+  } catch (error) {
+    console.error('Error al crear la cita:', error); // Improved error logging
+    res.status(400).json({ message: error.message });
+  }
+};
+
   
 
 // Leer todas las citas

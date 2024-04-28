@@ -80,9 +80,10 @@ export const register = async (req, res) => {
 
 export const registerDoctor = async (req, res) => {
   try {
-    const { name, email, specialization, password, birthDate } = req.body;
+    const { name, email, specialization, password, birthDate, doctorPhoto} = req.body;
+    console.log(req.body)
 
-    const parsedData = registerDoctorSchema.safeParse({ name, email, specialization, password, birthDate});
+    const parsedData = registerDoctorSchema.safeParse({ name, email, specialization, password, birthDate, doctorPhoto});
     if (!parsedData.success) {
       return res.status(400).json({
         message: parsedData.error.issues.map(issue => issue.message),
@@ -106,6 +107,7 @@ export const registerDoctor = async (req, res) => {
       specialization,
       password: passwordHash,
       birthDate,
+      doctorPhoto,
     });
 
     const userSaved = await newUser.save();
@@ -131,6 +133,9 @@ export const registerDoctor = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+
 
 export const login = async (req, res) => {
   try {

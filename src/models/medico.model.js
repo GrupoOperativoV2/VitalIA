@@ -19,7 +19,6 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // Puedes considerar si necesitas incluir 'tipo' y 'birthDate' para el doctor también.
   tipo: {
     type: String,
     required: true,
@@ -29,6 +28,7 @@ const doctorSchema = new mongoose.Schema({
     type: Date,
     required: false,
   },
+  doctorPhoto: { type: String, trim: true },
 }, {
   timestamps: true, // Mantiene registro de cuándo se crea y actualiza el documento
 });

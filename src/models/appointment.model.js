@@ -11,6 +11,14 @@ const appointmentSchema = new mongoose.Schema({
     ref: 'Doctor', // Asumiendo que tienes una colección de doctores
     required: true,
   },
+  symptoms: {
+    type: String,
+    trim: true,
+  },
+  reason: {
+    type: String,
+    trim: true,
+  },
   date: {
     type: Date,
     required: true,
@@ -18,14 +26,6 @@ const appointmentSchema = new mongoose.Schema({
   time: {
     type: String,
     required: true,
-  },
-  details: {
-    type: String,
-    trim: true,
-  },
-  office: {
-    type: String,
-    trim: true,
   },
   status: {
     type: String,

@@ -35,11 +35,11 @@ export function Contacts({ contacts, changeChat }) {
         {contacts.map((contact) => (
           <div key={contact._id} className="contact" onClick={() => changeChat(contact)}>
             <div className="avatar">
-              <img
-                src={contact.avatarImage || defaultAvatar}
-                alt={contact.name}
-                style={{ width: 50, height: 50, borderRadius: "50%" }}
-              />
+            <img
+        src={contact.doctorPhoto ? `http://localhost:4000/${contact.doctorPhoto.replace(/\\+/g, "/")}` : defaultAvatar}
+        alt={contact.name}
+        style={{ width: 50, height: 50, borderRadius: "50%" }}
+      />
             </div>
             <div className="username">
               <h3>{contact.name}</h3>

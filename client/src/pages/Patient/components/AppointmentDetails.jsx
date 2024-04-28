@@ -11,9 +11,8 @@ const AppointmentDetails = ({ userID }) => {
     }
   }, [userID, loadUserAppointments]);
 
-  if (loading) return <p>Loading appointments...</p>;
-  if (error) return <p>Error loading appointments: {error}</p>;
-  if (appointments.length === 0) return <p>No appointments found.</p>;
+  if (loading) return <p>Cargando citas...</p>;
+  if (appointments.length === 0) return <p>No tienes citas próximas.</p>;
 
   return (
       <AppointmentsContainer>

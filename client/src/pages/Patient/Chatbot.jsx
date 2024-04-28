@@ -6,60 +6,64 @@ import Cookies from "js-cookie";
 
 let datospaciente = "";
 const Chatbot = ({ showChatbot, setShowChatbot, history}) => {
-  var num = 0;  
+  var num = 0;
   useEffect(() => {
     firstMessage();
     console.log("holaa");
 
-    console.log(history );
+    console.log(history);
     const {
+      personalInformation,
       physicalInformation,
+      emergencyInformation,
       medicalHistory,
       lifestyle,
-      vaccinations
+      vaccinations,
+      labResults
     } = history;
-    
-    const formatObjectToList = (obj) => 
-    Object.entries(obj)
-      .filter(([key, value]) => value)
-      .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim())
-      .join(', ');
 
+
+    // Función para crear una descripción detallada como una sola cadena
     const createDescription = () => {
-     
-  return `
-    Physical Information:
-    Weight: ${physicalInformation.weight} kg, Height: ${physicalInformation.height} cm, Blood Pressure: ${physicalInformation.bloodPressure}
-    
-    Medical History:
-    Blood Type: ${medicalHistory.bloodType},
-    Diseases: ${formatObjectToList(medicalHistory.diseases)},
-    Surgeries: ${formatObjectToList(medicalHistory.surgeries)},
-    Hospitalizations: ${formatObjectToList(medicalHistory.hospitalizations)},
-    Allergies: ${formatObjectToList(medicalHistory.allergies)},
-    Family History: ${formatObjectToList(medicalHistory.familyHistory)},
-    Medications: ${medicalHistory.medications.length > 0 ? medicalHistory.medications.join(', ') : 'None'}
+      return `
+        Personal Information:
+        Name: ${personalInformation.name}, Gender: ${personalInformation.gender}, Address: ${personalInformation.address}, Contact Number: ${personalInformation.contactNumber}, Email: ${personalInformation.email}
+        
+        Physical Information:
+        Weight: ${physicalInformation.weight} kg, Height: ${physicalInformation.height} cm, Blood Pressure: ${physicalInformation.bloodPressure}
+        
+        Emergency Information:
+        Emergency Contact: ${emergencyInformation.contactName}, Relation: ${emergencyInformation.contactRelation}, Contact Number: ${emergencyInformation.contactNumber}
 
-    Lifestyle:
-    Diet: ${formatObjectToList(lifestyle.diet) || 'No specific diet'},
-    Exercise: ${lifestyle.exercise},
-    Alcohol Consumption: ${lifestyle.alcoholConsumption},
-    Smoking Habits: ${lifestyle.smokingHabits}
+        Medical History:
+        Blood Type: ${medicalHistory.bloodType},
+        Diseases: Diabetes: ${medicalHistory.diseases.diabetes ? 'Yes' : 'No'}, Hypertension: ${medicalHistory.diseases.hypertension ? 'Yes' : 'No'}, ...
+        Surgeries: Appendectomy: ${medicalHistory.surgeries.appendectomy ? 'Yes' : 'No'}, Cholecystectomy: ${medicalHistory.surgeries.cholecystectomy ? 'Yes' : 'No'}, ...
+        Allergies: Pollen: ${medicalHistory.allergies.pollen ? 'Yes' : 'No'}, Dust: ${medicalHistory.allergies.dust ? 'Yes' : 'No'}, ...
 
-    Vaccinations:
-    Influenza: ${vaccinations.influenza ? 'Yes' : 'No'},
-    Tetanus: ${vaccinations.tetanus ? 'Yes' : 'No'},
-    Hepatitis B: ${vaccinations.hepatitisB ? 'Yes' : 'No'},
-    Measles: ${vaccinations.measles ? 'Yes' : 'No'},
-    COVID-19: ${vaccinations.covid19 ? 'Yes' : 'No'}
-  `;
-};
-    
-    // Almacenar la descripción en una variable
+        Lifestyle:
+        Diet: ${Object.entries(lifestyle.diet).filter(([key, value]) => value).map(([key]) => key.charAt(0).toUpperCase() + key.slice(1)).join(', ')}${lifestyle.diet.description ? ', ' + lifestyle.diet.description : ''}
+        Exercise: ${lifestyle.exercise},
+        Alcohol Consumption: ${lifestyle.alcoholConsumption},
+        Smoking Habits: ${lifestyle.smokingHabits}
+
+        Vaccinations:
+        Influenza: ${vaccinations.influenza ? 'Yes' : 'No'},
+        Tetanus: ${vaccinations.tetanus ? 'Yes' : 'No'},
+        Hepatitis B: ${vaccinations.hepatitisB ? 'Yes' : 'No'},
+        Measles: ${vaccinations.measles ? 'Yes' : 'No'},
+        COVID-19: ${vaccinations.covid19 ? 'Yes' : 'No'}
+
+        Lab Results:
+        Latest: ${labResults.length ? `Diagnosis: ${labResults[0].diagnosis}, Doctor: ${labResults[0].doctor}` : 'No lab results available'}
+      `;
+    };
+
     const patientDescription = createDescription();
     datospaciente = patientDescription;
     console.log(patientDescription);
-  }, []);
+}, []);
+
   const firstMessage = async () => {
     num++;
     const tokenString = Cookies.get("token");
