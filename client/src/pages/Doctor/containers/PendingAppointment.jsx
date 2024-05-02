@@ -29,7 +29,7 @@ const appointmentData = [
   // Puedes añadir más citas aquí
 ];
 
-export function PendingAppointments() {
+export function PendingAppointment() {
   return (
     <AppointmentContainer>
       <Title>Citas pendientes</Title>

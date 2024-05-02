@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
-import { PendingAppointments } from "./containers/PendingAppointments.jsx";
+import { PendingAppointment } from "./containers/PendingAppointment.jsx";
 import { ContainerDoctor } from "./containers/ContainerDoctor.jsx";
 import Chatbot from "../Patient/Chatbot.jsx";
 import { useAuth } from "../../context/authContext";  
@@ -27,7 +27,7 @@ export function DoctorPage() {
 
 
       <ContentSidebarContainer>
-        <PendingAppointments user={user}/>
+        <PendingAppointment user={user}/>
       </ContentSidebarContainer>
 
 
