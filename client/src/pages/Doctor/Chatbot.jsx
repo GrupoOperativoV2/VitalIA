@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { getCompletion } from '../../containers/IA/api.js';
+import { getCompletion } from '../../IA/api.js';
 import Cookies from "js-cookie";
 
 const ChatbotContainer = styled.div`

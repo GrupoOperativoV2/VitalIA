@@ -53,7 +53,7 @@ export function MonitoringPage() {
   useEffect(() => {
     const initialize = async () => {
       const historyData = await getMedicalHistory(user?.id);
-      setHistory(historyData); 
+      setHistory(historyData);
     };
 
     initialize();
@@ -65,13 +65,50 @@ export function MonitoringPage() {
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
       <BodyContainer>
-        {/* <ChatbotContainer>
-          <Chatbot history={history} />
-        </ChatbotContainer> */}
+       
+        
       </BodyContainer>
     </PatientPageContainer>
   );
 }
+
+const PatientsListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 90%;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+const PatientItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #e6f0ff;
+  }
+`;
+
+const PatientAvatar = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  margin-right: 15px;
+`;
+
+const PatientName = styled.span`
+  font-size: 18px;
+  color: #333;
+  font-weight: 600;
+`;
 
 const ChatbotContainer = styled.div`
   width: 100%; // Toma todo el ancho disponible

@@ -6,7 +6,7 @@ import defaultImage from './Vitalia.png';
 import { FaUpload, FaPaperPlane } from 'react-icons/fa';
 
 const DoctorPageContainer = styled.div`
-  display: flex; // Cambiado a flex para un mejor control del layout
+  display: flex;
   background: ${({ theme }) => theme.bgtotal};
   transition: all 0.3s;
   height: 100vh;
@@ -20,11 +20,10 @@ const SidebarContainer = styled.div`
 `;
 
 const BodyContainer = styled.div`
-  flex-grow: 1; // Ocupa el espacio restante
-  background: ${({ theme }) =>
-    theme.bg}; // Asume que tienes un tema con color de fondo
+  flex-grow: 1;
+  background: ${({ theme }) => theme.bg};
   transition: all 0.3s;
-  overflow: auto; // Para el desplazamiento del contenido si es necesario
+  overflow: auto;
 `;
 
 const PositionedButton = styled.button`
@@ -52,8 +51,9 @@ const styles = {
     borderRadius: '4px',
     border: '1px solid #ddd',
     fontSize: '16px'
-  }, imagePreviewContainer: {
-    textAlign: 'center', // Esto centrará la imagen dentro del div
+  },
+  imagePreviewContainer: {
+    textAlign: 'center',
   },
   imagePreview: {
     maxWidth: '30%',
@@ -62,7 +62,7 @@ const styles = {
     border: '1px solid #ddd',
     borderRadius: '4px',
     padding: '5px',
-    display: 'inline-block', // Esto permite que la imagen se centre correctamente
+    display: 'inline-block',
   },
   icon: {
     marginRight: '5px',
@@ -89,9 +89,8 @@ const styles = {
 export function AssistantPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(defaultImage); // Usamos la imagen importada aquí
+  const [imagePreview, setImagePreview] = useState(defaultImage);
   const [id, setId] = useState('');
 
   const buttonStyles = {
@@ -106,10 +105,10 @@ export function AssistantPage() {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    
     pointerEvents: image && id ? 'auto' : 'none',
     opacity: image && id ? 1 : 0.5,
   };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
@@ -119,16 +118,26 @@ export function AssistantPage() {
   const handleIdChange = (e) => {
     setId(e.target.value);
   };
-
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('image', image);
     formData.append('id', id);
+    console.log('Sending the following data:', Object.fromEntries(formData.entries()));
 
-    // Here you would send formData to the server
-    console.log('Sending the following data:', Object.fromEntries(formData));
+    try {
+      const response = await fetch('http://localhost:5000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const result = await response.text();
+      console.log('Response from server:', result);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
+
   return (
     <DoctorPageContainer>
       <SidebarContainer isOpen={sidebarOpen}>
@@ -150,7 +159,7 @@ export function AssistantPage() {
             <label style={styles.label}>
               <FaUpload style={styles.icon} />
               <span>Upload</span>
-              <input type="file" style={styles.fileInput} onChange={handleImageChange} />
+              <input type="file" style={styles.fileInput} onChange={handleImageChange} accept="image/*" />
             </label>
             <button type="submit" style={buttonStyles} disabled={!image || !id}>
               <FaPaperPlane style={{ marginRight: '5px' }} />
@@ -158,8 +167,6 @@ export function AssistantPage() {
             </button>
           </form>
         </div>
-
-
 
         <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
         {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}

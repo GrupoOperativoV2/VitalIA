@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useAuth } from '../../../context/authContext';
-import { getCompletion } from "../../../containers/IA/api";
+import { getCompletion } from "../../../IA/api";
 
 export function AppointmentFrom ({ doctors }) {
     const { Appointment, user } = useAuth();
