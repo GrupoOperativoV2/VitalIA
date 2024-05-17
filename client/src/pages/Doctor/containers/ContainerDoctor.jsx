@@ -58,7 +58,6 @@ const WelcomeContainer = styled.div`
     text-align: center;
     width: 90%;
     margin: 20px auto;
-    animation: ${float} 4s ease-in-out infinite;
 `;
 
 // Estilos del encabezado con detalle en azul y en negritas

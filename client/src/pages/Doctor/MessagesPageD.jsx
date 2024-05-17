@@ -1,6 +1,23 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
+import { ChatD } from "./containers/ChatD.jsx";
+
+export function MessagesPageD() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+
+  return (
+    <DoctorPageContainer>
+      <SidebarContainer isOpen={sidebarOpen}>
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      </SidebarContainer>
+      <BodyContainer>
+        <ChatD />
+      </BodyContainer>
+    </DoctorPageContainer>
+  );
+}
 
 const DoctorPageContainer = styled.div`
   display: flex; // Cambiado a flex para un mejor control del layout
@@ -22,19 +39,3 @@ const BodyContainer = styled.div`
   transition: all 0.3s;
   overflow: auto; // Para el desplazamiento del contenido si es necesario
 `;
-
-export function MessagesPageD() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
-
-  return (  
-    <DoctorPageContainer>
-      <SidebarContainer isOpen={sidebarOpen}>
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      </SidebarContainer>
-      <BodyContainer>
-        <h1>Hola</h1>
-        </BodyContainer>
-    </DoctorPageContainer>
-  );
-}

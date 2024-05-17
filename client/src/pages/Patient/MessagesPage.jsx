@@ -55,7 +55,7 @@ export function MessagesPage() {
   useEffect(() => {
     const initialize = async () => {
            const historyData = await getMedicalHistory(user?.id);
-          setHistory(historyData); // Guarda el historial médico en el estado
+          setHistory(historyData); 
     };
 
     initialize();

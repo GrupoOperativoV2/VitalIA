@@ -23,7 +23,6 @@ const Chatbot = ({ showChatbot, setShowChatbot, history}) => {
     } = history;
 
 
-    // Función para crear una descripción detallada como una sola cadena
     const createDescription = () => {
       return `
         Personal Information:
@@ -88,21 +87,8 @@ const Chatbot = ({ showChatbot, setShowChatbot, history}) => {
     chatMessages.scrollTop = chatMessages.scrollHeight;
   };
 
-  const handleQuery = (query) => {
-    query = query.toLowerCase();
-    if (query.includes("cuál es mi peso") || query.includes("peso")) {
-      const weight = history.physicalInformation.weight;
-      sendMessage(`Tu peso es ${weight} kg.`, "bot");
-    } else if (query.includes("cuál es mi altura") || query.includes("altura")) {
-      const height = history.physicalInformation.height;
-      sendMessage(`Tu altura es ${height} cm.`, "bot");
-    } else if (query.includes("tipo de sangre")) {  
-      const bloodType = history.medicalHistory.bloodType;
-      sendMessage(`Tu tipo de sangre es ${bloodType}.`, "bot");
-    } 
-  };
 
-  
+
 const processUserInput = async () => {
   const userInput = document.getElementById("user-input");
   const userMessage = userInput.value.trim();
@@ -110,7 +96,9 @@ const processUserInput = async () => {
   if (userMessage !== "") {
     sendMessage(userMessage, "user");
     
-    const response = handleQuery(userMessage) || await getCompletion(`(Responde muy brevemente a la siguiente petición en base a los siguientes datos si se trata de cuestiones de salud, si no se trata de cuestiones de salud decir: No puedo responder eso). datos = (${datospaciente}). petición= (${userMessage})`);
+    const response = await getCompletion(`(Responde muy brevemente a la siguiente petición en base a los siguientes datos si se trata de 
+      cuestiones de salud, si no se trata de cuestiones de salud decir: 
+      No puedo responder eso). datos = (${datospaciente}). petición= (${userMessage})`);
     sendMessage(response, "bot");
 
     userInput.value = "";

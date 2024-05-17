@@ -55,7 +55,7 @@ export async function getCompletion(prompt) {
         Authorization: 'Bearer ' + API_KEY
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o',
         messages: [{ "role": "user", "content": prompt }]
       })
     });
@@ -65,6 +65,8 @@ export async function getCompletion(prompt) {
     }
 
     const data = await response.json();
+    
+    //console.log(data);
     return data.choices[0].message.content.trim();
   } catch (error) {
     console.error('Error in getCompletion:', error);

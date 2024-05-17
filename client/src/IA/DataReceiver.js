@@ -3,18 +3,15 @@ import multer from 'multer';
 import { spawn } from 'child_process';
 import cors from 'cors';  // Importa el paquete cors
 
-const app = express();
-const port = 5000;
+const APIapp = express();
 
-// Configurar multer para manejar la carga de archivos
 const upload = multer({ dest: 'uploads/' });
 
-// Habilitar CORS para todas las solicitudes
-app.use(cors());
+APIapp.use(cors());
 
-app.use(express.json());
+APIapp.use(express.json());
 
-app.post('/upload', upload.single('image'), (req, res) => {
+APIapp.post('/upload', upload.single('image'), (req, res) => {
   const data = req.body;
   const imageFile = req.file;
 
@@ -39,6 +36,4 @@ app.post('/upload', upload.single('image'), (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}!`);
-});
+export { APIapp };
