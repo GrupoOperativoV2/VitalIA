@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { spawn } from 'child_process';
 import cors from 'cors';  // Importa el paquete cors
+const pathToPython = './.venv/Scripts/python.exe'; 
 
 const APIapp = express();
 
@@ -18,7 +19,7 @@ APIapp.post('/upload', upload.single('image'), (req, res) => {
   console.log('Datos recibidos en DataReceiver5000.js:', data);
   console.log('Imagen recibida en DataReceiver5000.js:', imageFile);
 
-  const pythonProcess = spawn('python', ['api.py', imageFile.path]); // Asegúrate de usar el comando correcto
+  const pythonProcess = spawn(pathToPython, ['client/src/IA/api.py', imageFile.path]);
 
   let dataFromPython = '';
 
@@ -32,7 +33,8 @@ APIapp.post('/upload', upload.single('image'), (req, res) => {
 
   pythonProcess.on('close', (code) => {
     console.log(`Python process exited with code ${code}`);
-    res.send(dataFromPython);
+    res.send(dataFromPython.trim());
+    console.log(dataFromPython.trim());
   });
 });
 
