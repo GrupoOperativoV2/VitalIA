@@ -1,5 +1,5 @@
 import sys
-
+import tensorflow
 def main(image_path):
     # Aquí puedes procesar la imagen
     print(f'Imagen recibida: {image_path}')
@@ -10,5 +10,4 @@ def main(image_path):
 if __name__ == '__main__':
     image_path = sys.argv[1]
     main(image_path)
-
 
