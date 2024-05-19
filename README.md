@@ -1,5 +1,5 @@
 
-### Deployment back
+### Deployment Back
 
 ```sh
 
@@ -8,7 +8,7 @@ npm i
 npm run dev
 ```
 
-### Deployment front
+### Deployment Front
 
 ```sh
 
@@ -17,6 +17,9 @@ npm i
 npm run dev
 ```
 
-GESTOR email:ibanez.nunez.dantealejandro@gmail.com pass:123456
-DOCTOR email: kevudoc:kevudoc@gmail.com    pass: 123456 
-Nota: REINICIAR SERVER PARA INICIAR OTRA SESIÓN 
+### Update Python Virtual Environment 
+```sh
+
+.\.venv\Scripts\activate
+pip install ...
+```
