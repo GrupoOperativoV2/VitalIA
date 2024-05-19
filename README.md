@@ -17,7 +17,7 @@ npm i
 npm run dev
 ```
 
-### Update Virtual Environment Python
+### Update Python Virtual Environment 
 ```sh
 
 .\.venv\Scripts\activate
