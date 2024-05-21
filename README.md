@@ -21,5 +21,10 @@ npm run dev
 ```sh
 
 .\.venv\Scripts\activate
-pip install ...
+pip install tensorflow keras opencv-python numpy pandas matplotlib seaborn pydrive sys  
+```
+
+### Retirar restricciones en PowerShell
+```sh
+Set-ExecutionPolicy RemoteSigned
 ```
