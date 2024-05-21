@@ -34,7 +34,7 @@ APIapp.post('/upload', upload.single('image'), (req, res) => {
   pythonProcess.on('close', (code) => {
     console.log(`Python process exited with code ${code}`);
     res.send(dataFromPython.trim());
-    console.log(dataFromPython.trim());iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii5ñ,ññ444x
+    console.log(dataFromPython.trim());
   });
 });
 
