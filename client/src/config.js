@@ -1,3 +1,11 @@
 const PORT = process.env.PORT || 4000;
 
-export const API_URL = import.meta.env.VITE_API_URL || `http://localhost:${PORT}/api`;
+let API_URL;
+
+if (process.env.NODE_ENV === 'production') {
+  API_URL = `https://vital-ia-c973e2aac327.herokuapp.com/api`;
+} else {
+  API_URL = `http://localhost:${PORT}/api`;
+}
+
+export { API_URL };
