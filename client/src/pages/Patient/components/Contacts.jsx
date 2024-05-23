@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import defaultAvatar from "../../../assets/Profile.jpg"; // Asegúrate de tener una imagen de avatar por defecto
-import Logo from "../../../Godev.svg";
+// import Logo from "../../../Godev.svg";
 import { useAuth } from "../../../context/authContext";  
 
 export function Contacts({ contacts, changeChat }) {
@@ -28,7 +28,7 @@ export function Contacts({ contacts, changeChat }) {
   return (
     <Container>
       <div className="brand">
-        <img src={Logo} alt="logo" />
+        {/* <img src={Logo} alt="logo" /> */}
         <h3>VitalIA</h3>
       </div>
       <div className="contacts">
