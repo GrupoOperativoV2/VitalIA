@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "@hookform/resolvers": "^3.1.0",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
@@ -32,6 +33,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.2.4",
     "@vitejs/plugin-react": "^4.0.0",
