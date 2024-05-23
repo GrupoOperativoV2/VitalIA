@@ -34,14 +34,16 @@ app.use("/api/medicalHistory", medicalHistoryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/appointments", appointmentRoutes);
 
+
 // Production-specific setup
 if (process.env.NODE_ENV === "production") {
   const path = await import("path");
-  app.use(express.static("client/dist"));
+  app.use(express.static(path.resolve("client", "dist")));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve("client", "dist", "index.html"));
   });
 }
+
 
 const io = new SocketIOServer(server, {
   cors: {
