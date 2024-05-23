@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import logo from "./Godev.svg";
+// // import logo from "./Godev.svg";
 import { v } from "../../styles/Variables";
 import {
   AiOutlineLeft,
@@ -35,7 +35,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
       </button>
       <div className="Logocontent">
         <div className="imgcontent">
-          <img src={logo} />
+  
         </div>
         <h2>VitalIA</h2>
       </div>
