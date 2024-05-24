@@ -27,9 +27,9 @@ export const ManagerPages = () => {
   const payload = parseToken(tokenString);
   if (!payload) return <Navigate to="/login" replace />;
 
-  const valorTipo = payload.tipo;
-  if (valorTipo === "3") return <Navigate to="/pacient" replace />;
-  if (valorTipo === "2") return <Navigate to="/doctor" replace />;
+  const { tipo } = payload;
+  if (tipo === "3") return <Navigate to="/pacient" replace />;
+  if (tipo === "2") return <Navigate to="/doctor" replace />;
   return <Outlet />;
 };
 
@@ -38,9 +38,9 @@ export const PatientPages = () => {
   const payload = parseToken(tokenString);
   if (!payload) return <Navigate to="/login" replace />;
 
-  const valorTipo = payload.tipo;
-  if (valorTipo === "1") return <Navigate to="/tasks" replace />;
-  if (valorTipo === "2") return <Navigate to="/doctor" replace />;
+  const { tipo } = payload;
+  if (tipo === "1") return <Navigate to="/tasks" replace />;
+  if (tipo === "2") return <Navigate to="/doctor" replace />;
   return <Outlet />;
 };
 
@@ -49,8 +49,8 @@ export const DoctorPages = () => {
   const payload = parseToken(tokenString);
   if (!payload) return <Navigate to="/login" replace />;
 
-  const valorTipo = payload.tipo;
-  if (valorTipo === "3") return <Navigate to="/pacient" replace />;
-  if (valorTipo === "1") return <Navigate to="/tasks" replace />;
+  const { tipo } = payload;
+  if (tipo === "3") return <Navigate to="/pacient" replace />;
+  if (tipo === "1") return <Navigate to="/tasks" replace />;
   return <Outlet />;
 };
