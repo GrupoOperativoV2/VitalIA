@@ -1,10 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/authContext";
 import { AppointmentsProvider } from "./context/appointmentContext";
+
 import { ProtectedRoute } from "./routes";
 import { PatientPages } from "./routes";
 import { DoctorPages } from "./routes";
 import { ManagerPages } from "./routes";
+
+
 import { Light, Dark } from "./styles/Themes";
 import { ThemeProvider } from "styled-components";
 import React, { useState, useEffect } from "react";
