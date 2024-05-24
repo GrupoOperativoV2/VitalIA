@@ -82,6 +82,7 @@
         if (res.status === 200) {
           setUser(res.data);
           setIsAuthenticated(true);
+          Cookies.set('token', res.data.token, { expires: 1 }); 
           setErrors([]);
         }
       } catch (error) {
@@ -224,29 +225,34 @@
  
 
 
-    useEffect(() => {
-      const checkLogin = async () => {
-        const cookies = Cookies.get();
-        if (!cookies.token) {
+  useEffect(() => {
+    const checkLogin = async () => {
+      const token = Cookies.get('token');
+      if (!token) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+  
+      try {
+        const res = await verifyTokenRequest(token);
+        console.log('Token verification response:', res);
+        if (!res.data) {
           setIsAuthenticated(false);
-          setLoading(false);
-          return;
-        }
-
-        try {
-          const res = await verifyTokenRequest(cookies.token);
-          console.log(res);
-          if (!res.data) return setIsAuthenticated(false);
+        } else {
           setIsAuthenticated(true);
           setUser(res.data);
-          setLoading(false);
-        } catch (error) {
-          setIsAuthenticated(false);
-          setLoading(false);
         }
-      };
-      checkLogin();
-    }, []);
+      } catch (error) {
+        console.error('Token verification error:', error);
+        setIsAuthenticated(false);
+      }
+      setLoading(false);
+    };
+  
+    checkLogin();
+  }, []);
+  
 
     return (
       <AuthContext.Provider

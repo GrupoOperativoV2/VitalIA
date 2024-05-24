@@ -31,6 +31,7 @@ const parseToken = (tokenString) => {
 
 export const ManagerPages = () => {
   const tokenString = Cookies.get("token");
+  console.log("Token from cookies in ManagerPages:", tokenString); // Añade este log para verificar el token
   const payload = parseToken(tokenString);
   if (!payload) return <Navigate to="/login" replace />;
 
@@ -40,8 +41,10 @@ export const ManagerPages = () => {
   return <Outlet />;
 };
 
+// Aplica el mismo patrón de verificación en PatientPages y DoctorPages
 export const PatientPages = () => {
   const tokenString = Cookies.get("token");
+  console.log("Token from cookies in PatientPages:", tokenString); // Añade este log para verificar el token
   const payload = parseToken(tokenString);
   if (!payload) return <Navigate to="/login" replace />;
 
@@ -53,6 +56,7 @@ export const PatientPages = () => {
 
 export const DoctorPages = () => {
   const tokenString = Cookies.get("token");
+  console.log("Token from cookies in DoctorPages:", tokenString); // Añade este log para verificar el token
   const payload = parseToken(tokenString);
   if (!payload) return <Navigate to="/login" replace />;
 
