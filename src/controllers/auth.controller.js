@@ -174,13 +174,14 @@ export const login = async (req, res) => {
       tipo: userFound.tipo,
     });
 
+    const isProduction = process.env.NODE_ENV === "production";
     res.cookie("token", token, {
-      httpOnly: process.env.NODE_ENV !== "development",
-      secure: true,
-      sameSite: "none",
+      httpOnly: true,
+      secure: isProduction, // Solo se enviará a través de HTTPS en producción
+      sameSite: isProduction ? "Strict" : "Lax",
     });
 
-    console.log("Exitoso");
+    console.log("Login exitoso");
 
     return res.json({
       id: userFound._id,
@@ -199,7 +200,7 @@ export const login = async (req, res) => {
 
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
-  if (!token) return res.send(false);
+  if (!token) return res.status(401).json({ message: "No token provided" });
 
   jwt.verify(token, TOKEN_SECRET, async (error, user) => {
     if (error) return res.sendStatus(401);

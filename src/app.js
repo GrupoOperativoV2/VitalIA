@@ -15,6 +15,7 @@ import messageRoutes from './routes/messagesRoutes.js';
 import { FRONTEND_URL } from "./config.js";
 
 const app = express();
+app.set('trust proxy', 1);
 const server = createServer(app);  // Create an HTTP server for Express and Socket.io
 
 // //Agregamo un manager por defecto 
