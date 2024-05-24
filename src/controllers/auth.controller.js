@@ -197,7 +197,6 @@ export const login = async (req, res) => {
   }
 };
 
-
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
   if (!token) return res.status(401).json({ message: "No token provided" });

@@ -12,7 +12,6 @@
   export const verifyTokenRequest = async () => 
     axios.get(`/auth/verify`);
 
-
     export const resetPasswordRequest = async (email) => {
       return axios.post('/auth/request-password-reset', {
         email: email  

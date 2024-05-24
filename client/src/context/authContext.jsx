@@ -16,6 +16,7 @@
   import {AppointmentRequest,  // Importamos la función de solicitud de citas
   DoctorSearchRequest  } from "../api/appointments";
   import Cookies from "js-cookie";  
+  import axios from "../api/axios"; 
 
   const AuthContext = createContext();
 
@@ -78,11 +79,11 @@
 
     const signin = async (user) => {
       try {
-        const res = await loginRequest(user);
+        const res = await axios.post('/auth/login', user);
         if (res.status === 200) {
           setUser(res.data);
           setIsAuthenticated(true);
-          Cookies.set('token', res.data.token, { expires: 1 }); 
+          Cookies.set('token', res.data.token, { expires: 1, sameSite: 'Strict', secure: process.env.NODE_ENV === 'production' });
           setErrors([]);
         }
       } catch (error) {
@@ -96,7 +97,7 @@
         }
       }
     };
-
+    
     const logout = () => {
       Cookies.remove("token");
       setUser(null);
@@ -235,7 +236,7 @@
       }
   
       try {
-        const res = await verifyTokenRequest(token);
+        const res = await axios.get('/auth/verify');
         console.log('Token verification response:', res);
         if (!res.data) {
           setIsAuthenticated(false);

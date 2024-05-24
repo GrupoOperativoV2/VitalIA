@@ -1,13 +1,12 @@
+// Backend Configuration (e.g., server.js or app.js)
 import express from "express";
 import { createServer } from 'http';
 import { Server as SocketIOServer } from "socket.io";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-
 import initializeDoctor from "../src/controllers/initializeDoctor.js";
 import initializeManager from "../src/controllers/initializeManager.js";
-
 import authRoutes from "./routes/auth.routes.js";
 import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';  
 import appointmentRoutes from './routes/appointment.routes.js';
@@ -23,7 +22,10 @@ initializeManager();
 initializeDoctor();
 
 // Middleware setup
-app.use(cors({ credentials: true, origin: FRONTEND_URL }));
+app.use(cors({
+  credentials: true,
+  origin: [FRONTEND_URL, 'http://localhost:3000'] // Incluye todas las URLs relevantes
+}));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
@@ -35,7 +37,6 @@ app.use("/api/medicalHistory", medicalHistoryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/appointments", appointmentRoutes);
 
-
 // Production-specific setup
 if (process.env.NODE_ENV === "production") {
   const path = await import("path");
@@ -44,7 +45,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve("client", "dist", "index.html"));
   });
 }
-
 
 const io = new SocketIOServer(server, {
   cors: {
@@ -74,7 +74,7 @@ io.on("connection", (socket) => {
     if (sendUserSocket) {
         socket.to(sendUserSocket).emit("msg-recieve", data.message);
     }
-});
+  });
 
   // Manejador para cuando un cliente se desconecta
   socket.on("disconnect", () => {
