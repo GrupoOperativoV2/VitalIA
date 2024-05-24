@@ -3,7 +3,6 @@ import { useAuth } from "./context/authContext";
 import Cookies from "js-cookie";
 import React, { useEffect } from 'react';
 
-
 export const ProtectedRoute = () => {
   const { isAuthenticated, loading } = useAuth();
   if (loading) return <h1>Loading...</h1>;
@@ -12,8 +11,16 @@ export const ProtectedRoute = () => {
 };
 
 const parseToken = (tokenString) => {
+  if (!tokenString) {
+    console.error("Token not found");
+    return null;
+  }
+
   try {
     const [headerEncoded, payloadEncoded, signature] = tokenString.split('.');
+    if (!headerEncoded || !payloadEncoded || !signature) {
+      throw new Error("Invalid token structure");
+    }
     const payload = JSON.parse(atob(payloadEncoded));
     return payload;
   } catch (error) {

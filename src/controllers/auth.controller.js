@@ -180,6 +180,8 @@ export const login = async (req, res) => {
       sameSite: "none",
     });
 
+    console.log("Exitoso");
+
     return res.json({
       id: userFound._id,
       username: userFound.username || userFound.name, 
@@ -188,6 +190,7 @@ export const login = async (req, res) => {
       tipo: userFound.tipo,
       birthDate: userFound.birthDate
     });
+
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
