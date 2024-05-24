@@ -5,4 +5,4 @@ export const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://grupooperat
 
 export const TOKEN_SECRET = process.env.TOKEN_SECRET || "secret";
 
-export const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+export const FRONTEND_URL = process.env.FRONTEND_URL || "https://vital-ia-c973e2aac327.herokuapp.com";
