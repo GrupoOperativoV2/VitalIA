@@ -12,7 +12,6 @@ import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';
 import appointmentRoutes from './routes/appointment.routes.js';
 import messageRoutes from './routes/messagesRoutes.js';
 import { FRONTEND_URL } from "./config.js";
-
 const app = express();
 app.set('trust proxy', 1);
 const server = createServer(app);  // Create an HTTP server for Express and Socket.io
@@ -44,11 +43,12 @@ const corsOptions = {
 // Middleware setup
 app.use(cors(corsOptions));
 
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
-// Static files and routes setup
+// Static files and routes setupx 
 app.get('/hello', (req, res) => {
   res.send('Hola Mundo');
 }); 

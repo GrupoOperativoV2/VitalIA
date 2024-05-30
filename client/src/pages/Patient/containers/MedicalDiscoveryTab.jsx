@@ -97,7 +97,7 @@ const MedicalDiscoveryTab = () => {
 
   useEffect(() => {
     const fetchMedicalNews = async () => {
-      const apiKey = '21ca2e9bdb9e4571ba261935c08ce793'; 
+      const apiKey = '21ca2e9bdb9e4571ba261935c08ce793';  
       const url = `https://newsapi.org/v2/everything?q=medicina+biotecnología&language=es&apiKey=${apiKey}`; //Pendejos, acá se le mueve a las noticias
       try {
         const response = await axios.get(url);
