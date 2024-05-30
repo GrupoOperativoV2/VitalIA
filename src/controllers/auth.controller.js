@@ -141,21 +141,17 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     let errors = [];
 
-    console.log(`Login attempt with email: ${email}`);
 
     let userFound = await User.findOne({ email });
     if (!userFound) {
       userFound = await Doctor.findOne({ email });
-      console.log(`No user found in Users, checked Doctors: ${!!userFound}`);
     }
     if (!userFound) {
       userFound = await Manager.findOne({ email });
-      console.log(`No user found in Doctors, checked Managers: ${!!userFound}`);
     }
 
     if (!userFound) {
       errors.push("The email does not exist");
-      console.log("Email does not exist");
     }
 
     let isMatch = false;
@@ -168,7 +164,6 @@ export const login = async (req, res) => {
     }
 
     if (errors.length > 0) {
-      console.log("Errors found, sending response with errors");
       return res.status(400).json({
         message: errors,
       });
@@ -180,7 +175,6 @@ export const login = async (req, res) => {
       tipo: userFound.tipo,
     });
 
-    console.log(`Generated token: ${token}`);
 
     return res.json({
       id: userFound._id,
@@ -192,7 +186,6 @@ export const login = async (req, res) => {
       token: token // Include token in the response JSON
     });
   } catch (error) {
-    console.error("Error during login:", error.message);
     return res.status(500).json({ message: error.message });
   }
 };
