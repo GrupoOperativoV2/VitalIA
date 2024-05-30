@@ -10,7 +10,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 labels = ['PNEUMONIA', 'NORMAL']
 img_size = 150
 
-model_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\mi_modelo.keras'
+model_path = 'C:\\Users\\Alumno\\VitalIA\\client\\src\\IA\\mi_modelo.keras'
 
 if os.path.exists(model_path):
     try:

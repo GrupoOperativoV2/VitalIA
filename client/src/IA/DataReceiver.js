@@ -4,8 +4,6 @@ import { spawn } from 'child_process';
 import cors from 'cors';  // Importa el paquete cors
 const pathToPython = './.venv/Scripts/python.exe'; 
 
-import { getCompletion } from './api';
-
 
 const APIapp = express();
 
@@ -38,8 +36,6 @@ APIapp.post('/upload', upload.single('image'), (req, res) => {
     console.log(`Python process exited with code ${code}`);
     res.send(dataFromPython.trim());
     console.log(dataFromPython.trim());
-    const response =  getCompletion("En base a los datos del usuario: " + 
-    "dame un texto de etc...")
   });
 });
 
