@@ -70,7 +70,7 @@ const Chatbot = ({ showChatbot, setShowChatbot, history}) => {
       const [headerEncoded, payloadEncoded, signature] = tokenString.split(".");
       const payload = JSON.parse(atob(payloadEncoded));
       const nom = payload.username;
-      const initialBotMessage = `Hola 👋 ${nom}, soy Toast, tu chatbot personal, estoy aquí para responder todas tus preguntas sobre tu salud 🩺. ¿Empezamos?`;
+      const initialBotMessage = `Hola 👋 ${nom}, soy Toast, tu chatbot personal, estoy aquí para responder todas tus preguntas`;
       sendMessage(initialBotMessage, "bot");
     }
   };

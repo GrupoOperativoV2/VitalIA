@@ -136,33 +136,39 @@ export const registerDoctor = async (req, res) => {
 
 
 
-
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     let errors = [];
 
+    console.log(`Login attempt with email: ${email}`);
+
     let userFound = await User.findOne({ email });
     if (!userFound) {
       userFound = await Doctor.findOne({ email });
+      console.log(`No user found in Users, checked Doctors: ${!!userFound}`);
     }
     if (!userFound) {
       userFound = await Manager.findOne({ email });
+      console.log(`No user found in Doctors, checked Managers: ${!!userFound}`);
     }
 
     if (!userFound) {
       errors.push("The email does not exist");
+      console.log("Email does not exist");
     }
 
     let isMatch = false;
     if (userFound) {
       isMatch = await bcrypt.compare(password, userFound.password);
+      console.log(`Password match: ${isMatch}`);
       if (!isMatch) {
         errors.push("The password is incorrect");
       }
     }
 
     if (errors.length > 0) {
+      console.log("Errors found, sending response with errors");
       return res.status(400).json({
         message: errors,
       });
@@ -174,11 +180,7 @@ export const login = async (req, res) => {
       tipo: userFound.tipo,
     });
 
-    res.cookie("token", token, {
-      httpOnly: process.env.NODE_ENV !== "development",
-      secure: true,
-      sameSite: "none",
-    });
+    console.log(`Generated token: ${token}`);
 
     return res.json({
       id: userFound._id,
@@ -186,12 +188,15 @@ export const login = async (req, res) => {
       email: userFound.email,
       name: userFound.name,
       tipo: userFound.tipo,
-      birthDate: userFound.birthDate
+      birthDate: userFound.birthDate,
+      token: token // Include token in the response JSON
     });
   } catch (error) {
+    console.error("Error during login:", error.message);
     return res.status(500).json({ message: error.message });
   }
 };
+
 
 
 export const verifyToken = async (req, res) => {

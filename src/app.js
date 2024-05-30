@@ -22,12 +22,38 @@ initializeManager();
 initializeDoctor();
 
 // Middleware setup
-app.use(cors({ credentials: true, origin: FRONTEND_URL }));
+const whitelist = [ 
+  'http://localhost:5173/',
+  'https://vital-ia-c973e2aac327.herokuapp.com/',
+  'http://192.168.1.67:5173/',
+  FRONTEND_URL // Asegúrate de incluir FRONTEND_URL aquí
+];
+
+const corsOptions = {
+  credentials: true,
+  origin: (origin, callback) => {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS: " + origin));
+    }
+  },
+  optionsSuccessStatus: 200
+};
+
+// Middleware setup
+app.use(cors(corsOptions));
+
+
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
 // Static files and routes setup
+app.get('/hello', (req, res) => {
+  res.send('Hola Mundo');
+}); 
 app.use('/uploads', express.static('uploads'));
 app.use("/api/messages", messageRoutes);
 app.use("/api/medicalHistory", medicalHistoryRoutes);

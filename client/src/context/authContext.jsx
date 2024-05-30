@@ -80,6 +80,7 @@
       try {
         const res = await loginRequest(user);
         if (res.status === 200) {
+          localStorage.setItem('token', res.data.token);
           setUser(res.data);
           setIsAuthenticated(true);
           setErrors([]);
@@ -224,29 +225,34 @@
  
 
 
-    useEffect(() => {
-      const checkLogin = async () => {
-        const cookies = Cookies.get();
-        if (!cookies.token) {
-          setIsAuthenticated(false);
-          setLoading(false);
-          return;
-        }
+  useEffect(() => {
+    const checkLogin = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
 
-        try {
-          const res = await verifyTokenRequest(cookies.token);
-          console.log(res);
-          if (!res.data) return setIsAuthenticated(false);
+      try {
+        const res = await axios.get('/auth/verify', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (res.status === 200) {
           setIsAuthenticated(true);
           setUser(res.data);
-          setLoading(false);
-        } catch (error) {
+        } else {
           setIsAuthenticated(false);
-          setLoading(false);
         }
-      };
-      checkLogin();
-    }, []);
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+      setLoading(false);
+    };
+    checkLogin();
+  }, []);
 
     return (
       <AuthContext.Provider
