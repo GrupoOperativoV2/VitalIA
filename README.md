@@ -28,3 +28,10 @@ pip install tensorflow keras opencv-python numpy pandas matplotlib seaborn pydri
 ```sh
 Set-ExecutionPolicy RemoteSigned
 ```
+
+### Entorno de producción 
+git status
+git add .  
+git commit -m "X"
+git push heroku main
+heroku logs --tail
