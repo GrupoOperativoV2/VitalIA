@@ -125,6 +125,7 @@ export function AssistantPage() {
     formData.append('image', image);
     formData.append('id', id);
     console.log('Sending the following data:', Object.fromEntries(formData.entries()));
+    
 
     try {
       const response = await fetch('http://localhost:5000/upload', {
@@ -161,7 +162,7 @@ export function AssistantPage() {
               <span>Upload</span>
               <input type="file" style={styles.fileInput} onChange={handleImageChange} accept="image/*" />
             </label>
-            <button type="submit" style={buttonStyles} disabled={!image || !id}>
+            <button type="submit" style={buttonStyles} disabled={!image || !id} id="submit">
               <FaPaperPlane style={{ marginRight: '5px' }} />
               Send
             </button>

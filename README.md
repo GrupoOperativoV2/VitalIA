@@ -21,5 +21,17 @@ npm run dev
 ```sh
 
 .\.venv\Scripts\activate
-pip install ...
+pip install tensorflow keras opencv-python numpy pandas matplotlib seaborn pydrive sys  
 ```
+
+### Retirar restricciones en PowerShell
+```sh
+Set-ExecutionPolicy RemoteSigned
+```
+
+### Entorno de producción 
+git status
+git add .  
+git commit -m "X"
+git push heroku main
+heroku logs --tail

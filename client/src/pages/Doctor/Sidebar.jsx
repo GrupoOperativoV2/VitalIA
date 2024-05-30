@@ -1,5 +1,4 @@
 import styled from "styled-components";
-// // import logo from "./Godev.svg";
 import { v } from "../../styles/Variables";
 import {
   AiOutlineLeft,
