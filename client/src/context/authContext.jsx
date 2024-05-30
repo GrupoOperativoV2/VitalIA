@@ -85,7 +85,6 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
         setErrors([]);
       }
-<<<<<<< HEAD
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const messages = error.response.data.message || [
@@ -94,28 +93,6 @@ export const AuthProvider = ({ children }) => {
         setErrors(messages);
       } else {
         setErrors(["An unexpected error occurred"]);
-=======
-    };
-
-    const signin = async (user) => {
-      try {
-        const res = await loginRequest(user);
-        if (res.status === 200) {
-          localStorage.setItem('token', res.data.token);
-          setUser(res.data);
-          setIsAuthenticated(true);
-          setErrors([]);
-        }
-      } catch (error) {
-        if (error.response && error.response.status === 400) {
-          const messages = error.response.data.message || [
-            "There was a problem with your login details",
-          ];
-          setErrors(messages);
-        } else {
-          setErrors(["An unexpected error occurred"]);
-        }
->>>>>>> b3545989ab626e26d4bb59fa64537fac3a3d9c1a
       }
     }
   };
@@ -245,9 +222,6 @@ const updatePassword = async (userId, token, newPassword) => {
 };
 
 
-
-
-
 useEffect(() => {
   const checkLogin = async () => {
     const token = localStorage.getItem('token');
@@ -258,7 +232,6 @@ useEffect(() => {
     }
 
     try {
-<<<<<<< HEAD
       const res = await axios.get('/auth/verify', {
         headers: {
           Authorization: `Bearer ${token}`
@@ -274,135 +247,6 @@ useEffect(() => {
       setIsAuthenticated(false);
     }
     setLoading(false);
-=======
-      const response = await AppointmentRequest(appointmentData);
-      return response.data;
-    } catch (error) {
-      console.error('Error creating appointment:', error);
-      throw error;
-    }
-  };
-
-  // const getUserAppointments = useCallback(async (userId) => {
-  //   try {
-  //     setLoading(true);
-  //     const response = await getUserAppointmentsRequest(userId);
-  //     setAppointments(response.data); // Actualiza el estado con las citas obtenidas
-  //     setLoading(false);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('Error fetching appointments:', error);
-  //     setErrors(prevErrors => [...prevErrors, error.message]);
-  //     setLoading(false);
-  //     throw error;
-  //   } 
-  // }, [getUserAppointmentsRequest]);
-
-  const photoUser = async (userId) => {
-    try {
-      const photoPath = await photoUserRequest(userId); // Llamamos a la función para obtener la ruta de la foto del usuario
-      return photoPath;
-    } catch (error) {
-      console.error('Error fetching user photo:', error);
-      throw error;
-    }
-  };
-
-
-  const updateMedicalHistory = async (userId, updatedData) => {
-    try {
-        const response = await updateMedicalHistoryRequest(userId, updatedData);
-        console.log("Historial médico actualizado con éxito:", response.data);
-        // Aquí puedes realizar más acciones como actualizar el estado o redirigir al usuario
-    } catch (error) {
-        console.error("Error al actualizar el historial médico:", error);
-        throw error; // Lanzar el error para manejarlo en el formulario
-    }
-  };
-
-  const resetPassword = async (email) => {
-    try {
-      const response = await resetPasswordRequest(email);
-      if (response.status === 200) {
-        console.log("Solicitud de restablecimiento de contraseña enviada:", response.data);
-        // Aquí podrías actualizar el estado para informar al usuario que el correo fue enviado
-      }
-    } catch (error) {
-      console.error("Error al enviar la solicitud de restablecimiento de contraseña:", error);
-      // Manejo de errores, por ejemplo, actualizar el estado de errores en el contexto
-      setErrors([...errors, error.response ? error.response.data.message : "Un error ocurrió"]);
-    }
-  };
-
-  const updatePassword = async (userId, token, newPassword) => {
-    try {
-      const response = await passwordRequest(userId, token, newPassword);
-      console.log("Respuesta de restablecimiento de contraseña:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("Error al actualizar la contraseña:", error);
-      throw error;
-    }
-  };
-
-
- 
-
-
-  useEffect(() => {
-    const checkLogin = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const res = await axios.get('/auth/verify', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        if (res.status === 200) {
-          setIsAuthenticated(true);
-          setUser(res.data);
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        setIsAuthenticated(false);
-      }
-      setLoading(false);
-    };
-    checkLogin();
-  }, []);
-
-    return (
-      <AuthContext.Provider
-        value={{
-          user,
-          signup,
-          registerDoctor,
-          signin,
-          logout,
-          isAuthenticated,
-          errors,
-          addMedicalHistory,
-          loading,  
-          uploadPatientPhoto,
-          getMedicalHistory,
-          DoctorSearch,
-          Appointment,
-          photoUser,
-          resetPassword,
-          updateMedicalHistory, updatePassword
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    );
->>>>>>> b3545989ab626e26d4bb59fa64537fac3a3d9c1a
   };
   checkLogin();
 }, []);

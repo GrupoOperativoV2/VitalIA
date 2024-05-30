@@ -20,28 +20,7 @@ const server = createServer(app);  // Create an HTTP server for Express and Sock
 initializeManager();
 initializeDoctor();
 
-// Middleware setup
-const whitelist = [ 
-  'http://localhost:5173/',
-  'https://vital-ia-c973e2aac327.herokuapp.com/',
-  'http://192.168.1.67:5173/',
-  FRONTEND_URL // Asegúrate de incluir FRONTEND_URL aquí
-];
-
-const corsOptions = {
-  credentials: true,
-  origin: (origin, callback) => {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS: " + origin));
-    }
-  },
-  optionsSuccessStatus: 200
-};
-
-// Middleware setup
-app.use(cors(corsOptions));
+app.use(cors({ credentials: true, origin: FRONTEND_URL }));
 
 
 app.use(express.json());
