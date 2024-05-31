@@ -1,5 +1,5 @@
 import styled from "styled-components";
-// import logo from "../../GoDev.svg";
+import logo from "../../goDev.svg";
 import { v } from "../../styles/Variables";
 
 import { FaHome } from "react-icons/fa";
@@ -32,7 +32,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div className="Logocontent">
         <div className="imgcontent">
           
-          {/* <img src={logo} /> */}
+          <img src={logo} /> 
         </div>
         <h2>VitalIA</h2>
       </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
-import { ChatD } from "./containers/ChatD.jsx";
+import { DoctorChat } from "./containers/DoctorChat.jsx";
 
 export function MessagesPageD() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -13,7 +13,7 @@ export function MessagesPageD() {
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </SidebarContainer>
       <BodyContainer>
-        <ChatD />
+        <DoctorChat />
       </BodyContainer>
     </DoctorPageContainer>
   );

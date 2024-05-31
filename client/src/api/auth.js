@@ -9,9 +9,14 @@
     axios.post(`/auth/login`, user);
 
   // Función existente para verificación de token
-  export const verifyTokenRequest = async () => 
-    axios.get(`/auth/verify`);
-
+  export const verifyTokenRequest = async (token) => {
+    return axios.get('/auth/verify', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      withCredentials: true
+    });
+  };
     export const resetPasswordRequest = async (email) => {
       return axios.post('/auth/request-password-reset', {
         email: email  

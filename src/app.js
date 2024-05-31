@@ -61,10 +61,8 @@ io.on("connection", (socket) => {
   socket.on("add-user", (userId) => {
     if (userId) {
       onlineUsers.set(userId, socket.id);
-      // Enviar confirmación al cliente
       socket.emit("user-added", { userId, status: "success" });
     } else {
-      // Enviar una respuesta de fallo si el userId no se proporcionó o es inválido
       socket.emit("user-added", { userId, status: "failed" });
     }
   });
@@ -72,17 +70,15 @@ io.on("connection", (socket) => {
   socket.on("send-msg", (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
-        socket.to(sendUserSocket).emit("msg-recieve", data.message);
-    }
+        socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+    } 
+    
   });
 
-  // Manejador para cuando un cliente se desconecta
   socket.on("disconnect", () => {
-    console.log(`Cliente desconectado: ${socket.id}`);
     onlineUsers.forEach((value, key) => {
       if (value === socket.id) {
         onlineUsers.delete(key);
-        console.log(`Usuario ${key} eliminado de onlineUsers`);
       }
     });
   });

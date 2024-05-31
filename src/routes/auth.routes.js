@@ -5,7 +5,7 @@ import {
   register,
   verifyToken,
   registerDoctor, 
-  getMedicalHistoryPhoto,requestPasswordReset, resetPassword 
+  getMedicalHistoryPhoto,requestPasswordReset, resetPassword, upload
 } from "../controllers/auth.controller.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
 import { loginSchema, registerSchema, registerDoctorSchema } from "../schemas/auth.schema.js"; 
@@ -15,7 +15,7 @@ import { loginSchema, registerSchema, registerDoctorSchema } from "../schemas/au
 const router = Router();
 
 router.post("/register", validateSchema(registerSchema), register);
-router.post("/registerDoctor", registerDoctor); // Nueva ruta para el registro de doctores.
+router.post('/registerDoctor', upload.single('doctorPhoto'), registerDoctor);
 router.post("/login", validateSchema(loginSchema), login);
 router.get("/verify", verifyToken);
 router.post("/logout", verifyToken, logout);

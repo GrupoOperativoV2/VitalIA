@@ -77,7 +77,7 @@ export function PatientPage() {
         <BodyContainer>
           {/* <button onClick={togglePopup}>Mostrar popup</button>  */}
 
-          <MedicalDiscoveryTab />
+          {/* <MedicalDiscoveryTab /> */}
 
 
         {!isHistorySubmitted && popupVisible && (

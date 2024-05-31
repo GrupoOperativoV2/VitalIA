@@ -22,7 +22,7 @@ export function DoctorPage() {
 
       <BodyContainer>
         <ContainerDoctor user={user}/>
-          <NoticeDoctor/>
+          {/* <NoticeDoctor/> */}
       </BodyContainer>
 
 
