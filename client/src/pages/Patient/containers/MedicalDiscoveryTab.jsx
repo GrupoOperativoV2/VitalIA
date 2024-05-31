@@ -51,20 +51,11 @@ const NewsContent = styled.div`
   flex-direction: column;
 `;
 
-const NewsTitle = styled.h4`
+const ArticleTitle = styled.h4`
   margin: 0;
   color: #333;
   font-size: 18px;
   font-weight: 600;
-`;
-
-const NewsLink = styled.a`
-  color: #007bff;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const NewsText = styled.p`
@@ -81,8 +72,6 @@ const WelcomeTitle = styled.h1`
   margin-bottom: 10px;
 `;
 
-
-
 const WelcomeText = styled.p`
   font-size: 18px;
   color: #7f8c8d;
@@ -91,17 +80,28 @@ const WelcomeText = styled.p`
   margin-bottom: 20px;
 `;
 
+const SectionTitle = styled.h2`
+  font-size: 24px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+`;
 
 const MedicalDiscoveryTab = () => {
   const [articles, setArticles] = useState([]);
 
   useEffect(() => {
     const fetchMedicalNews = async () => {
-      const apiKey = '21ca2e9bdb9e4571ba261935c08ce793';  
-      const url = `https://newsapi.org/v2/everything?q=medicina+biotecnología&language=es&apiKey=${apiKey}`; //Pendejos, acá se le mueve a las noticias
+      const apiKey = 'pub_452895b742ee037d704d38a63bbc2e564ef97';  
+      const url = `https://newsdata.io/api/1/latest?apikey=${apiKey}&category=health&language=es,en`;
       try {
         const response = await axios.get(url);
-        setArticles(response.data.articles);
+        const uniqueArticles = response.data.results.reduce((acc, article) => {
+          if (!acc.some(item => item.article_id === article.article_id)) {
+            acc.push(article);
+          }
+          return acc;
+        }, []);
+        setArticles(uniqueArticles);
       } catch (error) {
         console.error('Error fetching medical news:', error);
       }
@@ -116,13 +116,13 @@ const MedicalDiscoveryTab = () => {
         <WelcomeTitle>Bienvenido al Centro de Descubrimientos Médicos</WelcomeTitle>
         <WelcomeText>Explora los últimos avances y descubrimientos en el mundo de la medicina.</WelcomeText>
       </WelcomeMessage>
-      <NewsTitle>Últimas Noticias</NewsTitle>
+      <SectionTitle>Últimas Noticias</SectionTitle>
       {articles.length > 0 ? (
         articles.map((article, index) => (
-          <NewsSection key={index} onClick={() => window.open(article.url, '_blank')}>
-            <NewsImage src={article.urlToImage || 'https://via.placeholder.com/120'} alt="Noticia" />
+          <NewsSection key={index} onClick={() => window.open(article.link, '_blank')}>
+            <NewsImage src={article.image_url || 'https://via.placeholder.com/120'} alt="Noticia" />
             <NewsContent>
-              <NewsTitle>{article.title}</NewsTitle>
+              <ArticleTitle>{article.title}</ArticleTitle>
               <NewsText>{article.description || 'No hay descripción disponible.'}</NewsText>
             </NewsContent>
           </NewsSection>
