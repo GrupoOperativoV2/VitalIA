@@ -92,7 +92,7 @@ const MedicalDiscoveryTab = () => {
   useEffect(() => {
     const fetchMedicalNews = async () => {
       const apiKey = 'pub_452895b742ee037d704d38a63bbc2e564ef97';  
-      const url = `https://newsdata.io/api/1/latest?apikey=${apiKey}&category=health&language=es,en`;
+      const url = `https://newsdata.io/api/1/latest?apikey=${apiKey}&category=health&language=es,en`; //no le muevan tanto babosos
       try {
         const response = await axios.get(url);
         const uniqueArticles = response.data.results.reduce((acc, article) => {
