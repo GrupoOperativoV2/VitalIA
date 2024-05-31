@@ -4,6 +4,7 @@ import { spawn } from 'child_process';
 import cors from 'cors';  // Importa el paquete cors
 const pathToPython = './.venv/Scripts/python.exe'; 
 
+
 const APIapp = express();
 
 const upload = multer({ dest: 'uploads/' });

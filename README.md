@@ -21,12 +21,17 @@ npm run dev
 ```sh
 
 .\.venv\Scripts\activate
-pip install tensorflow keras opencv-python numpy pandas matplotlib seaborn pydrive sys  
+pip install tensorflow keras opencv-python numpy 
 ```
 
 ### Retirar restricciones en PowerShell
 ```sh
 Set-ExecutionPolicy RemoteSigned
+```
+
+### Borrar caché Python Virtual Environment 
+```sh
+pip cache purge
 ```
 
 ### Entorno de producción 
