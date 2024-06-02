@@ -19,9 +19,9 @@ npm run dev
 
 ### Update Python Virtual Environment 
 ```sh
-
+.\.venv\Scripts\activate.bat
 .\.venv\Scripts\activate
-pip install tensorflow keras opencv-python numpy 
+pip install tensorflow keras opencv-python numpy datetime pypdf2
 ```
 
 ### Retirar restricciones en PowerShell
