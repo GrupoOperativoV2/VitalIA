@@ -11,6 +11,7 @@ import authRoutes from "./routes/auth.routes.js";
 import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';  
 import appointmentRoutes from './routes/appointment.routes.js';
 import messageRoutes from './routes/messagesRoutes.js';
+import MedicalHistoryController from "./controllers/medicalHistoryController.js";
 import { FRONTEND_URL } from "./config.js";
 const app = express();
 app.set('trust proxy', 1);
@@ -36,6 +37,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/medicalHistory", medicalHistoryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/appointments", appointmentRoutes);
+app.use("/api/medicalHisroyController", MedicalHistoryController);
 
 // Production-specific setup
 if (process.env.NODE_ENV === "production") {

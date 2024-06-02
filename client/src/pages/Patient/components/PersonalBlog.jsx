@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const BlogSection = styled.section`
   background-color: #f8f9fa;
@@ -51,9 +52,41 @@ const NewPostButton = styled.button`
 export function PersonalBlog({ patientInfo }) {
   const [blogPosts, setBlogPosts] = useState(patientInfo.blogPosts || []);
 
-  // Función para agregar un nuevo post (esto es solo un esquema, se debe implementar)
-  const addNewPost = () => {
-    // Aquí se debería implementar la lógica para agregar una nueva entrada al blog
+  useEffect(() => {
+    fetchBlogPosts();
+  }, []);
+
+  const fetchBlogPosts = async () => {
+    try {
+      const response = await axios.get('/api/blogPosts');
+      setBlogPosts(response.data);
+    } catch (error) {
+      console.error('Error fetching blog posts:', error);
+    }
+  };
+
+  const addNewPost = async () => {
+    try {
+      const newPost = {
+        title: "Nuevo Título",
+        content: "Contenido del nuevo post",
+        author: "Autor",
+        status: "draft",
+      };
+      const response = await axios.post('/api/blogPosts', newPost);
+      setBlogPosts([...blogPosts, response.data]);
+    } catch (error) {
+      console.error('Error adding new post:', error);
+    }
+  };
+
+  const deletePost = async (id) => {
+    try {
+      await axios.delete(`/api/blogPosts/${id}`);
+      setBlogPosts(blogPosts.filter(post => post._id !== id));
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
   };
 
   return (
@@ -62,9 +95,10 @@ export function PersonalBlog({ patientInfo }) {
       <NewPostButton onClick={addNewPost}>Añadir Nueva Entrada</NewPostButton>
       <PostList>
         {blogPosts.map((post, index) => (
-          <PostItem key={index}>
+          <PostItem key={post._id}>
             <PostTitle>{post.title}</PostTitle>
             <PostContent>{post.content}</PostContent>
+            <button onClick={() => deletePost(post._id)}>Eliminar</button>
           </PostItem>
         ))}
       </PostList>

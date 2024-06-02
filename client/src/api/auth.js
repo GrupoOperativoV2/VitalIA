@@ -81,13 +81,13 @@
     }
   };
 
-  export const updateMedicalHistoryRequest = async (userId, medicalHistoryData) => {
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
-    return axios.put(`/medicalHistory/user/${userId}/medicalHistory`, JSON.stringify(medicalHistoryData), config);
-  };
-
+  export const updateMedicalHistoryRequest = async (userId, data) => {
+    try {
+        const response = await axios.put(`/medicalHistory/user/${userId}/medicalHistory`, data);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating medical history:', error);
+        throw error;
+    }
+};
 

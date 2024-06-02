@@ -11,11 +11,13 @@ import {
   updateMedicalHistoryRequest,
   resetPasswordRequest,
   passwordRequest,
-  photoUserRequest,  
+  photoUserRequest,
 } from "../api/auth";
-import {AppointmentRequest,  // Importamos la función de solicitud de citas
-DoctorSearchRequest  } from "../api/appointments";
-import Cookies from "js-cookie";  
+import {
+  AppointmentRequest,  // Importamos la función de solicitud de citas
+  DoctorSearchRequest
+} from "../api/appointments";
+import Cookies from "js-cookie";
 
 const AuthContext = createContext();
 
@@ -129,127 +131,127 @@ export const AuthProvider = ({ children }) => {
 
   const getMedicalHistory = async (userId) => {
     try {
-        const history = await getMedicalHistoryRequest(userId);
-        return history;
+      const history = await getMedicalHistoryRequest(userId);
+      return history;
     } catch (error) {
-        console.error('Error fetching medical history:', error);
-        throw error;
+      console.error('Error fetching medical history:', error);
+      throw error;
     }
   };
 
-// Definimos el método `DoctorSearch` en tu AuthProvider
-const DoctorSearch = async () => {
-  try {
-    const response = await DoctorSearchRequest();
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching doctors:', error);
-    throw error;
-  }
-};
-
-// Definimos el método `Appointment` en tu AuthProvider
-const Appointment = async (appointmentData) => {
-  try {
-    const response = await AppointmentRequest(appointmentData);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating appointment:', error);
-    throw error;
-  }
-};
-
-// const getUserAppointments = useCallback(async (userId) => {
-//   try {
-//     setLoading(true);
-//     const response = await getUserAppointmentsRequest(userId);
-//     setAppointments(response.data); // Actualiza el estado con las citas obtenidas
-//     setLoading(false);
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching appointments:', error);
-//     setErrors(prevErrors => [...prevErrors, error.message]);
-//     setLoading(false);
-//     throw error;
-//   } 
-// }, [getUserAppointmentsRequest]);
-
-const photoUser = async (userId) => {
-  try {
-    const photoPath = await photoUserRequest(userId); // Llamamos a la función para obtener la ruta de la foto del usuario
-    return photoPath;
-  } catch (error) {
-    console.error('Error fetching user photo:', error);
-    throw error;
-  }
-};
-
-
-const updateMedicalHistory = async (userId, updatedData) => {
-  try {
-      const response = await updateMedicalHistoryRequest(userId, updatedData);
-      console.log("Historial médico actualizado con éxito:", response.data);
-      // Aquí puedes realizar más acciones como actualizar el estado o redirigir al usuario
-  } catch (error) {
-      console.error("Error al actualizar el historial médico:", error);
-      throw error; // Lanzar el error para manejarlo en el formulario
-  }
-};
-
-const resetPassword = async (email) => {
-  try {
-    const response = await resetPasswordRequest(email);
-    if (response.status === 200) {
-      console.log("Solicitud de restablecimiento de contraseña enviada:", response.data);
-      // Aquí podrías actualizar el estado para informar al usuario que el correo fue enviado
-    }
-  } catch (error) {
-    console.error("Error al enviar la solicitud de restablecimiento de contraseña:", error);
-    // Manejo de errores, por ejemplo, actualizar el estado de errores en el contexto
-    setErrors([...errors, error.response ? error.response.data.message : "Un error ocurrió"]);
-  }
-};
-
-const updatePassword = async (userId, token, newPassword) => {
-  try {
-    const response = await passwordRequest(userId, token, newPassword);
-    console.log("Respuesta de restablecimiento de contraseña:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error al actualizar la contraseña:", error);
-    throw error;
-  }
-};
-
-
-useEffect(() => {
-  const checkLogin = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setIsAuthenticated(false);
-      setLoading(false);
-      return;
-    }
-
+  // Definimos el método `DoctorSearch` en tu AuthProvider
+  const DoctorSearch = async () => {
     try {
-      const res = await axios.get('/auth/verify', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      if (res.status === 200) {
-        setIsAuthenticated(true);
-        setUser(res.data);
-      } else {
-        setIsAuthenticated(false);
+      const response = await DoctorSearchRequest();
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+      throw error;
+    }
+  };
+
+  // Definimos el método `Appointment` en tu AuthProvider
+  const Appointment = async (appointmentData) => {
+    try {
+      const response = await AppointmentRequest(appointmentData);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      throw error;
+    }
+  };
+
+  // const getUserAppointments = useCallback(async (userId) => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await getUserAppointmentsRequest(userId);
+  //     setAppointments(response.data); // Actualiza el estado con las citas obtenidas
+  //     setLoading(false);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('Error fetching appointments:', error);
+  //     setErrors(prevErrors => [...prevErrors, error.message]);
+  //     setLoading(false);
+  //     throw error;
+  //   } 
+  // }, [getUserAppointmentsRequest]);
+
+  const photoUser = async (userId) => {
+    try {
+      const photoPath = await photoUserRequest(userId); // Llamamos a la función para obtener la ruta de la foto del usuario
+      return photoPath;
+    } catch (error) {
+      console.error('Error fetching user photo:', error);
+      throw error;
+    }
+  };
+
+
+  const updateMedicalHistory = async (userId, updatedData, historyId) => {
+    try {
+      const response = await updateMedicalHistoryRequest(userId, updatedData, historyId);
+      console.log("Historial médico actualizado con éxito:", response.data);
+    } catch (error) {
+      console.error("Error al actualizar el historial médico:", error);
+      throw error;
+    }
+  };
+  
+
+  const resetPassword = async (email) => {
+    try {
+      const response = await resetPasswordRequest(email);
+      if (response.status === 200) {
+        console.log("Solicitud de restablecimiento de contraseña enviada:", response.data);
+        // Aquí podrías actualizar el estado para informar al usuario que el correo fue enviado
       }
     } catch (error) {
-      setIsAuthenticated(false);
+      console.error("Error al enviar la solicitud de restablecimiento de contraseña:", error);
+      // Manejo de errores, por ejemplo, actualizar el estado de errores en el contexto
+      setErrors([...errors, error.response ? error.response.data.message : "Un error ocurrió"]);
     }
-    setLoading(false);
   };
-  checkLogin();
-}, []);
+
+  const updatePassword = async (userId, token, newPassword) => {
+    try {
+      const response = await passwordRequest(userId, token, newPassword);
+      console.log("Respuesta de restablecimiento de contraseña:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error al actualizar la contraseña:", error);
+      throw error;
+    }
+  };
+
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await axios.get('/auth/verify', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (res.status === 200) {
+          setIsAuthenticated(true);
+          setUser(res.data);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+      setLoading(false);
+    };
+    checkLogin();
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -262,14 +264,15 @@ useEffect(() => {
         isAuthenticated,
         errors,
         addMedicalHistory,
-        loading,  
+        loading,
         uploadPatientPhoto,
         getMedicalHistory,
         DoctorSearch,
         Appointment,
         photoUser,
         resetPassword,
-        updateMedicalHistory, updatePassword
+        updateMedicalHistory , 
+        updatePassword
       }}
     >
       {children}
