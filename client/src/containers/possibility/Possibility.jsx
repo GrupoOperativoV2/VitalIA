@@ -1,5 +1,5 @@
 import React from 'react';
-import possibilityImage from '../../assets/vitalia.png';
+import possibilityImage from '../../assets/toast.png';
 import './possibility.css';
 
 const Possibility = () => (
@@ -8,8 +8,9 @@ const Possibility = () => (
       <img src={possibilityImage} alt="possibility" />
     </div>
     <div className="gpt3__possibility-content">
-      <h1 className="gradient__text">Las posibilidades <br /> están más allá de tu imaginación</h1>
-      <p>Transformando el sector salud con innovación y tecnología, VitalIA abre nuevas puertas para el cuidado del paciente. Desde diagnósticos precisos hasta tratamientos personalizados, nuestra plataforma eleva la experiencia tanto de profesionales médicos como de pacientes.</p>
+      <h1 className="gradient__text">Conoce a Toast <br /> el nuevo asistente personal para tu salud</h1>
+      <p>Toast te brindará recomendaciones u observaciones personalizadas con el fin de <strong>procurar tu bienestar</strong>, además de poder responder preguntas sobre salud en general.
+      Sumérgete en una <strong>vida más saludable e inteligente con Toast </strong></p>
     </div>
   </div>
 );

@@ -12,6 +12,7 @@ import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';
 import appointmentRoutes from './routes/appointment.routes.js';
 import messageRoutes from './routes/messagesRoutes.js';
 import { FRONTEND_URL } from "./config.js";
+
 const app = express();
 app.set('trust proxy', 1);
 const server = createServer(app);  // Create an HTTP server for Express and Socket.io
@@ -20,7 +21,24 @@ const server = createServer(app);  // Create an HTTP server for Express and Sock
 initializeManager();
 initializeDoctor();
 
-app.use(cors({ credentials: true, origin: FRONTEND_URL }));
+const allowedOrigins = [
+  'http://localhost:57356',
+  FRONTEND_URL
+];
+
+// CORS configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 
 
 app.use(express.json());

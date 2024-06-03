@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import ai from '../../assets/ai.png'; 
+import ai from '../../assets/vital.png'; 
 import './header.css'; 
 
 // Definición de TextScramble
