@@ -25,12 +25,12 @@ const Title = styled.h2`
   margin-bottom: 10px;
 `;
 
-const Dashboard = ({ userID }) => {
+const Dashboard = ({ historyID }) => {
   return (
     <DashboardContainer>
       <Section>
         <Title>Próximas Citas</Title>
-        <AppointmentDetails userID={userID}/>
+        <AppointmentDetails historyID={historyID}/>
       </Section>
 
       <Section>

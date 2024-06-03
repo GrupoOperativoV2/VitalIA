@@ -70,7 +70,13 @@ export const registerDoctor = async (req, res) => {
       id: userSaved._id,
       name: userSaved.name,
       tipo: userSaved.tipo,
-      doctorPhoto: userSaved.doctorPhoto
+      doctorPhoto: userSaved.doctorPhoto,
+      specialization: userSaved.specialization,
+      phone: userSaved.phone,
+      address: userSaved.address,
+      experience: userSaved.experience
+
+
     });
 
     res.cookie("token", token, {
@@ -83,7 +89,11 @@ export const registerDoctor = async (req, res) => {
       id: userSaved._id,
       username: userSaved.name,
       email: userSaved.email,
-      doctorPhoto: userSaved.doctorPhoto
+      doctorPhoto: userSaved.doctorPhoto,
+      specialization: userSaved.specialization,
+      phone: userSaved.phone,
+      address: userSaved.address,
+      experience: userSaved.experience
 
     });
   } catch (error) {
@@ -208,6 +218,10 @@ export const login = async (req, res) => {
       tipo: userFound.tipo,
       birthDate: userFound.birthDate,
       doctorPhoto: userFound.doctorPhoto || null,
+      specialization: userFound.specialization || null,
+      phone: userFound.phone || null,
+      address: userFound.address || null,
+      experience: userFound.experience || null,
       token: token // Include token in the response JSON
     });
   } catch (error) {
@@ -244,6 +258,10 @@ export const verifyToken = async (req, res) => {
       tipo: userFound.tipo,
       birthDate: userFound.birthDate,
       doctorPhoto: userFound.doctorPhoto || null,
+      specialization: userFound.specialization || null,
+      phone: userFound.phone || null,
+      address: userFound.address || null,
+      experience: userFound.experience || null,
     };
 
 

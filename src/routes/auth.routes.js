@@ -7,6 +7,12 @@ import {
   registerDoctor, 
   getMedicalHistoryPhoto,requestPasswordReset, resetPassword, upload
 } from "../controllers/auth.controller.js";
+
+import {
+  listPatientsDoctor, getHistoriesByDoctorID
+} from "../controllers/patientsController.js";
+
+
 import { validateSchema } from "../middlewares/validator.middleware.js";
 import { loginSchema, registerSchema, registerDoctorSchema } from "../schemas/auth.schema.js"; 
 
@@ -24,5 +30,9 @@ router.get('/photoUser/:userId', getMedicalHistoryPhoto);
 
 router.post("/request-password-reset", requestPasswordReset);
 router.post("/password-reset", resetPassword);
+
+
+router.post("/register/list",  listPatientsDoctor);
+router.get('/histories/:doctorID', getHistoriesByDoctorID);
 
 export default router;

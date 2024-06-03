@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useAuth } from '../../../context/authContext';
 import { getCompletion } from "../../../IA/api";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export function AppointmentFrom ({ doctors }) {
+export function AppointmentFrom ({ doctors, historyId }) {
     const { Appointment, user } = useAuth();
-    
+
     const [appointments, setAppointments] = useState([{
         date: '',
         time: '',
@@ -26,7 +28,7 @@ export function AppointmentFrom ({ doctors }) {
         if (uniqueSpecializations.length > 0) {
             handleSpecializationChange({ target: { value: uniqueSpecializations[0] } }, 0);
         }
-    }, [doctors])
+    }, [doctors]);
 
     const updateAppointment = (index, field, value) => {
         const updatedAppointments = appointments.map((appointment, i) => 
@@ -50,24 +52,19 @@ export function AppointmentFrom ({ doctors }) {
         );
         setAppointments(updatedAppointments);
     };
-    
-    
 
     async function deduceReasonFromSymptoms(symptoms) {
-        const prompt = `Basado en los siguientes síntomas, genera una respuesta que consista en una especialidad médica seguida de una coma y luego un motivo corto de la cita médica en una frase de una a cinco palabras. Escoge una especialidad de la siguiente lista: Medicina Interna, Cirugía General, Pediatría, Obstetricia y Ginecología, Cardiología, Neurología, Ortopedia, Oncología, Anestesiología, Urgencias. Si no esta en la lista ponlos en Medicina Interna Síntomas: ${symptoms}`;
+        const prompt = `Basado en los siguientes síntomas, genera una respuesta que consista en una especialidad médica seguida de una coma y luego un motivo corto de la cita médica en una frase de una a cinco palabras. Escoge una especialidad de la siguiente lista: Medicina Interna, Cirugía General, Pediatría, Obstetricia y Ginecología, Cardiología, Neurología, Ortopedia, Oncología, Anestesiología, Urgencias. Si no está en la lista ponlos en Medicina Interna Síntomas: ${symptoms}`;
     
         try {
             const response = await getCompletion(prompt);
             const [specialization, reason] = response.split(',', 2).map(s => s.trim());
-            console.log(specialization)
-            return { specialization, reason }; // Retorna un objeto con ambos valores como strings
+            return { specialization, reason };
         } catch (error) {
             console.error('Error deducing reason from symptoms:', error);
             return { specialization: 'Indefinido', reason: 'No se pudo determinar el motivo debido a un error.' };
         }
     }
-    
-
 
     const handleAddAppointment = () => {
         setAppointments([...appointments, {
@@ -89,33 +86,32 @@ export function AppointmentFrom ({ doctors }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Prepare the data for each appointment according to the backend schema
         const formattedAppointments = appointments.map(appointment => ({
-            patientId: appointment.patientId,
-            doctorId: appointment.doctorId,
-            symptoms: appointment.details,  // Assuming 'details' are the symptoms
+            patientId: historyId,
+            doctorId: appointment.doctorId, 
+            symptoms: appointment.details,
             reason: appointment.reason,
             date: appointment.date,
             time: appointment.time,
             status: appointment.status
         }));
     
-        console.log('Datos finales de las citas listos para enviar:', formattedAppointments);
     
         try {
             const results = await Promise.all(formattedAppointments.map(appointment => 
-                Appointment(appointment)  // Call the existing Appointment function with formatted data
+                Appointment(appointment)
             ));
-            console.log('Citas creadas con éxito:', results);
+            toast.success('Cita creada con éxito');
         } catch (error) {
-            console.error('Error creando citas:', error);
+            toast.error(`Error creando citas: ${error.response.data.message}`);
+
         }
     };
-    
+
     const analyzeSymptoms = async (index) => {
         const symptoms = appointments[index].details;
         if (!symptoms) {
-            alert("Por favor ingrese síntomas antes de analizar.");
+            toast.error('Por favor ingrese síntomas antes de analizar.');
             return;
         }
         const { specialization, reason } = await deduceReasonFromSymptoms(symptoms);
@@ -134,13 +130,11 @@ export function AppointmentFrom ({ doctors }) {
             setFilteredDoctors(docs);
             setSelectsDisabled(false);
         }
-        
     };
 
-    
-    
     return (
         <NewAppointmentForm onSubmit={handleSubmit}>
+            <ToastContainer />
             {appointments.map((appointment, index) => (
                 <div key={index}>
                     <Label>Describe tus síntomas</Label>
@@ -151,7 +145,8 @@ export function AppointmentFrom ({ doctors }) {
                         onChange={(e) => handleInputChange(e, index, 'details')}
                         placeholder="¿cómo te sientes?"
                     />
-                    <Button onClick={() => analyzeSymptoms(index)}>Analizar síntomas</Button>
+<Button type="button" onClick={(e) => { e.preventDefault(); analyzeSymptoms(index); }}>Analizar síntomas</Button>
+
                     <br></br> <br></br>
                     <Label>Motivo</Label>
                     <Input
@@ -161,9 +156,8 @@ export function AppointmentFrom ({ doctors }) {
                         placeholder="El motivo de tu cita es.."
                         readOnly
                     />
-                    
                     <Row>
-                    <SelectContainer>
+                        <SelectContainer>
                             <Label>Especialidad:</Label>
                             <Select
                                 name="specialization"

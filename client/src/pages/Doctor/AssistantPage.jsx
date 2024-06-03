@@ -4,6 +4,137 @@ import { Sidebar } from "./Sidebar.jsx";
 import Chatbot from "../Doctor/Chatbot.jsx";
 import defaultImage from './Vitalia.png';
 import { FaUpload, FaPaperPlane } from 'react-icons/fa';
+import { useAuth } from "../../context/authContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+export function AssistantPage() {
+  const { getMedicalHistoryID } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showChatbot, setShowChatbot] = useState(false);
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(defaultImage);
+  const [id, setId] = useState('');
+  const [searchId, setSearchId] = useState('');
+  const [medicalHistory, setMedicalHistory] = useState(null);
+
+  const buttonStyles = {
+    cursor: 'pointer',
+    backgroundColor: '#007bff',
+    color: 'white',
+    padding: '10px 15px',
+    border: 'none',
+    borderRadius: '4px',
+    marginLeft: '10px',
+    fontSize: '16px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: image && id ? 'auto' : 'none',
+    opacity: image && id ? 1 : 0.5,
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleIdChange = (e) => {
+    setId(e.target.value);
+  };
+
+  const handleSearchIdChange = (e) => {
+    setSearchId(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('image', image);
+    formData.append('id', id);
+    console.log('Sending the following data:', Object.fromEntries(formData.entries()));
+
+    try {
+      const response = await fetch('http://localhost:5000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const result = await response.text();
+      console.log('Response from server:', result);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
+
+  const handleSearchSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Search ID submitted:', searchId);
+    try {
+        const history = await getMedicalHistoryID(searchId);
+        setMedicalHistory(history);
+        toast.success('Historial médico encontrado.');
+
+        console.log("Su historial medico es:", history)
+    } catch (error) {
+        toast.error('Error al buscar el historial médico.');
+        console.error('Error fetching medical history:', error);
+    }
+  };
+
+  return (
+    <DoctorPageContainer>
+      <SidebarContainer isOpen={sidebarOpen}>
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      </SidebarContainer>
+      <BodyContainer>
+        
+        <div style={styles.form}>
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="Enter Medical History ID"
+              value={searchId}
+              onChange={handleSearchIdChange}
+              style={styles.input}
+            />
+            <button type="submit" style={buttonStyles}>
+              Buscar
+            </button>
+          </form>
+        </div>
+
+        <div style={styles.form}>|
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Enter ID"
+              value={id}
+              onChange={handleIdChange}
+              style={styles.input}
+            />
+            <div>
+              <img src={imagePreview} alt="Upload Preview" style={styles.imagePreview} />
+            </div>
+            <label style={styles.label}>
+              <FaUpload style={styles.icon} />
+              <span>Upload</span>
+              <input type="file" style={styles.fileInput} onChange={handleImageChange} accept="image/*" />
+            </label>
+            <button type="submit" style={buttonStyles} disabled={!image || !id} id="submit">
+              <FaPaperPlane style={{ marginRight: '5px' }} />
+              Send
+            </button>
+          </form>
+        </div>
+
+        <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
+        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
+      </BodyContainer>
+      <ToastContainer />
+    </DoctorPageContainer>
+  );
+}
 
 const DoctorPageContainer = styled.div`
   display: flex;
@@ -85,93 +216,3 @@ const styles = {
     marginTop: '20px'
   }
 };
-
-export function AssistantPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showChatbot, setShowChatbot] = useState(false);
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(defaultImage);
-  const [id, setId] = useState('');
-
-  const buttonStyles = {
-    cursor: 'pointer',
-    backgroundColor: '#007bff',
-    color: 'white',
-    padding: '10px 15px',
-    border: 'none',
-    borderRadius: '4px',
-    marginLeft: '10px',
-    fontSize: '16px',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    pointerEvents: image && id ? 'auto' : 'none',
-    opacity: image && id ? 1 : 0.5,
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
-
-  const handleIdChange = (e) => {
-    setId(e.target.value);
-  };
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('image', image);
-    formData.append('id', id);
-    console.log('Sending the following data:', Object.fromEntries(formData.entries()));
-    
-
-    try {
-      const response = await fetch('http://localhost:5000/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const result = await response.text();
-      console.log('Response from server:', result);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    }
-  };
-
-  return (
-    <DoctorPageContainer>
-      <SidebarContainer isOpen={sidebarOpen}>
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      </SidebarContainer>
-      <BodyContainer>
-        <div style={styles.form}>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Enter ID"
-              value={id}
-              onChange={handleIdChange}
-              style={styles.input}
-            />
-            <div>
-              <img src={imagePreview} alt="Upload Preview" style={styles.imagePreview} />
-            </div>
-            <label style={styles.label}>
-              <FaUpload style={styles.icon} />
-              <span>Upload</span>
-              <input type="file" style={styles.fileInput} onChange={handleImageChange} accept="image/*" />
-            </label>
-            <button type="submit" style={buttonStyles} disabled={!image || !id} id="submit">
-              <FaPaperPlane style={{ marginRight: '5px' }} />
-              Send
-            </button>
-          </form>
-        </div>
-
-        <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
-        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} />}
-      </BodyContainer>
-    </DoctorPageContainer>
-  );
-}

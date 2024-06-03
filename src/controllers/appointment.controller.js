@@ -1,30 +1,34 @@
 import appointment from '../models/appointment.model.js';
 import Doctor from '../models/medico.model.js';
 
-
 export const createAppointment = async (req, res) => {
   try {
-    const newAppointment = new appointment({
-      patientId: req.body.patientId,
-      doctorId: req.body.doctorId,
-      symptoms: req.body.symptoms, // Adding symptoms from request body
-      reason: req.body.reason, // Adding reason from request body
-      date: req.body.date,
-      time: req.body.time,
-      status: req.body.status
+    const { patientId, doctorId, symptoms, reason, date, time, status } = req.body;
+    const appointmentDate = new Date(`${date}T${time}:00.000Z`);
+    const existingAppointments = await appointment.find({ doctorId, date });
+    const isConflict = existingAppointments.some(existingAppointment => {
+      const existingAppointmentDate = new Date(`${existingAppointment.date.toISOString().split('T')[0]}T${existingAppointment.time}:00.000Z`);
+      const timeDifference = Math.abs(appointmentDate - existingAppointmentDate) / (1000 * 60); // difference in minutes
+      return timeDifference < 20;
     });
-
+    if (isConflict) {
+      return res.status(400).json({ message: 'There is already an appointment within 20 minutes of the requested time.' });   
+    }
+    const newAppointment = new appointment({
+      patientId,
+      doctorId,
+      symptoms,
+      reason,
+      date,
+      time,
+      status
+    });
     const savedAppointment = await newAppointment.save();
-    
     res.status(201).json(savedAppointment);
   } catch (error) {
-    console.error('Error al crear la cita:', error); // Improved error logging
     res.status(400).json({ message: error.message });
   }
 };
-
-  
-
 // Leer todas las citas
 export const getAllAppointments = async (req, res) => {
   try {
@@ -59,7 +63,6 @@ export const getAllDoctors = async (req, res) => {
       res.status(500).json({ message: error.message });
     }
   };
-  
 
 // Actualizar una cita por ID
 export const updateAppointment = async (req, res) => {
@@ -89,6 +92,25 @@ export const deleteAppointment = async (req, res) => {
       res.status(404).json({ message: 'Appointment not found' });
     }
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+// Obtener todas las citas de un doctor por ID y estado "scheduled"
+export const getAppointmentsByDoctorId = async (req, res) => {
+  try {
+    const doctorId = req.params.id; // Asumiendo que el ID del doctor se pasa como parámetro en la URL
+    const doctorAppointments = await appointment.find({ doctorId, status: 'scheduled' });
+
+    if (doctorAppointments.length > 0) {
+      res.json(doctorAppointments);
+    } else {
+      res.status(404).json({ message: 'No appointments found for this doctor with status scheduled' });
+    }
+  } catch (error) {
+    console.error('Error al obtener las citas por ID de doctor:', error);
     res.status(500).json({ message: error.message });
   }
 };

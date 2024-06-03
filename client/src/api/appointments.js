@@ -11,3 +11,7 @@ export const DoctorSearchRequest = async () => {
 export const getUserAppointmentsRequest = async (userId) => {
     return axios.get(`/appointments/appointments/user/${userId}`);
   };
+
+  export const getAppointmentsDoctorRequest = async (doctorId) => {
+    return axios.get(`/appointments/appointments/doctor/${doctorId}`);
+  };

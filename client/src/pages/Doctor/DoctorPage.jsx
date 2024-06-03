@@ -54,6 +54,7 @@ const BodyContainer = styled.div`
     theme.bg}; // Asume que tienes un tema con color de fondo
   transition: all 0.3s;
   overflow: auto; // Para el desplazamiento del contenido si es necesario
+  width: 100%;
 `;
 
  const ContentSidebarContainer = styled.div`

@@ -37,6 +37,9 @@ import { PersonalPage } from "./pages/Manager/PersonalPage";
 import { SearchPage } from "./pages/Manager/SearchPage";
 import { SettingPageM } from "./pages/Manager/SettingPageM";
 
+import { PreviewProfile } from "./pages/Doctor/components/PreviewProfile"
+
+
 import { Page404 } from './pages/Page404';
 
 function App() {
@@ -76,6 +79,7 @@ function App() {
                       <Route path="/assistant" element={<AssistantPage />} />
                       <Route path="/messagesdoctor" element={<MessagesPageD />} />
                       <Route path="/settingdoctor" element={<SettingPageD />} />
+                      <Route path="/previewpatient" element={<PreviewProfile />} />
                     </Route>
                     <Route element={<PatientPages />}>
                       <Route path="/pacient" element={<PatientPage />} />

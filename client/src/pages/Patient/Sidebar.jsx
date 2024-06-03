@@ -111,11 +111,11 @@ const linksArray = [
     icon: <IoPerson  />,
     to: "/profilepatient",
   },
-  {
-    label: "Monitoreo ",
-    icon: <CiMonitor />,
-    to: "/monitoring",
-  },
+  // {
+  //   label: "Monitoreo ",
+  //   icon: <CiMonitor />,
+  //   to: "/monitoring",
+  // },
   {
     label: "Mensajes",
     icon: <LuMessagesSquare  />,

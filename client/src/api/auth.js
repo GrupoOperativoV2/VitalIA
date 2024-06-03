@@ -1,8 +1,14 @@
   import axios from "./axios";
 
   // Función existente para registro de usuario
-  export const registerRequest = async (user) =>
+  export const registerListDoctorRequest = async (doctorID, historyID) => {
+    return axios.post('auth/register/list', { doctorID, historyID });
+  };
+  
+
+  export const  registerRequest = async (user) =>
     axios.post(`/auth/register`, user);
+
 
   // Función existente para inicio de sesión
   export const loginRequest = async (user) => 
@@ -68,7 +74,6 @@
   export const getMedicalHistory = async (userId) => {
     try {
       const response = await axios.get(`/medicalHistory/user/${userId}/medicalHistory`);
-      // Asumiendo que la foto se encuentra en la propiedad 'patientPhoto' de la respuesta
       return response.data.patientPhoto;
     } catch (error) {
       console.error('Error al obtener la foto del historial médico:', error);
@@ -86,13 +91,36 @@
     }
   };
 
-  export const updateMedicalHistoryRequest = async (userId, medicalHistoryData) => {
+
+
+  export const getMedicalHistoryIDRequest = async (historyID) => {
+    try {
+      const response = await axios.get(`/medicalHistory/user/${historyID}`);
+      return response.data; // Devuelve los datos recibidos
+    } catch (error) {
+      throw new Error(error.response.data.message || 'Error al obtener el historial médico');
+    }
+  };
+
+  export const getMypacientsRequest = async (doctorID) => {
+    try {
+      const response = await axios.get(`/auth/histories/${doctorID}`);
+      return response.data; // Devuelve los datos recibidos
+    } catch (error) {
+      throw new Error(error.response ? error.response.data.message : 'Error al obtener pacientes');
+    }
+  };
+
+  export const updateMedicalHistoryRequest = async (historyId, formDataToSend) => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
         },
     };
-    return axios.put(`/medicalHistory/user/${userId}/medicalHistory`, JSON.stringify(medicalHistoryData), config);
+    return axios.put(`/medicalHistory/update/medicalHistory/${historyId}`, JSON.stringify(formDataToSend), config);
   };
 
 
+  export const updateMedicalHistoryPhotoRequest = async (historyId, formData) => {
+    return axios.put(`/medicalHistory/update/photo/${historyId}`, formData);
+  };

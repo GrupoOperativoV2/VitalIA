@@ -11,10 +11,12 @@
     resetPasswordRequest,
     passwordRequest,
     verifyTokenRequest,
-    photoUserRequest,  
-    
+    photoUserRequest, 
+    getMypacientsRequest,
+    updateMedicalHistoryPhotoRequest, 
+    getMedicalHistoryIDRequest,registerListDoctorRequest
   } from "../api/auth";
-  import {AppointmentRequest,  
+  import {AppointmentRequest,  getAppointmentsDoctorRequest,
   DoctorSearchRequest} from "../api/appointments";
   import { listPatientsRequest } from "../api/menssage";
   import Cookies from "js-cookie";  
@@ -168,16 +170,45 @@
       }
     };
 
-    const updateMedicalHistory = async (userId, updatedData) => {
+
+
+    const getMedicalHistoryID = async (historyID) => {
       try {
-          const response = await updateMedicalHistoryRequest(userId, updatedData);
-          console.log("Historial médico actualizado con éxito:", response.data);
-          // Aquí puedes realizar más acciones como actualizar el estado o redirigir al usuario
+          const history = await getMedicalHistoryIDRequest(historyID);
+          return history;
       } catch (error) {
-          console.error("Error al actualizar el historial médico:", error);
-          throw error; // Lanzar el error para manejarlo en el formulario
+          console.error('Error fetching medical history:', error);
+          throw error;
       }
     };
+
+    const updateMedicalHistory = async (historyId, formDataToSend) => {
+      try {
+          const response = await updateMedicalHistoryRequest(historyId, formDataToSend);
+      } catch (error) {
+          throw error; 
+      }
+    };
+
+    const updateMedicalHistoryPhoto = async (historyId, formData) => {
+      console.log(formData)
+      try {
+          const response = await updateMedicalHistoryPhotoRequest(historyId, formData);
+      } catch (error) {
+          throw error; 
+      }
+    };
+
+      const photoUser = async (userId) => {
+    try {
+      const photoPath = await photoUserRequest(userId); 
+      return photoPath;
+    } catch (error) {
+      console.error('Error fetching user photo:', error);
+      throw error;
+    }
+  };
+
 
 
 
@@ -192,7 +223,28 @@
     }
   };
 
+
+  const getAppointmentsDoctor = async (doctorId) => {
+    try {
+        const response = await getAppointmentsDoctorRequest(doctorId);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching Appointments:', error);
+        throw error;
+    }
+  };
+
+   const getMypacients = async (doctorID) => {
+    try {
+      const response = await getMypacientsRequest(doctorID);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   // const getUserAppointments = useCallback(async (userId) => {
+
   //   try {
   //     setLoading(true);
   //     const response = await getUserAppointmentsRequest(userId);
@@ -207,20 +259,24 @@
   //   } 
   // }, [getUserAppointmentsRequest]);
 
-  const photoUser = async (userId) => {
+   const registerListDoctor = async (doctorID, historyID) => {
+
     try {
-      const photoPath = await photoUserRequest(userId); // Llamamos a la función para obtener la ruta de la foto del usuario
-      return photoPath;
+      const response = await registerListDoctorRequest(doctorID, historyID);
+      return response.data;
     } catch (error) {
-      console.error('Error fetching user photo:', error);
+      console.error('Error register list:', error);
       throw error;
     }
   };
+  
+
 
 
 
   //Mensajes 
   // Definimos el método `DoctorSearch` en tu AuthProvider
+ 
   const DoctorSearch = async () => {
     try {
       const response = await DoctorSearchRequest();
@@ -269,10 +325,6 @@
     };
     checkLogin();
   }, []);
-  
-
-
-
     return (
       <AuthContext.Provider
         value={{
@@ -285,14 +337,17 @@
           errors,
           addMedicalHistory,
           loading,  
+          updateMedicalHistoryPhoto,
           uploadPatientPhoto,
           getMedicalHistory,
           DoctorSearch,
           Appointment,
           photoUser,
+          registerListDoctor,
           resetPassword,
           updateMedicalHistory, updatePassword,
-          listPatients
+          listPatients, 
+          getMedicalHistoryID,getAppointmentsDoctor, getMypacients
         }}
       >
         {children}

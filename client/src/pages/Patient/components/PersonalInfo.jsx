@@ -1,11 +1,15 @@
 import React from "react";
 import styled from "styled-components";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const PersonalInfo = ({ patientInfo }) => {
 
   const personal = patientInfo.personalInformation || {};
+  const id = patientInfo._id || '';
   const medical = patientInfo.medicalHistory || {};
-
+  
   const imageUrl = patientInfo.patientPhoto
     ? `http://localhost:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
     : "https://via.placeholder.com/100";
@@ -33,11 +37,31 @@ const allergiesList = medical.allergies
       .join(', ')
   : "No especificado";
 
+  
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("ID copiado al portapapeles");
+    }, () => {
+      toast.error("Error al copiar el ID");
+    });
+  };
+  
+  const IdContainer = styled.span`
+  cursor: pointer;
+  text-decoration: underline;
+  color: blue;
+`;
+
   return (
     <ProfileCard>
       <ProfileHeader>
+         <ToastContainer />
+
         <ProfilePicture src={imageUrl} alt="Foto de Perfil" />
         <FullName>{personal.name}</FullName>
+        <id>
+          id : <IdContainer onClick={() => copyToClipboard(id)}>{id}</IdContainer>
+        </id>
       </ProfileHeader>
       <ProfileDetails>
         <DetailField>
