@@ -21,7 +21,7 @@ npm run dev
 ```sh
 .\.venv\Scripts\activate.bat
 .\.venv\Scripts\activate
-pip install tensorflow keras opencv-python numpy datetime pypdf2 pdfrw
+pip install tensorflow keras opencv-python numpy datetime pypdf2 pdfrw datetime
 ```
 
 ### Retirar restricciones en PowerShell
