@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import logo from "../../goDev.svg";
+import logo from "../../assets/goDev.svg";
 import { v } from "../../styles/Variables";
 
 import { FaHome } from "react-icons/fa";
