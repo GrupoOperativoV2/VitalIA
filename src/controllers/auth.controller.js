@@ -11,6 +11,95 @@ import { createAccessToken } from "../libs/jwt.js";
 import { registerSchema, registerDoctorSchema} from "../schemas/auth.schema.js";
 import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
+import multer from 'multer';
+import path from 'path';
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Carpeta donde se guardarán las fotos
+  },
+  filename: function (req, file, cb) {
+    cb(null, 'doctorPhoto-' + Date.now() + path.extname(file.originalname)); // Nombre del archivo con prefijo
+  },
+});
+
+export const upload = multer({ storage: storage });
+
+export const registerDoctor = async (req, res) => {
+  try {
+    const { name, email, specialization, password, birthDate, phone, address, experience } = req.body;
+    const doctorPhoto = req.file ? req.file.filename : null;
+
+    console.log(req.body);
+
+    const parsedData = registerDoctorSchema.safeParse({ name, email, specialization, password, birthDate, phone, address, experience, doctorPhoto });
+    if (!parsedData.success) {
+      return res.status(400).json({
+        message: parsedData.error.issues.map(issue => issue.message),
+      });
+    }
+
+    const userFound = await Doctor.findOne({ email });
+
+    if (userFound) {
+      return res.status(400).json({
+        message: ["El correo electrónico ya está en uso"],
+      });
+    }
+
+    // Se hashea el password
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    // Crea un nuevo usuario
+    const newUser = new Doctor({
+      name,
+      email,
+      specialization,
+      password: passwordHash,
+      birthDate,
+      phone,
+      address,
+      experience,
+      doctorPhoto: doctorPhoto ? `/uploads/${doctorPhoto}` : null, // Guardar la ruta de la foto
+    });
+
+    const userSaved = await newUser.save();
+
+    const token = await createAccessToken({
+      id: userSaved._id,
+      name: userSaved.name,
+      tipo: userSaved.tipo,
+      doctorPhoto: userSaved.doctorPhoto,
+      specialization: userSaved.specialization,
+      phone: userSaved.phone,
+      address: userSaved.address,
+      experience: userSaved.experience
+
+
+    });
+
+    res.cookie("token", token, {
+      httpOnly: process.env.NODE_ENV !== "development",
+      secure: true,
+      sameSite: "none",
+    });
+
+    res.json({
+      id: userSaved._id,
+      username: userSaved.name,
+      email: userSaved.email,
+      doctorPhoto: userSaved.doctorPhoto,
+      specialization: userSaved.specialization,
+      phone: userSaved.phone,
+      address: userSaved.address,
+      experience: userSaved.experience
+
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export const register = async (req, res) => {
   try {
@@ -78,69 +167,10 @@ export const register = async (req, res) => {
   }
 };
 
-export const registerDoctor = async (req, res) => {
-  try {
-    const { name, email, specialization, password, birthDate, doctorPhoto} = req.body;
-    console.log(req.body)
-
-    const parsedData = registerDoctorSchema.safeParse({ name, email, specialization, password, birthDate, doctorPhoto});
-    if (!parsedData.success) {
-      return res.status(400).json({
-        message: parsedData.error.issues.map(issue => issue.message),
-      });
-    }
-
-    const userFound = await Doctor.findOne({ email });
-
-    if (userFound)
-      return res.status(400).json({
-        message: ["The email is already in use"],
-      });
-
-    // Se hashea el password
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    // Crea un nuevo usuario
-    const newUser = new Doctor({
-      name,
-      email,
-      specialization,
-      password: passwordHash,
-      birthDate,
-      doctorPhoto,
-    });
-
-    const userSaved = await newUser.save();
-
-    const token = await createAccessToken({
-      id: userSaved._id,
-      name: userSaved.name,
-      tipo: userSaved.tipo,
-    });
-
-    res.cookie("token", token, {
-      httpOnly: process.env.NODE_ENV !== "development",
-      secure: true,
-      sameSite: "none",
-    });
-
-    res.json({
-      id: userSaved._id,
-      username: userSaved.username,
-      email: userSaved.email,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-
-
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     let errors = [];
-
 
     let userFound = await User.findOne({ email });
     if (!userFound) {
@@ -157,7 +187,6 @@ export const login = async (req, res) => {
     let isMatch = false;
     if (userFound) {
       isMatch = await bcrypt.compare(password, userFound.password);
-      console.log(`Password match: ${isMatch}`);
       if (!isMatch) {
         errors.push("The password is incorrect");
       }
@@ -175,6 +204,11 @@ export const login = async (req, res) => {
       tipo: userFound.tipo,
     });
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // secure en producción
+      sameSite: "none",
+    });
 
     return res.json({
       id: userFound._id,
@@ -183,6 +217,11 @@ export const login = async (req, res) => {
       name: userFound.name,
       tipo: userFound.tipo,
       birthDate: userFound.birthDate,
+      doctorPhoto: userFound.doctorPhoto || null,
+      specialization: userFound.specialization || null,
+      phone: userFound.phone || null,
+      address: userFound.address || null,
+      experience: userFound.experience || null,
       token: token // Include token in the response JSON
     });
   } catch (error) {
@@ -190,14 +229,15 @@ export const login = async (req, res) => {
   }
 };
 
-
-
 export const verifyToken = async (req, res) => {
-  const { token } = req.cookies;
+  const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Acepta token de cookies o headers
   if (!token) return res.send(false);
 
   jwt.verify(token, TOKEN_SECRET, async (error, user) => {
-    if (error) return res.sendStatus(401);
+    if (error) {
+      return res.sendStatus(401);
+    }
+
 
     let userFound = await User.findById(user.id);
     if (!userFound) {
@@ -206,20 +246,28 @@ export const verifyToken = async (req, res) => {
     if (!userFound) {
       userFound = await Manager.findById(user.id);
     }
+    if (!userFound) {
+      return res.sendStatus(401);
+    }
 
-    if (!userFound) return res.sendStatus(401);
-
-    return res.json({
+    const responseData = {
       id: userFound._id,
       username: userFound.username || userFound.name,
       email: userFound.email,
       name: userFound.name,
       tipo: userFound.tipo,
-      birthDate: userFound.birthDate
-    });
+      birthDate: userFound.birthDate,
+      doctorPhoto: userFound.doctorPhoto || null,
+      specialization: userFound.specialization || null,
+      phone: userFound.phone || null,
+      address: userFound.address || null,
+      experience: userFound.experience || null,
+    };
+
+
+    return res.json(responseData);
   });
 };
-
 
 export const logout = async (req, res) => {
   res.cookie("token", "", {
@@ -229,7 +277,6 @@ export const logout = async (req, res) => {
   });
   return res.sendStatus(200);
 };
-
 
 export const getMedicalHistoryPhoto = async (req, res) => {
   const { userId } = req.params; // Suponiendo que el ID de usuario se pasa como parámetro en la URL
@@ -249,8 +296,6 @@ export const getMedicalHistoryPhoto = async (req, res) => {
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };
-
-
 
 
 const OAuth2 = google.auth.OAuth2;
@@ -287,7 +332,6 @@ const createTransporter = async () => {
 
   return transporter;
 };
-
 
 export const requestPasswordReset = async (req, res) => {
   const { email } = req.body;

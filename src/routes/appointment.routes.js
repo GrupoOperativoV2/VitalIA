@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createAppointment, getAllAppointments, getAppointmentsByUserId, updateAppointment, deleteAppointment, getAllDoctors} from '../controllers/appointment.controller.js';
+import { createAppointment, getAllAppointments, getAppointmentsByUserId, updateAppointment, deleteAppointment, getAllDoctors, getAppointmentsByDoctorId} from '../controllers/appointment.controller.js';
 
 const router = Router();
 
@@ -18,6 +18,8 @@ router.delete('/appointments/:id', deleteAppointment);
 router.get('/doctors', getAllDoctors);
 
 router.get('/appointments/user/:id', getAppointmentsByUserId);
+
+router.get('/appointments/doctor/:id', getAppointmentsByDoctorId);
 
 
 export default router;

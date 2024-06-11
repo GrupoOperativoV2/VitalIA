@@ -12,7 +12,6 @@ import medicalHistoryRoutes from './routes/medicalHistoryRoutes.js';
 import appointmentRoutes from './routes/appointment.routes.js';
 import messageRoutes from './routes/messagesRoutes.js';
 import { FRONTEND_URL } from "./config.js";
-
 const app = express();
 app.set('trust proxy', 1);
 const server = createServer(app);  // Create an HTTP server for Express and Socket.io
@@ -21,24 +20,7 @@ const server = createServer(app);  // Create an HTTP server for Express and Sock
 initializeManager();
 initializeDoctor();
 
-const allowedOrigins = [
-  'http://localhost:57356',
-  FRONTEND_URL
-];
-
-// CORS configuration
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-};
-
-app.use(cors(corsOptions));
+app.use(cors({ credentials: true, origin: FRONTEND_URL }));
 
 
 app.use(express.json());
@@ -79,10 +61,8 @@ io.on("connection", (socket) => {
   socket.on("add-user", (userId) => {
     if (userId) {
       onlineUsers.set(userId, socket.id);
-      // Enviar confirmación al cliente
       socket.emit("user-added", { userId, status: "success" });
     } else {
-      // Enviar una respuesta de fallo si el userId no se proporcionó o es inválido
       socket.emit("user-added", { userId, status: "failed" });
     }
   });
@@ -90,17 +70,15 @@ io.on("connection", (socket) => {
   socket.on("send-msg", (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
-        socket.to(sendUserSocket).emit("msg-recieve", data.message);
-    }
+        socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+    } 
+    
   });
 
-  // Manejador para cuando un cliente se desconecta
   socket.on("disconnect", () => {
-    console.log(`Cliente desconectado: ${socket.id}`);
     onlineUsers.forEach((value, key) => {
       if (value === socket.id) {
         onlineUsers.delete(key);
-        console.log(`Usuario ${key} eliminado de onlineUsers`);
       }
     });
   });
