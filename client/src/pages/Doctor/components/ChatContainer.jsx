@@ -16,9 +16,10 @@ export function ChatContainer({ currentChat, socket, user }) {
       try {
         const response = await axios.post(recieveMessageRoute, {
           from: user.id,
-          to: currentChat._id,
+          to: currentChat.id,
         });
         setMessages(response.data);
+        console.log("Mensajes recibidos:", response.data);
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -28,25 +29,34 @@ export function ChatContainer({ currentChat, socket, user }) {
   }, [currentChat, user]);
 
   useEffect(() => {
-    const getCurrentChat = async () => {
-      if (currentChat) {
-        await user.id;
-      }
-    };
-    getCurrentChat();
-  }, [currentChat, user]);
+    if (socket.current) {
+      socket.current.on("msg-recieve", (msg) => {
+        console.log("Mensaje recibido:", msg);
+        if (msg) {
+          setArrivalMessage({ fromSelf: false, message: msg });
+        }
+      });
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (arrivalMessage) {
+      setMessages((prev) => [...prev, arrivalMessage]);
+      console.log("Mensajes actualizados:", messages);
+    }
+  }, [arrivalMessage]);
 
   const handleSendMsg = async (msg) => {
     try {
       socket.current.emit("send-msg", {
-        to: currentChat._id,
+        to: currentChat.id,
         from: user.id,
         msg,
       });
 
       await axios.post(sendMessageRoute, {
         from: user.id,
-        to: currentChat._id,
+        to: currentChat.id,
         message: msg,
       });
 
@@ -60,23 +70,15 @@ export function ChatContainer({ currentChat, socket, user }) {
   };
 
   useEffect(() => {
-    if (socket.current) {
-      socket.current.on("msg-recieve", (msg) => {
-        setArrivalMessage({ fromSelf: false, message: msg });
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
-  }, [arrivalMessage]);
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <Container>
       <div className="chat-header">
         <div className="user-details">
           <div className="avatar">
-            <img src={currentChat?.doctorPhoto ? `http://localhost:4000${currentChat?.doctorPhoto.replace(/\\+/g, "/")}` : defaultAvatar}alt="Avatar"   style={{ width: 50, height: 50, borderRadius: "50%" }}/>
+            <img src={currentChat?.patientPhoto ? `http://localhost:4000/${currentChat?.patientPhoto.replace(/\\+/g, "/")}` : defaultAvatar} alt="Avatar" style={{ width: 50, height: 50, borderRadius: "50%" }}/>
           </div>
           <div className="username">
             <h3>{currentChat?.name || "Username"}</h3>
@@ -87,12 +89,8 @@ export function ChatContainer({ currentChat, socket, user }) {
         {messages.map((message) => {
           return (
             <div ref={scrollRef} key={uuidv4()}>
-              <div
-                className={`message ${
-                  message.fromSelf ? "sended" : "recieved"
-                }`}
-              >
-                <div className="content ">
+              <div className={`message ${message.fromSelf ? "sended" : "recieved"}`}>
+                <div className="content">
                   <p>{message.message}</p>
                 </div>
               </div>

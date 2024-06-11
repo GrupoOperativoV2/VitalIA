@@ -8,7 +8,7 @@ const Footer = () => (
     <div className="gpt3__footer-links">
       <div className="gpt3__footer-links_logo">
         <img src={gpt3Logo} alt="gpt3_logo" />
-        <p>GoDev, by Grupo Operativo, <br /> Todos los Derechos Reservados</p>
+        <p>GoDev, by Grupo Operativo, <br /> </p>
       </div>
       <div className="gpt3__footer-links_div">
         <h4>Enlaces</h4>
@@ -31,7 +31,7 @@ const Footer = () => (
     </div>
 
     <div className="gpt3__footer-copyright">
-      <p>@2024 Grupo Operativo. All rights reserved.</p>
+      <p>@2024 Grupo Operativo. </p>
     </div>
   </div>
 );

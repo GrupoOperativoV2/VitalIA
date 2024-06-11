@@ -1,36 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import defaultAvatar from "../../../assets/Profile.jpg"; // Asegúrate de tener una imagen de avatar por defecto
-// import Logo from "../../../Godev.svg";
+import defaultAvatar from "../../../assets/Profile.jpg";
 import { useAuth } from "../../../context/authContext";
 
 export function Contacts({ contacts, changeChat }) {
-    const { user, isAuthenticated, photoUser } = useAuth();
-    const [userPhoto, setUserPhoto] = useState(defaultAvatar);
-
-    useEffect(() => {
-        const fetchUserPhoto = async () => {
-            try {
-                const photoPath = await photoUser(user.id); 
-                const formattedPhotoPath = `http://localhost:4000/${photoPath.replace(/\\+/g, "/")}`; 
-                setUserPhoto(formattedPhotoPath); 
-            } catch (error) {
-                console.error("Error fetching user photo:", error);
-   
-            }
-        };
-
-        if (isAuthenticated) {
-            fetchUserPhoto(); 
-        }
-    }, [isAuthenticated, user.id, photoUser]);
+    const { user } = useAuth();
 
     const handleDefaultUser = (contact) => {
         if (!contact) {
             return {
                 name: "Usuario por Defecto",
-                specialization: "Especialización Desconocida",
-                doctorPhoto: defaultAvatar,
+                patientPhoto: defaultAvatar,
             };
         }
         return contact;
@@ -39,7 +19,6 @@ export function Contacts({ contacts, changeChat }) {
     return (
         <Container>
             <div className="brand">
-                {/* <img src={Logo} alt="logo" /> */}
                 <h3>VitalIA</h3>
             </div>
             <div className="contacts">
@@ -49,7 +28,7 @@ export function Contacts({ contacts, changeChat }) {
                         <div key={userContact._id} className="contact" onClick={() => changeChat(userContact)}>
                             <div className="avatar">
                                 <img
-                                    src={userContact.doctorPhoto ? `http://localhost:4000/${userContact.doctorPhoto.replace(/\\+/g, "/")}` : defaultAvatar}
+                                    src={userContact.patientPhoto ? `http://localhost:4000/${userContact.patientPhoto.replace(/\\+/g, "/")}` : defaultAvatar}
                                     alt={userContact.name}
                                     style={{ width: 50, height: 50, borderRadius: "50%" }}
                                 />
@@ -64,11 +43,10 @@ export function Contacts({ contacts, changeChat }) {
             </div>
             <div className="current-user">
                 <div className="avatar">
-                    {userPhoto ? (
-                        <img src={userPhoto} alt="avatar" style={{ width: 50, height: 50, borderRadius: "50%" }} />
-                    ) : (
-                        <img src={defaultAvatar} alt="avatar" style={{ width: 50, height: 50, borderRadius: "50%" }} />
-                    )}
+                    <img src={user.doctorPhoto ? `http://localhost:4000${user.doctorPhoto.replace(/\\+/g, "/")}` : defaultAvatar} 
+                        alt="avatar" 
+                        style={{ width: 50, height: 50, borderRadius: "50%" }} 
+                    />
                 </div>
                 <div className="username">
                     <h2>{user.username}</h2>
@@ -88,9 +66,6 @@ const Container = styled.div`
         align-items: center;
         gap: 1rem;
         justify-content: center;
-        img {
-            height: 2rem;
-        }
         h3 {
             color: black;
             text-transform: uppercase;
@@ -129,6 +104,9 @@ const Container = styled.div`
             .username {
                 h3 {
                     color: black;
+                }
+                p {
+                    color: #555;
                 }
             }
         }

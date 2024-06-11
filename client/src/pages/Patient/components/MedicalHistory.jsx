@@ -9,7 +9,6 @@ export const MedicalHistory = ({ patientInfo }) => {
   const [activeTab, setActiveTab] = useState("cita"); 
   const [doctors, setDoctors] = useState([]);
 
-
   useEffect(() => {
     DoctorSearch()
       .then((doctorsList) => {
@@ -40,7 +39,7 @@ export const MedicalHistory = ({ patientInfo }) => {
 
       {activeTab === "cita" && (
         <div>
-         <AppointmentFrom doctors={doctors} />
+         <AppointmentFrom doctors={doctors} historyId = {patientInfo._id}/>
         </div>
       )}
 

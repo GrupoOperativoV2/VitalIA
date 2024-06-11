@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
 import { PendingAppointment } from "./containers/PendingAppointment.jsx";
 import { ContainerDoctor } from "./containers/ContainerDoctor.jsx";
 import Chatbot from "../Patient/Chatbot.jsx";
 import { useAuth } from "../../context/authContext";  
-import {NoticeDoctor} from './containers/NoticeDoctor.jsx'
 
 export function DoctorPage() {
   const { user } = useAuth();
@@ -22,7 +21,6 @@ export function DoctorPage() {
 
       <BodyContainer>
         <ContainerDoctor user={user}/>
-          <NoticeDoctor/>
       </BodyContainer>
 
 
@@ -35,17 +33,37 @@ export function DoctorPage() {
   );
 }
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
 const DoctorPageContainer = styled.div`
-  display: flex; // Cambiado a flex para un mejor control del layout
-  background: ${({ theme }) => theme.bgtotal};
+   display: flex;
   transition: all 0.3s;
   height: 100vh;
+  overflow: hidden;
+  position: relative;
+  animation: ${fadeIn} 1s ease-out;
 `;
 
 const SidebarContainer = styled.div`
-  width: ${({ isOpen }) => (isOpen ? "400px" : "80px")};
+  width: ${({ isOpen }) => (isOpen ? "300px" : "90px")};
   transition: width 0.3s;
   height: 1000px;
+  animation: ${slideIn} 0.5s ease-out;
 `;
 
 const BodyContainer = styled.div`
@@ -54,6 +72,7 @@ const BodyContainer = styled.div`
     theme.bg}; // Asume que tienes un tema con color de fondo
   transition: all 0.3s;
   overflow: auto; // Para el desplazamiento del contenido si es necesario
+  width: 100%;
 `;
 
  const ContentSidebarContainer = styled.div`

@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../../context/authContext';
 import styled from "styled-components";
-import profile from "../../../assets/Profile.jpg";  
+import profile from "../../../assets/Profile.jpg";
 
 export function DoctorRegister() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
+        password: "",
         specialization: "",
         phone: "",
         address: "",
         experience: "",
-        password: "",
-        photo: profile,
+        birthDate: "",
+        doctorPhoto: profile,
     });
 
     const { registerDoctor } = useAuth();
@@ -28,7 +29,7 @@ export function DoctorRegister() {
     const handleFileChange = (e) => {
         setFormData(prevState => ({
             ...prevState,
-            photo: e.target.files[0]
+            doctorPhoto: e.target.files[0]
         }));
     };
 
@@ -49,87 +50,94 @@ export function DoctorRegister() {
     };
 
     return (
-      <DocContainer>
-          <DocTitle>Registro de Doctores</DocTitle>
-          <DocForm onSubmit={handleSubmit}>
-              <DocLabel htmlFor="name">Nombre completo</DocLabel>
-              <DocInput 
-                  type="text" 
-                  id="name" 
-                  name="name" 
-                  value={formData.name}
-                  onChange={handleChange} 
-              />
-  
-              <DocLabel htmlFor="email">Email</DocLabel>
-              <DocInput 
-                  type="email" 
-                  id="email" 
-                  name="email" 
-                  value={formData.email}
-                  onChange={handleChange} 
-              />
-  
-              <DocLabel htmlFor="specialization">Especialización</DocLabel>
-              <DocInput 
-                  type="text" 
-                  id="specialization" 
-                  name="specialization" 
-                  value={formData.specialization}
-                  onChange={handleChange} 
-              />
-  
-              <DocLabel htmlFor="phone">Teléfono</DocLabel>
-              <DocInput 
-                  type="tel" 
-                  id="phone" 
-                  name="phone" 
-                  value={formData.phone}
-                  onChange={handleChange} 
-              />
-  
-              <DocLabel htmlFor="address">Dirección</DocLabel>
-              <DocInput 
-                  type="text" 
-                  id="address" 
-                  name="address" 
-                  value={formData.address}
-                  onChange={handleChange} 
-              />
-  
-              <DocLabel htmlFor="experience">Años de experiencia</DocLabel>
-              <DocInput 
-                  type="number" 
-                  id="experience" 
-                  name="experience" 
-                  value={formData.experience}
-                  onChange={handleChange} 
-              />
-  
-              <DocLabel htmlFor="password">Contraseña</DocLabel>
-              <DocInput 
-                  type="password" 
-                  id="password" 
-                  name="password" 
-                  value={formData.password}
-                  onChange={handleChange} 
-              />
-  
-              <DocLabel htmlFor="photo">Foto</DocLabel>
-              <DocInput 
-                  type="file" 
-                  id="photo" 
-                  name="photo" 
-                  onChange={handleFileChange} 
-              />
-  
-              <DocButton type="submit">Registrarse</DocButton>
-          </DocForm>
-      </DocContainer>
-  );
-  
-}
+        <DocContainer>
+            <DocTitle>Registro de Doctores</DocTitle>
+            <DocForm onSubmit={handleSubmit}>
+                <DocLabel htmlFor="name">Nombre completo</DocLabel>
+                <DocInput 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    value={formData.name}
+                    onChange={handleChange} 
+                />
 
+                <DocLabel htmlFor="email">Email</DocLabel>
+                <DocInput 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    value={formData.email}
+                    onChange={handleChange} 
+                />
+
+                <DocLabel htmlFor="specialization">Especialización</DocLabel>
+                <DocInput 
+                    type="text" 
+                    id="specialization" 
+                    name="specialization" 
+                    value={formData.specialization}
+                    onChange={handleChange} 
+                />
+
+                <DocLabel htmlFor="phone">Teléfono</DocLabel>
+                <DocInput 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    value={formData.phone}
+                    onChange={handleChange} 
+                />
+
+                <DocLabel htmlFor="address">Dirección</DocLabel>
+                <DocInput 
+                    type="text" 
+                    id="address" 
+                    name="address" 
+                    value={formData.address}
+                    onChange={handleChange} 
+                />
+
+                <DocLabel htmlFor="experience">Años de experiencia</DocLabel>
+                <DocInput 
+                    type="number" 
+                    id="experience" 
+                    name="experience" 
+                    value={formData.experience}
+                    onChange={handleChange} 
+                />
+
+                <DocLabel htmlFor="birthDate">Fecha de Nacimiento</DocLabel>
+                <DocInput 
+                    type="date" 
+                    id="birthDate" 
+                    name="birthDate" 
+                    value={formData.birthDate}
+                    onChange={handleChange} 
+                />
+
+                <DocLabel htmlFor="password">Contraseña</DocLabel>
+                <DocInput 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    value={formData.password}
+                    onChange={handleChange} 
+                />
+
+                <DocLabel htmlFor="doctorPhoto">Foto</DocLabel>
+                <DocInput 
+                    type="file" 
+                    id="doctorPhoto" 
+                    name="doctorPhoto" 
+                    onChange={handleFileChange} 
+                />
+
+                <DocButton type="submit">Registrarse</DocButton>
+            </DocForm>
+        </DocContainer>
+    );
+}
 
 const DocContainer = styled.div`
     display: flex;

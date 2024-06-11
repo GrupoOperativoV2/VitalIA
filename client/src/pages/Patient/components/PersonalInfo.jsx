@@ -9,7 +9,7 @@ const PersonalInfo = ({ patientInfo }) => {
   const personal = patientInfo.personalInformation || {};
   const id = patientInfo._id || '';
   const medical = patientInfo.medicalHistory || {};
-
+  
   const imageUrl = patientInfo.patientPhoto
     ? `http://localhost:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
     : "https://via.placeholder.com/100";

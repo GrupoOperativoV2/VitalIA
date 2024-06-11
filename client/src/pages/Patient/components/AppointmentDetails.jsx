@@ -2,24 +2,26 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useAppointments } from "../../../context/appointmentContext";
 
-const AppointmentDetails = ({ userID }) => {
+const AppointmentDetails = ({ historyID }) => {
   const { appointments, loadUserAppointments, loading, error } = useAppointments();
 
-  useEffect(() => {
-    if (userID) {
-      loadUserAppointments(userID);
-    }
-  }, [userID, loadUserAppointments]);
 
+  console.log(historyID)
+  useEffect(() => {
+    if (historyID) {
+      loadUserAppointments(historyID);
+    }
+  }, [historyID, loadUserAppointments]);
   if (loading) return <p>Cargando citas...</p>;
   if (appointments.length === 0) return <p>No tienes citas próximas.</p>;
 
+  console.log(appointments)
   return (
       <AppointmentsContainer>
       {appointments.map((appointment, index) => (
         <AppointmentContainer key={index}>
           <AppointmentTitle>Cita {index + 1}</AppointmentTitle>
-          <AppointmentTitle>Motivo {appointment.details}</AppointmentTitle>
+          <AppointmentTitle>Motivo: {appointment.reason}</AppointmentTitle>
           <AppointmentInfo>Fecha y Hora: {new Date(appointment.date).toLocaleDateString()} {appointment.time}</AppointmentInfo>
           <AppointmentInfo>Estado {appointment.status}</AppointmentInfo>
           {/* <AppointmentInfo>ID del Paciente: {appointment.patientId}</AppointmentInfo>

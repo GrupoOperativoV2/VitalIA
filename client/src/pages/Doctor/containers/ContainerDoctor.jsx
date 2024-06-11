@@ -2,22 +2,26 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { createGlobalStyle } from 'styled-components';
 import { ListPatient } from '../components/ListPatient';
+import { SearchPatient } from '../components/SearchPatient';
 
 export function ContainerDoctor({ user }) {
     return (
         <>
-            <GlobalStyle />
+            <GlobalStyle /> 
             <WelcomeContainer>
                 <WelcomeHeader>¡Bienvenido, Dr. {user.name}!</WelcomeHeader>
-                <WelcomeText>
+                <WelcomeMessage>
                     Estamos encantados de tenerle aquí. Su dedicación y compromiso son esenciales para nosotros.
-                </WelcomeText>
+                </WelcomeMessage>
                 <WelcomeFooter>
                     Si necesita algo, no dude en contactarnos.
                 </WelcomeFooter>
             </WelcomeContainer>
 
             <PatientContainer>
+
+
+            <SearchPatient />
             <ListPatient/>
             </PatientContainer>
         </>
@@ -60,23 +64,18 @@ const WelcomeContainer = styled.div`
     margin: 20px auto;
 `;
 
-// Estilos del encabezado con detalle en azul y en negritas
 const WelcomeHeader = styled.h1`
-    color: #34495e; // Texto negro
-    margin-bottom: 20px;
-    text-shadow: 0 2px 4px rgba(0, 0, 255, 0.3); // Sombra en azul
-    font-size: 2.2em;
-    font-weight: 700; // Negritas para el título
+  font-size: 32px;
+  color: #34495e;
+  font-weight: bold;
+  margin-bottom: 10px;
 `;
 
-// Estilo de texto con fuente moderna y color principal
-const WelcomeText = styled.p`
-    color: #000000; // Texto negro
-    font-size: 18px;
-    margin-bottom: 25px;
-    line-height: 1.6;
+const WelcomeMessage = styled.p`
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 30px;
 `;
-
 // Estilo para el pie de página con un toque sutil y cursivo
 const WelcomeFooter = styled.div`
     font-style: italic;

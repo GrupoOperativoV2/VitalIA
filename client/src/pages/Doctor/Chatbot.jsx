@@ -7,44 +7,59 @@ const ChatbotContainer = styled.div`
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 300px;
-  height: 410px;
-  background-color: #fff;
-  border-left: 1px solid #ddd;
+  width: 350px;
+  height: 450px;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  border: 1px solid #00f2fe;
+  border-radius: 10px 10px 0 0;
   transform: translateX(100%);
   transition: transform 0.3s ease-out;
   z-index: 100;
+  font-family: 'Roboto', sans-serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
   &.open {
     transform: translateX(0);
   }
 
+  .user-message, .bot-message {
+    padding: 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
   .user-message {
-    color: blue;
-    background-color: #f0f0f0;
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 5px;
+    color: #fff;
+    background: #4caf50;
+    align-self: flex-end;
   }
   
   .bot-message {
-    color: green;
-    background-color: #e0e0e0;
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 5px;
+    color: #fff;
+    background: #009688;
+    align-self: flex-start;
   }
-  
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .chat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #ddd;
+    background: #112;
+    border-bottom: 1px solid #00f2fe;
+    border-radius: 10px 10px 0 0;
+    color: #00f2fe;
 
     h3 {
       margin: 0;
+      font-size: 1.2rem;
     }
 
     button {
@@ -52,36 +67,56 @@ const ChatbotContainer = styled.div`
       border: none;
       cursor: pointer;
       font-size: 1.5rem;
-      color: #6c757d;
+      color: #00f2fe;
     }
   }
 
   .chat-content {
+    display: flex;
+    flex-direction: column;
     padding: 10px;
     height: 300px;
     overflow-y: auto;
+    background: #0d1b2a;
+    color: #fff;
   }
 
   .chat-input {
     display: flex;
     align-items: center;
     padding: 10px;
-    border-top: 1px solid #ddd;
+    background: #112;
+    border-top: 1px solid #00f2fe;
+    border-radius: 0 0 10px 10px;
 
     input {
       flex: 1;
-      padding: 5px 10px;
+      padding: 10px;
       border: none;
-      border-radius: 5px;
+      border-radius: 20px;
+      margin-right: 10px;
+      background: #1c2b3a;
+      color: #00f2fe;
+      font-size: 0.9rem;
+    }
+
+    input::placeholder {
+      color: #00f2fe;
     }
 
     button {
-      background: none;
+      background: #00f2fe;
       border: none;
       cursor: pointer;
       font-size: 1.5rem;
-      color: #6c757d;
-      margin-left: 10px;
+      color: #112;
+      padding: 10px;
+      border-radius: 50%;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #00bcd4;
+      }
     }
   }
 `;
@@ -134,7 +169,7 @@ const Chatbot = ({ showChatbot, setShowChatbot }) => {
     <ChatbotContainer className={showChatbot ? 'open' : ''}>
       <div className="chat-header">
         <h3>Chatbot</h3>
-        <button onClick={() => { setShowChatbot(false); start(); }}>❌</button>
+        <button onClick={() => setShowChatbot(false)}>❌</button>
       </div>
       <div id="chat-messages" className="chat-content">
         {messages.map((message, index) => (
