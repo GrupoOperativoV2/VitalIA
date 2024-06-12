@@ -10,9 +10,8 @@ from PyPDF2 import PdfReader, PdfWriter
 from datetime import datetime
 
 
-input_pdf_path = 'C:\\Users\\Kevin\\Desktop\\VitalIA\\VitalIA\\client\\public\\plantilla.pdf'
-filled_pdf_path = 'C:\\Users\\Kevin\\Desktop\\VitalIA\\VitalIA\\client\\public\\plantilla_filled.pdf'
-
+input_pdf_path = '/home/root/Proyecto/VitalIA/client/public/plantilla.pdf'
+filled_pdf_path = '/home/root/Proyecto/VitalIA/client/public/plantilla_filled.pdf'
 
 if os.path.exists(filled_pdf_path):
     os.remove(filled_pdf_path)
@@ -150,8 +149,16 @@ sys.stdout.reconfigure(encoding='utf-8')
 labels = ['PNEUMONIA', 'NORMAL']
 img_size = 150
 
-model_path = 'C:\\Users\\Kevin\\Desktop\\VitalIA\\VitalIA\\client\\src\\IA\\mi_modelo.keras'
-model_pathT = 'C:\\Users\\Kevin\\Desktop\\VitalIA\\VitalIA\\client\\src\\IA\\modelo_tumores.keras'
+model_path = '/home/root/Proyecto/VitalIA/client/src/IA/mi_modelo.keras'
+model_pathT = '/home/root/Proyecto/VitalIA/client/src/IA/modelo_tumores.keras'
+
+
+
+input_pdf_path = '/home/root/Proyecto/VitalIA/client/public/plantilla.pdf'
+filled_pdf_path = '/home/root/Proyecto/VitalIA/client/public/plantilla_filled.pdf'
+
+
+
 labelsT = ['glioma', 'meningioma', 'notumor', 'pituitary']
 img_sizeT = (224, 224)
 
