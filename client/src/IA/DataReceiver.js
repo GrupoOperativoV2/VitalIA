@@ -1,11 +1,17 @@
 import express from 'express';
 import multer from 'multer';
 import { spawn } from 'child_process';
-import cors from 'cors';  // Importa el paquete cors
-import path from 'path'; // Importa el paquete path
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Define __dirname para módulos ES
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Ruta correcta para el entorno virtual en Linux
-const pathToPython = path.join(__dirname, '..', 'venv', 'bin', 'python');
+const pathToPython = path.join(__dirname, '..', '..', '..', 'venv', 'bin', 'python');
 
 const APIapp = express();
 
@@ -21,6 +27,7 @@ APIapp.post('/upload', upload.single('image'), (req, res) => {
 
   console.log('Datos recibidos en DataReceiver5000.js:', data);
   console.log('Imagen recibida en DataReceiver5000.js:', imageFile);
+
   function eliminarParteCadena(cadena) {
     // Eliminar "otherAllergies" si está presente
     cadena = cadena.replace("otherAllergies", "");
@@ -30,7 +37,6 @@ APIapp.post('/upload', upload.single('image'), (req, res) => {
 
     return cadena;
   }
-
 
   function calcularEdad(fechaNacimientoISO) {
     // Convertir la fecha de nacimiento de ISO a un objeto Date
@@ -69,6 +75,7 @@ APIapp.post('/upload', upload.single('image'), (req, res) => {
       return cadena;
     }
   }
+
   var hospitav = data.hospitalizations;
   var alergiav = data.allergies;
   var familiav = data.familyHistory;
@@ -77,14 +84,23 @@ APIapp.post('/upload', upload.single('image'), (req, res) => {
   var fecha = calcularEdad(fechaNacimiento);
   var nombre = data.name;
   var genero = data.gender;
-  var alergias = eliminarParteCadena(alergiav);;
+  var alergias = eliminarParteCadena(alergiav);
   var tiposangre = data.bloodType;
-  var hospitalizacion = "Hospitalización "  + eliminarDespuesNumero(hospitav);;
-  var historialf = eliminarParteCadena(familiav);;
+  var hospitalizacion = "Hospitalización " + eliminarDespuesNumero(hospitav);
+  var historialf = eliminarParteCadena(familiav);
   var notas = data.notes;
 
-  const pythonProcess = spawn(pathToPython, ['client/src/IA/api.py',
-    imageFile.path, nombre, genero, alergias, tiposangre, hospitalizacion, historialf, fecha, notas
+  const pythonProcess = spawn(pathToPython, [
+    'client/src/IA/api.py',
+    imageFile.path,
+    nombre,
+    genero,
+    alergias,
+    tiposangre,
+    hospitalizacion,
+    historialf,
+    fecha,
+    notas
   ]);
 
   let dataFromPython = '';
