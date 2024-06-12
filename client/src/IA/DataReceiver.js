@@ -3,7 +3,8 @@ import multer from 'multer';
 import { spawn } from 'child_process';
 import cors from 'cors';  // Importa el paquete cors
 
-const pathToPython = './.venv/Scripts/python.exe';
+// Ruta correcta para el entorno virtual en Linux
+const pathToPython = path.join(__dirname, '..', 'venv', 'bin', 'python');
 
 const APIapp = express();
 
