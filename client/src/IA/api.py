@@ -6,13 +6,11 @@ import cv2
 from tensorflow.keras.models import load_model
 import os
 import pdfrw
-from PyPDF2 import PdfReader, PdfWriter
 from datetime import datetime
 
 
-input_pdf_path = 'C:\\Users\Kevin\Desktop\\VitalIA-kvwell\\VitalIA-kvwell\\client\\public\\plantilla.pdf'
-filled_pdf_path = 'C:\\Users\Kevin\Desktop\\VitalIA-kvwell\\VitalIA-kvwell\\client\\public\\plantilla_filled.pdf'
-
+input_pdf_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\public\\plantilla.pdf'
+filled_pdf_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\public\\plantilla_filled.pdf'
 
 if os.path.exists(filled_pdf_path):
     os.remove(filled_pdf_path)
@@ -34,9 +32,10 @@ def decrypt(encrypted_text, shift):
         else:
             decrypted_text += char
     return decrypted_text
+
 shift = 3
 api_key = decrypt("vn-surm-pggnT52S3trNv04M0Sq8W3EoenIM9Bt6uNxAR3EmuEWccZfh", shift)
-#decrypt("vn-surm-pggnT52S3trNv04M0Sq8W3EoenIM9Bt6uNxAR3EmuEWccZfh", shift)
+
 def encode_image(image_path):
     try:
         with open(image_path, "rb") as image_file:
@@ -92,21 +91,36 @@ def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, 
     tipoEstudio = ""
     res = ""
     image_type = image_type_response.get("choices", [{}])[0].get("message", {}).get("content", "0")
+    
+    img_size = 150
 
     if image_type == "1":
-        
         tipoEstudio = "Radiografía de tórax"
         print("La imagen es una radiografía de tórax.")
+        
         img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
         img = cv2.resize(img, (img_size, img_size))
         img = img / 255.0
         img = img.reshape(-1, img_size, img_size, 1)
-        prediction = model.predict(img)
-        result = "PNEUMONIA" if prediction < 0.4 else "NORMAL"
-        res = f'{result} con una probabilidad de {prediction[0][0]:.2f}'
-    
+        
+        predictionNE = model.predict(img)  # Predict de neumonía
+        predictionTC = modelTB.predict(img)  # Predict de tuberculosis
+        predictionCV = modelCV.predict(img)  # Predict de COVID-19
+
+        print(predictionNE)
+        print(predictionTC)
+        print(predictionCV)
+
+        result = "Positivo" if predictionNE < 0.4 else "Negativo"
+        resulttb = "Positivo" if predictionTC < 0.4 else "Negativo"
+        resultcv = "Positivo" if predictionCV < 0.4 else "Negativo"
+        
+        res = "-NEUMONÍA: " + result + " \n"
+        res += "-TUBERCULOSIS: " + resulttb + " \n"
+        res += "-COVID-19: " + resultcv + " \n"
+        
     elif image_type == "2":
-        tipoEstudio = " IMR del cerebro"
+        tipoEstudio = "MRI del cerebro"
         print("La imagen es una MRI de la cabeza.")
         img = cv2.imread(image_path)
         img = cv2.resize(img, img_sizeT)
@@ -115,26 +129,22 @@ def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, 
         predictionT = modelT.predict(img)
         predicted_class = labelsT[np.argmax(predictionT)]
         res = f'Resultado del análisis de IA: {predicted_class} con una probabilidad de {predictionT[0][np.argmax(predictionT)]:.2f}'
-        
-        
-    else:
-        print("0")
-        print(image_type)
-    if(image_type == "1" or image_type == "2"):
+
+    if image_type in ["1", "2"]:
         fecha_actual = datetime.now()    
         fecha_formateada = fecha_actual.strftime("%d/%m/%Y")
         data = {
-        'dhFormfield-5016382845': fecha_formateada,  # Fecha
-        'dhFormfield-5016382886': nombre,  # Nombre del paciente
-        'dhFormfield-5016383832': tipoEstudio,  # Tipo de estudio
-        'dhFormfield-5016383935': genero,  # Género
-        'dhFormfield-5016383936': alergias,  # Alergias
-        'dhFormfield-5016383938': tiposangre,  # Tipo de sangre
-        'dhFormfield-5016383939': hospita,  # Antecedentes
-        'dhFormfield-5016383944': historialf,  # Historial familiar
-        'dhFormfield-5016384053': fecha,  # Edad
-        'dhFormfield-5016385348': res,  # Evaluación preliminar
-        'dhFormfield-5016385349': notas  # Notas del personal
+            'dhFormfield-5016382845': fecha_formateada,  # Fecha
+            'dhFormfield-5016382886': nombre,  # Nombre del paciente
+            'dhFormfield-5016383832': tipoEstudio,  # Tipo de estudio
+            'dhFormfield-5016383935': genero,  # Género
+            'dhFormfield-5016383936': alergias,  # Alergias
+            'dhFormfield-5016383938': tiposangre,  # Tipo de sangre
+            'dhFormfield-5016383939': hospita,  # Antecedentes
+            'dhFormfield-5016383944': historialf,  # Historial familiar
+            'dhFormfield-5016384053': fecha,  # Edad
+            'dhFormfield-5016385348': res,  # Evaluación preliminar
+            'dhFormfield-5016385349': notas  # Notas del personal
         }
         template_pdf = pdfrw.PdfReader(input_pdf_path)
         annotations = template_pdf.pages[0]['/Annots']
@@ -146,15 +156,21 @@ def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, 
                     annotation.update(pdfrw.PdfDict(AP=''))
         pdfrw.PdfWriter().write(filled_pdf_path, template_pdf)
         print(f'Formulario llenado y guardado en {filled_pdf_path}')
+
 sys.stdout.reconfigure(encoding='utf-8')
-labels = ['PNEUMONIA', 'NORMAL']
 img_size = 150
 
-model_pathT = 'C:\\Users\Kevin\Desktop\\VitalIA-kvwell\\VitalIA-kvwell\\client\\src\\IA\\modelo_tumores.keras'
-model_path = 'C:\\Users\Kevin\Desktop\\VitalIA-kvwell\\VitalIA-kvwell\\client\\src\\IA\\mi_modelo.keras'
+# Modelos para radiografías de tórax
+model_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\mi_modelo.keras'
+model_pathTuber = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\modelo_tuberculosis.keras'
+model_pathCovid = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\modelo_covid.keras'
+
+# Modelos para MRI de cabeza
+model_pathT = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\modelo_tumores.keras'
 labelsT = ['glioma', 'meningioma', 'notumor', 'pituitary']
 img_sizeT = (224, 224)
 
+# Cargar modelos
 if os.path.exists(model_path):
     try:
         model = load_model(model_path)
@@ -163,6 +179,22 @@ if os.path.exists(model_path):
 else:
     print(f"Model file not found at {model_path}")
 
+if os.path.exists(model_pathTuber):
+    try:
+        modelTB = load_model(model_pathTuber)
+    except Exception as e:
+        print(f"Error cargando el modelo: {e}")
+else:
+    print(f"Model file not found at {model_pathTuber}")
+    
+if os.path.exists(model_pathCovid):
+    try:
+        modelCV = load_model(model_pathCovid)
+    except Exception as e:
+        print(f"Error cargando el modelo: {e}")
+else:
+    print(f"Model file not found at {model_pathCovid}")
+    
 if os.path.exists(model_pathT):
     try:
         modelT = load_model(model_pathT)
@@ -172,7 +204,7 @@ else:
     print(f"Model file not found at {model_pathT}")
 
 if __name__ == '__main__':
-    if len(sys.argv) == 10:  # Verificar que se reciban 8 argumentos más la ruta de la imagen
+    if len(sys.argv) == 10:  # Verificar que se reciban 9 argumentos más la ruta de la imagen
         image_path = sys.argv[1]
         nombre = sys.argv[2]
         genero = sys.argv[3]
@@ -184,6 +216,5 @@ if __name__ == '__main__':
         notas = sys.argv[9]
         main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, fecha, notas)
     else:
-        print(len(sys.argv))
+        print(f"Argumentos recibidos: {len(sys.argv) - 1}")
         print("Por favor, proporciona todos los argumentos necesarios.")
-   
