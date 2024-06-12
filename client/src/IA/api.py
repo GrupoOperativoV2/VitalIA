@@ -9,13 +9,8 @@ import pdfrw
 from datetime import datetime
 
 
-<<<<<<< HEAD
 input_pdf_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\public\\plantilla.pdf'
 filled_pdf_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\public\\plantilla_filled.pdf'
-=======
-input_pdf_path = '/home/kvwell/Proyecto/VitalIA/client/public/plantilla.pdf'
-filled_pdf_path = '/home/kvwell/Proyecto/VitalIA/client/public/plantilla_filled.pdf'
->>>>>>> 01c1f2eaa6f890bd958b474e8908e25399fbe278
 
 if os.path.exists(filled_pdf_path):
     os.remove(filled_pdf_path)
@@ -165,7 +160,6 @@ def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, 
 sys.stdout.reconfigure(encoding='utf-8')
 img_size = 150
 
-<<<<<<< HEAD
 # Modelos para radiografías de tórax
 model_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\mi_modelo.keras'
 model_pathTuber = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\modelo_tuberculosis.keras'
@@ -173,14 +167,6 @@ model_pathCovid = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\
 
 # Modelos para MRI de cabeza
 model_pathT = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\modelo_tumores.keras'
-=======
-model_path = '/home/kvwell/Proyecto/VitalIA/client/src/IA/mi_modelo.keras'
-model_pathT = '/home/kvwell/Proyecto/VitalIA/client/src/IA/modelo_tumores.keras'
-
-
-
-
->>>>>>> 01c1f2eaa6f890bd958b474e8908e25399fbe278
 labelsT = ['glioma', 'meningioma', 'notumor', 'pituitary']
 img_sizeT = (224, 224)
 
