@@ -40,7 +40,7 @@ APIapp.post('/upload', upload.single('image'), (req, res) => {
     // Calcular la diferencia de años
     let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
 
-    // Ajustar si la fecha de cumpleaños aún no ha pasado en el año actuals
+    // Ajustar si la fecha de cumpleaños aún no ha pasado en el año actual
     const mesActual = hoy.getMonth();
     const diaActual = hoy.getDate();
     const mesNacimiento = fechaNacimiento.getMonth();
