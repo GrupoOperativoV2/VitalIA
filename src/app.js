@@ -20,7 +20,23 @@ const server = createServer(app);  // Create an HTTP server for Express and Sock
 initializeManager();
 initializeDoctor();
 
-app.use(cors({ credentials: true, origin: FRONTEND_URL }));
+// Lista de orígenes permitidos
+const allowedOrigins = [
+  'http://167.99.152.0:5173',
+  FRONTEND_URL
+];
+
+app.use(cors({
+  credentials: true,
+  origin: function (origin, callback) {
+    // Verificar si el origen de la solicitud está en la lista de orígenes permitidos
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 
 app.use(express.json());

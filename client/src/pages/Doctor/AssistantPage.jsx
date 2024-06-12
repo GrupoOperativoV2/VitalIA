@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { Sidebar } from "./Sidebar.jsx";
 import Chatbot from "../Doctor/Chatbot.jsx";
-import defaultImage from '../../assets/asisstant.png';
+import defaultImage from '../../assets/toast.png';
 import { FaUpload, FaPaperPlane } from 'react-icons/fa';
 import { cardio } from 'ldrs';
 import { ToastContainer, toast } from "react-toastify";
@@ -111,7 +111,7 @@ export function AssistantPage() {
         // Verificar los datos en formData antes de enviar
         console.log('Sending the following data:', Object.fromEntries(formData.entries()));
     
-        const response = await fetch('http://localhost:5000/upload', {
+        const response = await fetch('http://167.99.152.0:5000/upload', {
           method: 'POST',
           body: formData,
         });
