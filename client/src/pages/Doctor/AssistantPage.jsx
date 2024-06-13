@@ -111,7 +111,7 @@ export function AssistantPage() {
         // Verificar los datos en formData antes de enviar
         console.log('Sending the following data:', Object.fromEntries(formData.entries()));
     
-        const response = await fetch('http://167.99.152.0:5000/upload', {
+        const response = await fetch('http://localhost:5000/upload', {
           method: 'POST',
           body: formData,
         });

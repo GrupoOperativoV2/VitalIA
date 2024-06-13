@@ -9,8 +9,8 @@ import pdfrw
 from datetime import datetime
 
 
-input_pdf_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\public\\plantilla.pdf'
-filled_pdf_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\public\\plantilla_filled.pdf'
+input_pdf_path = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\public\\plantilla.pdf'
+filled_pdf_path = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\public\\plantilla_filled.pdf'
 
 if os.path.exists(filled_pdf_path):
     os.remove(filled_pdf_path)
@@ -105,19 +105,15 @@ def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, 
         
         predictionNE = model.predict(img)  # Predict de neumonía
         predictionTC = modelTB.predict(img)  # Predict de tuberculosis
-        predictionCV = modelCV.predict(img)  # Predict de COVID-19
 
         print(predictionNE)
         print(predictionTC)
-        print(predictionCV)
 
         result = "Positivo" if predictionNE < 0.4 else "Negativo"
         resulttb = "Positivo" if predictionTC < 0.4 else "Negativo"
-        resultcv = "Positivo" if predictionCV < 0.4 else "Negativo"
         
         res = "-NEUMONÍA: " + result + " \n"
         res += "-TUBERCULOSIS: " + resulttb + " \n"
-        res += "-COVID-19: " + resultcv + " \n"
         
     elif image_type == "2":
         tipoEstudio = "MRI del cerebro"
@@ -161,12 +157,11 @@ sys.stdout.reconfigure(encoding='utf-8')
 img_size = 150
 
 # Modelos para radiografías de tórax
-model_path = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\mi_modelo.keras'
-model_pathTuber = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\modelo_tuberculosis.keras'
-model_pathCovid = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\modelo_covid.keras'
+model_path = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\src\\IA\\modelo_neumonia.keras'
+model_pathTuber = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\src\\IA\\modelo_tuberculosis.keras'
 
 # Modelos para MRI de cabeza
-model_pathT = 'C:\\Users\\dante\\OneDrive\\Escritorio\\VitalIA\\client\\src\\IA\\modelo_tumores.keras'
+# model_pathT = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\src\\IA\\modelo_tumores.keras'
 labelsT = ['glioma', 'meningioma', 'notumor', 'pituitary']
 img_sizeT = (224, 224)
 
@@ -187,21 +182,15 @@ if os.path.exists(model_pathTuber):
 else:
     print(f"Model file not found at {model_pathTuber}")
     
-if os.path.exists(model_pathCovid):
-    try:
-        modelCV = load_model(model_pathCovid)
-    except Exception as e:
-        print(f"Error cargando el modelo: {e}")
-else:
-    print(f"Model file not found at {model_pathCovid}")
+
     
-if os.path.exists(model_pathT):
-    try:
-        modelT = load_model(model_pathT)
-    except Exception as e:
-        print(f"Error cargando el modelo: {e}")
-else:
-    print(f"Model file not found at {model_pathT}")
+# if os.path.exists(model_pathT):
+#     try:
+#         modelT = load_model(model_pathT)
+#     except Exception as e:
+#         print(f"Error cargando el modelo: {e}")
+# else:
+#     print(f"Model file not found at {model_pathT}")
 
 if __name__ == '__main__':
     if len(sys.argv) == 10:  # Verificar que se reciban 9 argumentos más la ruta de la imagen
