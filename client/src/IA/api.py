@@ -11,7 +11,6 @@ from datetime import datetime
 input_pdf_path = '/home/VitalIA/client/public/plantilla.pdf'
 filled_pdf_path = '/home/VitalIA/client/public/plantilla_filled.pdf'
 
-
 if os.path.exists(filled_pdf_path):
     os.remove(filled_pdf_path)
 
@@ -102,6 +101,7 @@ def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, 
         if os.path.exists(model_path):
             try:
                 model = load_model(model_path)
+                print("Modelo de neumonía cargado correctamente.")
             except Exception as e:
                 print(f"Error cargando el modelo: {e}")
                 return
@@ -114,6 +114,7 @@ def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, 
         if os.path.exists(model_pathTuber):
             try:
                 modelTB = load_model(model_pathTuber)
+                print("Modelo de tuberculosis cargado correctamente.")
             except Exception as e:
                 print(f"Error cargando el modelo: {e}")
                 return
@@ -179,7 +180,6 @@ img_size = 150
 model_path = '/home/VitalIA/client/src/IA/modelo_neumo.keras'
 model_pathTuber = '/home/VitalIA/client/src/IA/modelo_tuber.keras'
 model_pathT = '/home/VitalIA/client/src/IA/modelo_mri.keras'
-
 labelsT = ['glioma', 'meningioma', 'notumor', 'pituitary']
 img_sizeT = (224, 224)
 
@@ -187,6 +187,7 @@ img_sizeT = (224, 224)
 if os.path.exists(model_pathT):
     try:
         modelT = load_model(model_pathT)
+        print("Modelo de MRI cargado correctamente.")
     except Exception as e:
         print(f"Error cargando el modelo: {e}")
 else:
