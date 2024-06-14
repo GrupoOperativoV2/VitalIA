@@ -69,7 +69,7 @@ export function ListPatient() {
                     <PatientImage
                       src={
                         patient.patientPhoto
-                          ? `http://localhost:4000/${patient.patientPhoto.replace(/\\+/g, "/")}`
+                          ? `http://159.223.161.190:4000/${patient.patientPhoto.replace(/\\+/g, "/")}`
                           : "https://via.placeholder.com/200x150"
                       }
                       alt={`Foto de ${patient.personalInformation.name}`}

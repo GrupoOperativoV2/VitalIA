@@ -13,7 +13,7 @@ export function Contacts({ contacts, changeChat }) {
         const fetchUserPhoto = async () => {
             try {
                 const photoPath = await photoUser(user.id); // Llamamos a la función photoUser para obtener la ruta de la foto
-                const formattedPhotoPath = `http://localhost:4000/${photoPath.replace(/\\+/g, "/")}`; // Formateamos la ruta de la foto como una URL válida
+                const formattedPhotoPath = `http://159.223.161.190:4000/${photoPath.replace(/\\+/g, "/")}`; // Formateamos la ruta de la foto como una URL válida
                 setUserPhoto(formattedPhotoPath); // Actualizamos el estado con la ruta de la foto formateada
             } catch (error) {
                 console.error("Error fetching user photo:", error);
@@ -36,7 +36,7 @@ export function Contacts({ contacts, changeChat }) {
                     <div key={contact._id} className="contact" onClick={() => changeChat(contact)}>
                         <div className="avatar">
                             <img
-                                src={contact.doctorPhoto ? `http://localhost:4000${contact.doctorPhoto.replace(/\\+/g, "/")}` : defaultAvatar}
+                                src={contact.doctorPhoto ? `http://159.223.161.190:4000${contact.doctorPhoto.replace(/\\+/g, "/")}` : defaultAvatar}
                                 alt={contact.name}
                                 style={{ width: 50, height: 50, borderRadius: "50%" }}
                             />

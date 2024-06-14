@@ -64,7 +64,7 @@ if (process.env.NODE_ENV === "production") {
 
 const io = new SocketIOServer(server, {
   cors: {
-    origin: FRONTEND_URL,  // Asegúrate de que esto refleje la URL de tu cliente, en desarrollo y producción
+    origin: "http://159.223.161.190:5173",  // Asegúrate de que esto refleje la URL de tu cliente, en desarrollo y producción
     methods: ["GET", "POST"],  // Especifica los métodos permitidos si es necesario
     credentials: true
   }

@@ -78,7 +78,7 @@ export function ChatContainer({ currentChat, socket, user }) {
       <div className="chat-header">
         <div className="user-details">
           <div className="avatar">
-            <img src={currentChat?.patientPhoto ? `http://localhost:4000/${currentChat?.patientPhoto.replace(/\\+/g, "/")}` : defaultAvatar} alt="Avatar" style={{ width: 50, height: 50, borderRadius: "50%" }}/>
+            <img src={currentChat?.patientPhoto ? `http://159.223.161.190:4000/${currentChat?.patientPhoto.replace(/\\+/g, "/")}` : defaultAvatar} alt="Avatar" style={{ width: 50, height: 50, borderRadius: "50%" }}/>
           </div>
           <div className="username">
             <h3>{currentChat?.name || "Username"}</h3>

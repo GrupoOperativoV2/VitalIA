@@ -28,7 +28,7 @@ export function Contacts({ contacts, changeChat }) {
                         <div key={userContact._id} className="contact" onClick={() => changeChat(userContact)}>
                             <div className="avatar">
                                 <img
-                                    src={userContact.patientPhoto ? `http://localhost:4000/${userContact.patientPhoto.replace(/\\+/g, "/")}` : defaultAvatar}
+                                    src={userContact.patientPhoto ? `http://159.223.161.190:4000/${userContact.patientPhoto.replace(/\\+/g, "/")}` : defaultAvatar}
                                     alt={userContact.name}
                                     style={{ width: 50, height: 50, borderRadius: "50%" }}
                                 />
@@ -43,7 +43,7 @@ export function Contacts({ contacts, changeChat }) {
             </div>
             <div className="current-user">
                 <div className="avatar">
-                    <img src={user.doctorPhoto ? `http://localhost:4000${user.doctorPhoto.replace(/\\+/g, "/")}` : defaultAvatar} 
+                    <img src={user.doctorPhoto ? `http://159.223.161.190:4000${user.doctorPhoto.replace(/\\+/g, "/")}` : defaultAvatar} 
                         alt="avatar" 
                         style={{ width: 50, height: 50, borderRadius: "50%" }} 
                     />

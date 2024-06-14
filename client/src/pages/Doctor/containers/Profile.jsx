@@ -20,7 +20,7 @@ export function Profile({ doctorInfo }) {
       <ProfileHeader>
         <ProfileImageContainer>
           <ProfileImage
-            src={`http://localhost:4000${doctorInfo.doctorPhoto}`}
+            src={`http://159.223.161.190:4000${doctorInfo.doctorPhoto}`}
             alt={`Foto de ${doctorInfo.name}`}
           />
         </ProfileImageContainer>

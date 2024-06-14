@@ -36,7 +36,7 @@ export function PreviewProfile() {
           {patientData ? (
             <ProfileContainer>
               <ProfileHeader>
-                <ProfileImage src={`http://localhost:4000/${patientData.patientPhoto.replace(/\\+/g, "/")}`} alt="Patient Photo" />
+                <ProfileImage src={`http://159.223.161.190:4000/${patientData.patientPhoto.replace(/\\+/g, "/")}`} alt="Patient Photo" />
                 <h1>{patientData.personalInformation.name}</h1>
                 <p><strong>Email:</strong> {patientData.personalInformation.email}</p>
                 <p><strong>Teléfono:</strong> {patientData.personalInformation.contactNumber}</p>
