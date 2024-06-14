@@ -8,9 +8,8 @@ import os
 import pdfrw
 from datetime import datetime
 
-
-input_pdf_path = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\public\\plantilla.pdf'
-filled_pdf_path = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\public\\plantilla_filled.pdf'
+input_pdf_path = 'C:\\Users\\Kevin\\Desktop\\VitalIA\\client\\public\\plantilla.pdf'
+filled_pdf_path = 'C:\\Users\\Kevin\\Desktop\\VitalIA\\client\\public\\plantilla_filled.pdf'
 
 if os.path.exists(filled_pdf_path):
     os.remove(filled_pdf_path)
@@ -84,14 +83,10 @@ def check_image_type(image_path):
 
 def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, fecha, notas):
     image_type_response = check_image_type(image_path)
-    
-    if "error" in image_type_response:
-        print(image_type_response["error"])
-        return
     tipoEstudio = ""
     res = ""
     image_type = image_type_response.get("choices", [{}])[0].get("message", {}).get("content", "0")
-    
+   
     img_size = 150
 
     if image_type == "1":
@@ -102,14 +97,35 @@ def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, 
         img = cv2.resize(img, (img_size, img_size))
         img = img / 255.0
         img = img.reshape(-1, img_size, img_size, 1)
-        
+
+        if os.path.exists(model_path):
+            try:
+                model = load_model(model_path)
+            except Exception as e:
+                print(f"Error cargando el modelo: {e}")
+                return
+        else:
+            print(f"Model file not found at {model_path}")
+            return
+
         predictionNE = model.predict(img)  # Predict de neumonía
+
+        if os.path.exists(model_pathTuber):
+            try:
+                modelTB = load_model(model_pathTuber)
+            except Exception as e:
+                print(f"Error cargando el modelo: {e}")
+                return
+        else:
+            print(f"Model file not found at {model_pathTuber}")
+            return
+
         predictionTC = modelTB.predict(img)  # Predict de tuberculosis
 
         print(predictionNE)
         print(predictionTC)
 
-        result = "Positivo" if predictionNE < 0.4 else "Negativo"
+        result = "Positivo" if predictionNE < 0.5 else "Negativo"
         resulttb = "Positivo" if predictionTC < 0.4 else "Negativo"
         
         res = "-NEUMONÍA: " + result + " \n"
@@ -125,6 +141,9 @@ def main(image_path, nombre, genero, alergias, tiposangre, hospita, historialf, 
         predictionT = modelT.predict(img)
         predicted_class = labelsT[np.argmax(predictionT)]
         res = f'Resultado del análisis de IA: {predicted_class} con una probabilidad de {predictionT[0][np.argmax(predictionT)]:.2f}'
+        print(predictionT)
+    else:
+        print("Tipo de imagen no reconocido: " + image_type)
 
     if image_type in ["1", "2"]:
         fecha_actual = datetime.now()    
@@ -157,40 +176,22 @@ sys.stdout.reconfigure(encoding='utf-8')
 img_size = 150
 
 # Modelos para radiografías de tórax
-model_path = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\src\\IA\\modelo_neumonia.keras'
-model_pathTuber = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\src\\IA\\modelo_tuberculosis.keras'
+model_path = 'C:\\Users\\Kevin\\Desktop\\VitalIA\\client\\src\\IA\\modelo_neumo.keras'
+model_pathTuber = 'C:\\Users\\Kevin\\Desktop\\VitalIA\\client\\src\\IA\\modelo_tuber.keras'
 
 # Modelos para MRI de cabeza
-# model_pathT = 'C:\\Users\\Kevin\\Music\\VitalIA\\client\\src\\IA\\modelo_tumores.keras'
+model_pathT = 'C:\\Users\\Kevin\\Desktop\\VitalIA\\client\\src\\IA\\modelo_mri.keras'
 labelsT = ['glioma', 'meningioma', 'notumor', 'pituitary']
 img_sizeT = (224, 224)
 
-# Cargar modelos
-if os.path.exists(model_path):
+# Cargar modelo para MRI de cabeza
+if os.path.exists(model_pathT):
     try:
-        model = load_model(model_path)
+        modelT = load_model(model_pathT)
     except Exception as e:
         print(f"Error cargando el modelo: {e}")
 else:
-    print(f"Model file not found at {model_path}")
-
-if os.path.exists(model_pathTuber):
-    try:
-        modelTB = load_model(model_pathTuber)
-    except Exception as e:
-        print(f"Error cargando el modelo: {e}")
-else:
-    print(f"Model file not found at {model_pathTuber}")
-    
-
-    
-# if os.path.exists(model_pathT):
-#     try:
-#         modelT = load_model(model_pathT)
-#     except Exception as e:
-#         print(f"Error cargando el modelo: {e}")
-# else:
-#     print(f"Model file not found at {model_pathT}")
+    print(f"Model file not found at {model_pathT}")
 
 if __name__ == '__main__':
     if len(sys.argv) == 10:  # Verificar que se reciban 9 argumentos más la ruta de la imagen

@@ -93,8 +93,7 @@ export const registerDoctor = async (req, res) => {
       specialization: userSaved.specialization,
       phone: userSaved.phone,
       address: userSaved.address,
-      experience: userSaved.experience
-
+      experience: userSaved.experience,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -160,7 +159,8 @@ export const register = async (req, res) => {
       email: userSaved.email,
       name: userSaved.name,
       tipo: userSaved.tipo,
-      birthDate: userSaved.birthDate  
+      birthDate: userSaved.birthDate,
+      token: token
   });
   } catch (error) {
     res.status(500).json({ message: error.message });

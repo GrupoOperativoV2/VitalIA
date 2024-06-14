@@ -58,7 +58,6 @@ export function AssistantPage() {
       const history = await getMedicalHistoryID(id);
       setMedicalHistory(history);
       console.log(history);
-      toast.success('Historial médico encontrado.');
       if (history) {
         // Extraer y asignar los valores a las variables correspondientes
         const userName = history.personalInformation.name;
@@ -116,14 +115,15 @@ export function AssistantPage() {
           body: formData,
         });
 
-        const result = await response.text();
+        var result = await response.text();
         console.log('Response from server:', result);
         console.log(result.charAt(0));
         if (result.charAt(0) == "0") {
-          const resultado = "Invalido: " + result;
+          const resultado = "Toast: Inválido. " + result.substring(1);
           toast.error(resultado);
           setPdfActive(false); 
         } else {
+          toast.success('Historial médico encontrado.');
           setPdfActive(true); // Activar el PDF al recibir respuesta
           toast.success("Reporte generado!");
         }
@@ -132,7 +132,7 @@ export function AssistantPage() {
 
     } catch (error) {
       console.error('Error submitting form:', error);
-      toast.error("ID inválido");
+      toast.error("Error al generar el reporte");
     } finally {
       setIsLoading(false);
     }

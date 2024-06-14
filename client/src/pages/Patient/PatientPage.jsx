@@ -73,7 +73,7 @@ export function PatientPage() {
 
       <BodyContainer>
 
-           {/* <MedicalDiscoveryTab /> */}
+           {<MedicalDiscoveryTab />}
         {!isHistorySubmitted && popupVisible && (
           <Popup
             show={popupVisible}

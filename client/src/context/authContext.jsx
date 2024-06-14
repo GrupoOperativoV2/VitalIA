@@ -51,6 +51,7 @@
       try {
         const res = await registerRequest(user);
         if (res.status === 200) {
+          localStorage.setItem('token', res.data.token);
           setUser(res.data);
           setIsAuthenticated(true);
           localStorage.setItem("isFirstLogin", "true");
