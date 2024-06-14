@@ -40,6 +40,8 @@ import { PreviewProfile } from "./pages/Doctor/components/PreviewProfile";
 
 import { Page404 } from "./pages/Page404";
 
+import  Expobatiz  from "./pages/Expobatiz";
+
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
@@ -64,6 +66,7 @@ function App() {
                     <Route path="/login" element={<SesionPage />} />
                     <Route path="/register" element={<SesionPage />} />
                     <Route path="/recover" element={<Recover />} />
+                    <Route path="/expo" element={<Expobatiz />} />
                     <Route element={<ProtectedRoute />}>
                       <Route element={<ManagerPages />}>
                         <Route path="/gestor" element={<GestorPage />} />

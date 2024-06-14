@@ -78,8 +78,8 @@ export function ProfilePage() {
       </SidebarContainer>
       <BodyContainer>
         <ProfilePatient patientInfo={patientInfo} />
-        {/* <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
-        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} history={history} />} */}
+        <PositionedButton onClick={() => setShowChatbot(true)}>💬</PositionedButton>
+        {showChatbot && <Chatbot showChatbot={showChatbot} setShowChatbot={setShowChatbot} history={history} />}
       </BodyContainer>
     </PatientPageContainer>
   );

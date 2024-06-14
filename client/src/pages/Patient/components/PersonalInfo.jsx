@@ -11,7 +11,7 @@ const PersonalInfo = ({ patientInfo }) => {
   const medical = patientInfo.medicalHistory || {};
   
   const imageUrl = patientInfo.patientPhoto
-    ? `http://localhost:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
+    ? `http://159.223.161.190:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
     : "https://via.placeholder.com/100";
 
   const birthDate = personal.birthdate ? personal.birthdate.split("T")[0] : "";

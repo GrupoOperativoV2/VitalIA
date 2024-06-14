@@ -59,7 +59,7 @@ export const ChangeFrom = ({ patientInfo }) => {
 
   const [imagePreview, setImagePreview] = useState(
     patientInfo && patientInfo.patientPhoto
-      ? `http://localhost:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
+      ? `http://159.223.161.190:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
       : "https://via.placeholder.com/150"
   );
 
@@ -189,7 +189,7 @@ export const ChangeFrom = ({ patientInfo }) => {
   useEffect(() => {
     if (patientInfo && patientInfo.patientPhoto) {
       setImagePreview(
-        `http://localhost:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
+        `http://159.223.161.190:4000/${patientInfo.patientPhoto.replace(/\\+/g, "/")}`
       );
     } else {
       setImagePreview("https://via.placeholder.com/150");
