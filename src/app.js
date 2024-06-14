@@ -22,7 +22,7 @@ initializeDoctor();
 
 // Lista de orígenes permitidos
 const allowedOrigins = [
-  'http://167.99.152.0:5173',
+  'http://159.223.161.190:5173',
   FRONTEND_URL
 ];
 
